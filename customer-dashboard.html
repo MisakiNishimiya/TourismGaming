@@ -28,18 +28,14 @@
             background: #f8f9fa;
         }
 
-        .top-header {
-            background: #2c3e50;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
 
         .user-info {
+            background: #2c3e50;
+            padding: 15px 30px;
             display: flex;
-            align-items: center;
+            align-items: left;
             gap: 25px;
+            justify-content: space-between;
         }
 
         .user-name {
@@ -53,18 +49,19 @@
             background: transparent;
             color: #ecf0f1;
             border: 1px solid #ecf0f1;
-            padding: 10px 25px;
+            padding: 10px 15px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s;
+            display: flex;
         }
 
         .btn-logout:hover {
-            background: #ecf0f1;
-            color: #2c3e50;
+            background: #354250 ;
+            color:  #ecf0f1;
             transform: translateY(-2px);
         }
 
@@ -641,8 +638,8 @@
     <div class="top-header">
         <div class="user-info">
             <span class="user-name">Welcome, <span id="customerName">Guest</span></span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
         </div>
-        <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
 
     <div class="hero">
@@ -657,6 +654,7 @@
                 <span></span>
                 <span></span>
                 <span></span>
+                
             </div>
             <ul id="navMenu">
                 <li><a href="#packages">Experiences & Destinations</a></li>
