@@ -225,19 +225,25 @@
             letter-spacing: 1px;
         }
 
+        /* FIXED: Added align-items: stretch */
         .packages-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
             margin-bottom: 80px;
+            align-items: stretch;
         }
 
+        /* FIXED: Added height: 100% and flexbox */
         .package-card {
             background: white;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
             border: 1px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .package-card:hover {
@@ -271,31 +277,35 @@
         }
 
         .img-adventure {
-            background-image: url('https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&h=600&fit=crop');
+            background-image: url('https://beachresortfinder.com/resorts/magnaga-waters-beach-resort/cover.jpg');
         }
 
         .img-culinary {
-            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop');
+            background-image: url('https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/08/83/03/23.jpg');
         }
 
         .img-cultural {
-            background-image: url('https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=800&h=600&fit=crop');
+            background-image: url('https://davaodeoro.gov.ph/wp-content/uploads/2022/11/Salvosa-Falls-thumbnail.png');
         }
 
         .img-nature {
-            background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop');
+            background-image: url('https://scontent.fdvo1-2.fna.fbcdn.net/v/t39.30808-6/475799098_122175205472259363_982464141224456628_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGtJ_5U5At50gDQ_QBF9v6UiHJ3ojuUA5OIcneiO5QDky8HqDxErF54RBaRwuiUGiloaS1ocNQpFiGDcHFIIM8j&_nc_ohc=5PswVh9pmigQ7kNvwHmpWVA&_nc_oc=AdkHQfE-yjQaF_6E1L0UtN5cHI_dapcnwkGZLxPK3bQ0xkACBW8Y0xctiJl3xZGaVsM&_nc_zt=23&_nc_ht=scontent.fdvo1-2.fna&_nc_gid=xSb7cM-S5d10qdGbLIKGwQ&oh=00_Afoec4OfJwizv8S1d9Eroi6pauE4L7GF5NcWXMjwPU4u3g&oe=6965AF8A');
         }
 
         .img-complete {
-            background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop');
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX9IfkwvfixCfUfOLkaAe0VH0RamtUwMQd0A&s');
         }
 
         .img-family {
-            background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop');
+            background-image: url('https://a0.muscache.com/im/pictures/a9bf5b5c-efe0-47a4-88ae-79ee3a74c15e.jpg');
         }
 
+        /* FIXED: Added flexbox properties */
         .package-content {
             padding: 40px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         .package-content h3 {
@@ -340,6 +350,7 @@
             letter-spacing: 1px;
         }
 
+        /* FIXED: Added margin-top: auto and align-self */
         .btn {
             display: inline-block;
             background: #2c3e50;
@@ -353,6 +364,8 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             font-size: 0.85em;
+            margin-top: auto;
+            align-self: flex-start;
         }
 
         .btn:hover {
@@ -468,15 +481,15 @@
             transform: scale(1.02);
         }
 
-        .gallery-1 { background-image: url('https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&h=600&fit=crop'); }
-        .gallery-2 { background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop'); }
-        .gallery-3 { background-image: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop'); }
-        .gallery-4 { background-image: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&h=600&fit=crop'); }
-        .gallery-5 { background-image: url('https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=800&h=600&fit=crop'); }
-        .gallery-6 { background-image: url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop'); }
-        .gallery-7 { background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop'); }
-        .gallery-8 { background-image: url('https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&h=600&fit=crop'); }
-        .gallery-9 { background-image: url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&h=600&fit=crop'); }
+        .gallery-1 { background-image: url('https://scontent.fdvo1-1.fna.fbcdn.net/v/t39.30808-6/518273108_757772000089704_8356670821320343107_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFMoiF-2NIpZJgXkWhwkDXRQIoXsEsXrmJAihewSxeuYm_l9Q79wJYhpMq4vNGBGLTRRQRVrG8jOt4nCHSshKtv&_nc_ohc=vEDox9iotj8Q7kNvwHqzM_C&_nc_oc=Adlf5YAHE9AzlPVSEljhNYCovabOs8xbAxwK8kkmUoCCDUi9UiJK0D1M37Jc7q9KCvA&_nc_zt=23&_nc_ht=scontent.fdvo1-1.fna&_nc_gid=h10B0tAVEaMJiOLvd_Teiw&oh=00_AfoMZesdlzxDXJffSiRVxcZm4EotmyrIyLkdUz46yO6Xrg&oe=6965B1A7'); }
+        .gallery-2 { background-image: url('https://scontent.fdvo1-2.fna.fbcdn.net/v/t39.30808-6/486693178_1070780415075889_6186080029484241412_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=103&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEy-8VrcySrsYPcWl3P_kagE6Z0EHATp0QTpnQQcBOnRF_sclptt-Ir2JwvJPGl5HAP03V3Rh6j-fMJSdREqAkV&_nc_ohc=y2vLOZvXbugQ7kNvwHpvm63&_nc_oc=Adl3HykNUK2qCo6GMYX4QloqYkAbx7rwM7SpGzRNcsUczOMoibAPh_vo4Vm6EKhqM_g&_nc_zt=23&_nc_ht=scontent.fdvo1-2.fna&_nc_gid=dj_FF4-GArnifIkIX_EJ8Q&oh=00_AfozyIl6ZsOxLQdCLreqFrT6cVhGD2my_nxdNd396RmcBA&oe=6965BE7A'); }
+        .gallery-3 { background-image: url('https://davaodeoro.gov.ph/wp-content/uploads/2022/11/Salvosa-Falls-thumbnail.png'); }
+        .gallery-4 { background-image: url('https://scontent.fdvo1-2.fna.fbcdn.net/v/t39.30808-6/475799098_122175205472259363_982464141224456628_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGtJ_5U5At50gDQ_QBF9v6UiHJ3ojuUA5OIcneiO5QDky8HqDxErF54RBaRwuiUGiloaS1ocNQpFiGDcHFIIM8j&_nc_ohc=5PswVh9pmigQ7kNvwHmpWVA&_nc_oc=AdkHQfE-yjQaF_6E1L0UtN5cHI_dapcnwkGZLxPK3bQ0xkACBW8Y0xctiJl3xZGaVsM&_nc_zt=23&_nc_ht=scontent.fdvo1-2.fna&_nc_gid=xSb7cM-S5d10qdGbLIKGwQ&oh=00_Afoec4OfJwizv8S1d9Eroi6pauE4L7GF5NcWXMjwPU4u3g&oe=6965AF8A'); }
+        .gallery-5 { background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX9IfkwvfixCfUfOLkaAe0VH0RamtUwMQd0A&s'); }
+        .gallery-6 { background-image: url('https://a0.muscache.com/im/pictures/a9bf5b5c-efe0-47a4-88ae-79ee3a74c15e.jpg'); }
+        .gallery-7 { background-image: url('https://davaodeoro.gov.ph/wp-content/uploads/2022/11/Pantukan-Water-World-thumbnail.jpg'); }
+        .gallery-8 { background-image: url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2e/36/ca/3c/this-could-be-you.jpg?w=400&h=300&s=1'); }
+        .gallery-9 { background-image: url('https://isteam.wsimg.com/ip/3f56156f-45fd-465e-b0f1-2ae5ab45c07a/C71E401B-AB47-4CF6-9EEF-787710DD489C.jpeg/:/'); }
 
         footer {
             background: #2c3e50;
@@ -631,7 +644,7 @@
     </div>
 
     <div class="hero">
-        <h1>Pantukan</h1>
+        <h1>NaviBay Pantukan</h1>
         <div class="divider"></div>
         <p>A Refined Escape in Davao de Oro</p>
     </div>
@@ -680,96 +693,96 @@
             <div class="package-card">
                 <div class="package-image img-adventure"></div>
                 <div class="package-content">
-                    <h3>Adventure Explorer</h3>
-                    <p>Embark on an exhilarating journey through Pantukan's untamed landscapes and discover nature's most breathtaking spectacles</p>
+                    <h3>Beach Bliss & Coastal Escape</h3>
+                    <p>Unwind on pristine shores with golden sands, calm gulf waters, and sunset views—Pantukan's signature relaxation spots.</p>
                     <ul class="package-features">
-                        <li>Private mountain trekking with expert guide</li>
-                        <li>Pristine waterfall exploration</li>
-                        <li>River tubing through scenic valleys</li>
-                        <li>Cave discovery expedition</li>
+                        <li>Private beachfront lounging at Magnaga Waters or Pantukan Water World</li>
+                        <li>Panoramic sunset deck views</li>
+                        <li>Serene swimming & sunbathing at Puting Bonbon Beach</li>
+                        <li>Exclusive resort beach access</li>
                     </ul>
-                    <div class="price">₱3,500</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
 
             <div class="package-card" id="food">
                 <div class="package-image img-culinary"></div>
                 <div class="package-content">
-                    <h3>Culinary Journey</h3>
-                    <p>Savor the authentic flavors of Pantukan through an exclusive gastronomic experience celebrating local traditions</p>
+                    <h3>Adventure Explorer</h3>
+                    <p>Get your adrenaline going with water-based thrills and light coastal exploration along Pantukan's shores.</p>
                     <ul class="package-features">
-                        <li>Premium restaurant tasting tour</li>
-                        <li>Private cooking class with local chef</li>
-                        <li>Fresh seafood coastal experience</li>
-                        <li>Exotic fruit tasting including durian</li>
+                        <li>Premium water sports: kayaking, kiteboarding, banana boat rides</li>
+                        <li>Guided snorkeling in gulf marine areas</li>
+                        <li>Coastal paddle adventures from resort decks</li>
+                        <li>Expert-led active beach exploration</li>
                     </ul>
-                    <div class="price">₱2,800</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
 
             <div class="package-card" id="places">
                 <div class="package-image img-cultural"></div>
                 <div class="package-content">
-                    <h3>Cultural Heritage</h3>
-                    <p>Immerse yourself in the rich tapestry of Pantukan's history and indigenous traditions</p>
+                    <h3>Nature Sanctuary</h3>
+                    <p>Immerse in Pantukan's coastal ecosystems, from mangroves to beachside greenery, for peaceful eco-connection.</p>
                     <ul class="package-features">
-                        <li>Historical landmark private tour</li>
-                        <li>Indigenous community cultural exchange</li>
-                        <li>Traditional gold panning experience</li>
-                        <li>Artisan crafts workshop</li>
+                        <li>Guided mangrove walks & birdwatching</li>
+                        <li>Eco-exploration of gulf fish sanctuaries</li>
+                        <li>Tranquil beachside immersion in coconut groves</li>
+                        <li>Sustainable activities with resort guidance</li>
                     </ul>
-                    <div class="price">₱3,200</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
 
             <div class="package-card">
                 <div class="package-image img-nature"></div>
                 <div class="package-content">
-                    <h3>Nature Sanctuary</h3>
-                    <p>Retreat into tranquility and reconnect with nature in Pantukan's most serene environments</p>
+                    <h3>Cultural Heritage</h3>
+                    <p>Discover Pantukan's roots in gold mining, fishing communities, and everyday local life.</p>
                     <ul class="package-features">
-                        <li>Natural hot springs wellness visit</li>
-                        <li>Eco-sanctuary guided exploration</li>
-                        <li>Endemic bird watching excursion</li>
-                        <li>Scenic viewpoint private picnic</li>
+                        <li>Respectful insights into small-scale gold mining heritage</li>
+                        <li>Relaxed strolls at Municipal Baywalk Park</li>
+                        <li>Encounters with local fishing traditions</li>
+                        <li>Resort-hosted cultural interactions</li>
                     </ul>
-                    <div class="price">₱2,500</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
 
             <div class="package-card">
                 <div class="package-image img-complete"></div>
                 <div class="package-content">
-                    <h3>Grand Experience</h3>
-                    <p>The pinnacle of Pantukan luxury travel with comprehensive access to all premier attractions</p>
+                    <h3>Culinary Journey</h3>
+                    <p>Savor fresh gulf seafood, quirky local treats, and beachside dining that highlight Pantukan's coastal bounty.</p>
                     <ul class="package-features">
-                        <li>Full access to all destinations</li>
-                        <li>Three nights premium accommodation</li>
-                        <li>Gourmet meals and refreshments</li>
-                        <li>Private transportation and concierge</li>
+                        <li>Grilled tuna, bangus & daily gulf catches</li>
+                        <li>Signature “Dinner by the Beach” experiences</li>
+                        <li>Tastings of quirky treats like bacon-wrapped banana</li>
+                        <li>Resort dining with tropical fruit accents</li>
                     </ul>
-                    <div class="price">₱8,999</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
 
             <div class="package-card">
                 <div class="package-image img-family"></div>
                 <div class="package-content">
-                    <h3>Family Collection</h3>
-                    <p>Thoughtfully designed experiences that create cherished memories for the entire family</p>
+                    <h3>Family Collection / Grand Experience</h3>
+                    <p>Create memorable group moments with easy, all-ages-friendly beaches, pools, and activities perfect for families or reunions.</p>
                     <ul class="package-features">
-                        <li>Family-oriented activities and games</li>
-                        <li>Interactive farm visit experience</li>
-                        <li>Secure swimming and recreation areas</li>
-                        <li>Educational nature discovery tour</li>
+                        <li>Family water fun & pools at Pantukan Water World</li>
+                        <li>Spacious beach picnics at Magnaga Waters</li>
+                        <li>Relaxed baywalk strolls & sunset watching</li>
+                        <li>Group resort stays with games, volleyball & casual fishing</li>
                     </ul>
-                    <div class="price">₱4,200</div>
-                    <button class="btn">Reserve</button>
+                    
+                    <button class="btn">See packages</button>
                 </div>
             </div>
         </div>
@@ -779,12 +792,12 @@
         <h2 class="section-title">Discover Pantukan</h2>
         <p class="section-subtitle">A visual journey through our pristine landscapes</p>
         <div class="gallery-grid">
-            <div class="gallery-item gallery-1" data-label="Majestic Waterfalls"></div>
-            <div class="gallery-item gallery-2" data-label="Mountain Peaks"></div>
-            <div class="gallery-item gallery-3" data-label="Local Cuisine"></div>
-            <div class="gallery-item gallery-4" data-label="Rice Terraces"></div>
-            <div class="gallery-item gallery-5" data-label="Golden Sunsets"></div>
-            <div class="gallery-item gallery-6" data-label="Traditional Crafts"></div>
+            <div class="gallery-item gallery-1" data-label="wide shoreline"></div>
+            <div class="gallery-item gallery-2" data-label="Water Slides"></div>
+            <div class="gallery-item gallery-3" data-label="Majestic Waterfalls"></div>
+            <div class="gallery-item gallery-4" data-label="Eco-parks"></div>
+            <div class="gallery-item gallery-5" data-label="Local Cuisine"></div>
+            <div class="gallery-item gallery-6" data-label="private-feel relaxation"></div>
             <div class="gallery-item gallery-7" data-label="Coastal Beauty"></div>
             <div class="gallery-item gallery-8" data-label="Adventure Trails"></div>
         </div>
