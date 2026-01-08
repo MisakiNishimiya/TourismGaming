@@ -43,7 +43,7 @@
             left: 0;
             right: 0;
             background: #2c3e50;
-            color: white;
+            color: #ecf0f1;
             padding: 20px;
             display: none;
             align-items: center;
@@ -91,7 +91,7 @@
 
         .btn-install {
             background: #c9a961;
-            color: white;
+            color: #ecf0f1;
         }
 
         .btn-install:hover {
@@ -100,12 +100,12 @@
 
         .btn-dismiss {
             background: transparent;
-            color: white;
+            color: #ecf0f1;
             border: 1px solid rgba(255,255,255,0.3);
         }
 
         .btn-dismiss:hover {
-            border-color: white;
+            border-color: #ecf0f1;
         }
 
         /* Offline Indicator */
@@ -115,7 +115,7 @@
             left: 0;
             right: 0;
             background: #e74c3c;
-            color: white;
+            color: #ecf0f1;
             padding: 12px;
             text-align: center;
             font-size: 0.85em;
@@ -129,7 +129,7 @@
         }
 
         .login-container {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.549);
             backdrop-filter: blur(10px);
             max-width: 550px;
             width: 100%;
@@ -159,7 +159,7 @@
         }
 
         .logo p {
-            color: #95a5a6;
+            color: #2c3e50;
             font-size: 0.85em;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -186,7 +186,7 @@
             width: 100%;
             padding: 18px 20px;
             border: 1px solid #e0e0e0;
-            background: white;
+            background: #ecf0f1;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 1em;
             color: #2c3e50;
@@ -218,7 +218,7 @@
             width: 100%;
             padding: 20px;
             background: #2c3e50;
-            color: white;
+            color: #ecf0f1;
             border: none;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.85em;
@@ -286,7 +286,7 @@
         }
 
         .demo-account:hover {
-            background: white;
+            background: #ecf0f1;
             border-color: #2c3e50;
         }
 
@@ -309,7 +309,7 @@
             display: inline-block;
             padding: 5px 14px;
             background: #2c3e50;
-            color: white;
+            color: #ecf0f1;
             font-size: 0.7em;
             letter-spacing: 1.5px;
             text-transform: uppercase;
@@ -324,7 +324,7 @@
         }
 
         .toggle-form p {
-            color: #95a5a6;
+            color: #2c3e50;
             font-size: 0.85em;
             letter-spacing: 0.5px;
         }
@@ -403,15 +403,6 @@
 
         <form id="loginForm">
             <div class="form-group">
-                <label for="userType">Account Type</label>
-                <select id="userType" required>
-                    <option value="">Select Account Type</option>
-                    <option value="customer">Customer</option>
-                    <option value="host">Tour Host</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" required placeholder="your@email.com">
             </div>
@@ -430,23 +421,23 @@
             <p>Don't have an account? <a href="#" id="showRegister">Create one</a></p>
         </div>
 
-        <div class="demo-accounts">
+        <!-- <div class="demo-accounts">
             <h3>Demo Accounts</h3>
             
-            <div class="demo-account" onclick="fillLogin('customer@pantukan.com', 'customer123', 'customer')">
+            <div class="demo-account" onclick="fillLogin('customer@pantukan.com', 'customer123')">
                 <h4>Customer Account</h4>
                 <p>Email: customer@pantukan.com</p>
                 <p>Password: customer123</p>
                 <span class="role-badge">Customer</span>
             </div>
 
-            <div class="demo-account" onclick="fillLogin('host@pantukan.com', 'host123', 'host')">
+            <div class="demo-account" onclick="fillLogin('host@pantukan.com', 'host123')">
                 <h4>Tour Host Account</h4>
                 <p>Email: host@pantukan.com</p>
                 <p>Password: host123</p>
                 <span class="role-badge">Host</span>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!-- Register Form -->
@@ -636,10 +627,9 @@
         });
 
         // Fill Login
-        function fillLogin(email, password, userType) {
+        function fillLogin(email, password) {
             document.getElementById('email').value = email;
             document.getElementById('password').value = password;
-            document.getElementById('userType').value = userType;
         }
 
         // Login
@@ -648,11 +638,10 @@
             
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const userType = document.getElementById('userType').value;
             const messageDiv = document.getElementById('message');
 
             if (users[email]) {
-                if (users[email].password === password && users[email].role === userType) {
+                if (users[email].password === password) {
                     messageDiv.className = 'message success';
                     messageDiv.style.display = 'block';
                     messageDiv.textContent = `Welcome back, ${users[email].name}!`;
@@ -666,16 +655,12 @@
                     localStorage.setItem('currentUser', JSON.stringify(userData));
 
                     setTimeout(() => {
-                        if (userType === 'host') {
+                        if (users[email].role === 'host') {
                             window.location.href = 'host-dashboard.html';
                         } else {
                             window.location.href = 'customer-dashboard.html';
                         }
                     }, 1500);
-                } else if (users[email].role !== userType) {
-                    messageDiv.className = 'message error';
-                    messageDiv.style.display = 'block';
-                    messageDiv.textContent = `This email is registered as a ${users[email].role} account. Please select the correct account type.`;
                 } else {
                     messageDiv.className = 'message error';
                     messageDiv.style.display = 'block';
@@ -699,7 +684,6 @@
 
         document.getElementById('email').addEventListener('input', clearMessage);
         document.getElementById('password').addEventListener('input', clearMessage);
-        document.getElementById('userType').addEventListener('change', clearMessage);
         document.getElementById('regName').addEventListener('input', clearRegisterMessage);
         document.getElementById('regEmail').addEventListener('input', clearRegisterMessage);
         document.getElementById('regPassword').addEventListener('input', clearRegisterMessage);
