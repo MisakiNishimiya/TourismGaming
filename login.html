@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="description" content="Pantukan Tourism - Login to access luxury travel experiences">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pantukan">
+    
+    <title>Pantukan - Login</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Fallback Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* PWA Install Banner */
+        .install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+        }
+
+        .install-banner.show {
+            display: flex;
+        }
+
+        .install-banner-content {
+            flex: 1;
+        }
+
+        .install-banner-content h4 {
+            font-size: 1em;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .install-banner-content p {
+            font-size: 0.85em;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+        }
+
+        .install-banner-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-install, .btn-dismiss {
+            padding: 10px 20px;
+            border: none;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-install {
+            background: #c9a961;
+            color: white;
+        }
+
+        .btn-install:hover {
+            background: #b89851;
+        }
+
+        .btn-dismiss {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-dismiss:hover {
+            border-color: white;
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #e74c3c;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            max-width: 550px;
+            width: 100%;
+            padding: 60px 50px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #2c3e50;
+            margin: 25px auto;
+        }
+
+        .logo p {
+            color: #95a5a6;
+            font-size: 0.85em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #2c3e50;
+            font-size: 0.75em;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 18px 20px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 1em;
+            color: #2c3e50;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #2c3e50;
+        }
+
+        input::placeholder {
+            color: #bdc3c7;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232c3e50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            padding-right: 45px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.85em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #34495e;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 25px;
+            padding: 18px;
+            text-align: center;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+            display: none;
+        }
+
+        .message.error {
+            background: #fff5f5;
+            color: #e74c3c;
+            border: 1px solid #fadbd8;
+        }
+
+        .message.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #d1fae5;
+        }
+
+        .demo-accounts {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .demo-accounts h3 {
+            color: #2c3e50;
+            font-size: 0.75em;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .demo-account {
+            background: #fafafa;
+            padding: 22px 25px;
+            margin-bottom: 15px;
+            border: 1px solid #ecf0f1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .demo-account:hover {
+            background: white;
+            border-color: #2c3e50;
+        }
+
+        .demo-account h4 {
+            color: #2c3e50;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        .demo-account p {
+            color: #7f8c8d;
+            font-size: 0.8em;
+            margin: 5px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-account .role-badge {
+            display: inline-block;
+            padding: 5px 14px;
+            background: #2c3e50;
+            color: white;
+            font-size: 0.7em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .toggle-form p {
+            color: #95a5a6;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-form a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.3s;
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-form a:hover {
+            color: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 50px 35px;
+            }
+
+            .logo h1 {
+                font-size: 2.5em;
+                letter-spacing: 8px;
+            }
+
+            .install-banner {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .install-banner-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 40px 25px;
+            }
+
+            .logo h1 {
+                font-size: 2em;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        ⚠️ You are currently offline. Some features may be limited.
+    </div>
+
+    <!-- PWA Install Banner -->
+    <div class="install-banner" id="installBanner">
+        <div class="install-banner-content">
+            <h4>Install Pantukan App</h4>
+            <p>Get quick access and work offline</p>
+        </div>
+        <div class="install-banner-actions">
+            <button class="btn-install" id="btnInstall">Install</button>
+            <button class="btn-dismiss" id="btnDismiss">Not Now</button>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="login-container" id="loginContainer">
+        <div class="logo">
+            <h1>PANTUKAN</h1>
+            <div class="divider"></div>
+            <p>Portal Login</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="userType">Account Type</label>
+                <select id="userType" required>
+                    <option value="">Select Account Type</option>
+                    <option value="customer">Customer</option>
+                    <option value="host">Tour Host</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+
+            <div class="message" id="message"></div>
+        </form>
+
+        <div class="toggle-form">
+            <p>Don't have an account? <a href="#" id="showRegister">Create one</a></p>
+        </div>
+
+        <div class="demo-accounts">
+            <h3>Demo Accounts</h3>
+            
+            <div class="demo-account" onclick="fillLogin('customer@pantukan.com', 'customer123', 'customer')">
+                <h4>Customer Account</h4>
+                <p>Email: customer@pantukan.com</p>
+                <p>Password: customer123</p>
+                <span class="role-badge">Customer</span>
+            </div>
+
+            <div class="demo-account" onclick="fillLogin('host@pantukan.com', 'host123', 'host')">
+                <h4>Tour Host Account</h4>
+                <p>Email: host@pantukan.com</p>
+                <p>Password: host123</p>
+                <span class="role-badge">Host</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Form -->
+    <div class="login-container" id="registerContainer" style="display: none;">
+        <div class="logo">
+            <h1>PANTUKAN</h1>
+            <div class="divider"></div>
+            <p>Create Account</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="regUserType">Account Type</label>
+                <select id="regUserType" required>
+                    <option value="">Select Account Type</option>
+                    <option value="customer">Customer</option>
+                    <option value="host">Tour Host</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="regName">Full Name</label>
+                <input type="text" id="regName" required placeholder="Juan Dela Cruz">
+            </div>
+
+            <div class="form-group">
+                <label for="regEmail">Email Address</label>
+                <input type="email" id="regEmail" required placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label for="regPassword">Password</label>
+                <input type="password" id="regPassword" required placeholder="Minimum 6 characters">
+            </div>
+
+            <div class="form-group">
+                <label for="regConfirmPassword">Confirm Password</label>
+                <input type="password" id="regConfirmPassword" required placeholder="Re-enter password">
+            </div>
+
+            <button type="submit" class="btn">Create Account</button>
+
+            <div class="message" id="registerMessage"></div>
+        </form>
+
+        <div class="toggle-form">
+            <p>Already have an account? <a href="#" id="showLogin">Sign in</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered', reg))
+                .catch(err => console.error('Service Worker registration failed', err));
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        const installBanner = document.getElementById('installBanner');
+        const btnInstall = document.getElementById('btnInstall');
+        const btnDismiss = document.getElementById('btnDismiss');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBanner.classList.add('show');
+        });
+
+        btnInstall.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response: ${outcome}`);
+                deferredPrompt = null;
+                installBanner.classList.remove('show');
+            }
+        });
+
+        btnDismiss.addEventListener('click', () => {
+            installBanner.classList.remove('show');
+        });
+
+        // Online/Offline Detection
+        const offlineIndicator = document.getElementById('offlineIndicator');
+
+        window.addEventListener('online', () => {
+            offlineIndicator.classList.remove('show');
+        });
+
+        window.addEventListener('offline', () => {
+            offlineIndicator.classList.add('show');
+        });
+
+        // Check initial state
+        if (!navigator.onLine) {
+            offlineIndicator.classList.add('show');
+        }
+
+        // User Database
+        const users = {
+            'customer@pantukan.com': {
+                password: 'customer123',
+                role: 'customer',
+                name: 'Maria Santos'
+            },
+            'host@pantukan.com': {
+                password: 'host123',
+                role: 'host',
+                name: 'Juan Dela Cruz'
+            }
+        };
+
+        const storedUsers = localStorage.getItem('registeredUsers');
+        if (storedUsers) {
+            Object.assign(users, JSON.parse(storedUsers));
+        }
+
+        function saveUsers() {
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+        }
+
+        // Toggle Forms
+        document.getElementById('showRegister').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('registerContainer').style.display = 'block';
+        });
+
+        document.getElementById('showLogin').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('registerContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        });
+
+        // Registration
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const userType = document.getElementById('regUserType').value;
+            const messageDiv = document.getElementById('registerMessage');
+
+            if (password.length < 6) {
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                messageDiv.textContent = 'Password must be at least 6 characters long.';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                messageDiv.textContent = 'Passwords do not match. Please try again.';
+                return;
+            }
+
+            if (users[email]) {
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                messageDiv.textContent = 'An account with this email already exists.';
+                return;
+            }
+
+            users[email] = {
+                password: password,
+                role: userType,
+                name: name
+            };
+
+            saveUsers();
+
+            messageDiv.className = 'message success';
+            messageDiv.style.display = 'block';
+            messageDiv.textContent = 'Account created successfully! Redirecting to login...';
+
+            setTimeout(() => {
+                document.getElementById('registerContainer').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('registerForm').reset();
+                document.getElementById('registerMessage').style.display = 'none';
+            }, 2000);
+        });
+
+        // Fill Login
+        function fillLogin(email, password, userType) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            document.getElementById('userType').value = userType;
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const userType = document.getElementById('userType').value;
+            const messageDiv = document.getElementById('message');
+
+            if (users[email]) {
+                if (users[email].password === password && users[email].role === userType) {
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    messageDiv.textContent = `Welcome back, ${users[email].name}!`;
+
+                    const userData = {
+                        email: email,
+                        name: users[email].name,
+                        role: users[email].role,
+                        loginTime: new Date().toISOString()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(userData));
+
+                    setTimeout(() => {
+                        if (userType === 'host') {
+                            window.location.href = 'host-dashboard.html';
+                        } else {
+                            window.location.href = 'customer-dashboard.html';
+                        }
+                    }, 1500);
+                } else if (users[email].role !== userType) {
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    messageDiv.textContent = `This email is registered as a ${users[email].role} account. Please select the correct account type.`;
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    messageDiv.textContent = 'Invalid password. Please try again.';
+                }
+            } else {
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                messageDiv.textContent = 'Account not found. Please check your email address.';
+            }
+        });
+
+        // Clear Messages
+        function clearMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
+        function clearRegisterMessage() {
+            document.getElementById('registerMessage').style.display = 'none';
+        }
+
+        document.getElementById('email').addEventListener('input', clearMessage);
+        document.getElementById('password').addEventListener('input', clearMessage);
+        document.getElementById('userType').addEventListener('change', clearMessage);
+        document.getElementById('regName').addEventListener('input', clearRegisterMessage);
+        document.getElementById('regEmail').addEventListener('input', clearRegisterMessage);
+        document.getElementById('regPassword').addEventListener('input', clearRegisterMessage);
+        document.getElementById('regConfirmPassword').addEventListener('input', clearRegisterMessage);
+        document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
+    </script>
+</body>
+</html>

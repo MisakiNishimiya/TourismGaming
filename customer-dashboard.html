@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <!-- Add after the viewport meta tag -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="description" content="Pantukan Tourism Dashboard">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <title>Pantukan - Luxury Tourism Experience</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            overflow-x: hidden;
+            background: #f8f9fa;
+        }
+
+        .top-header {
+            background: #2c3e50;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .user-name {
+            font-size: 0.9em;
+            color: #ecf0f1;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #ecf0f1;
+            border: 1px solid #ecf0f1;
+            padding: 10px 25px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #ecf0f1;
+            color: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
+            color: white;
+            padding: 180px 20px 120px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.4em;
+            margin-bottom: 40px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: white;
+            margin: 30px auto;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .burger-menu span {
+            width: 25px;
+            height: 2px;
+            background: #2c3e50;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+
+        .burger-menu.active span:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .burger-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger-menu.active span:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li {
+            margin: 5px 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 400;
+            font-size: 0.95em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c9a961;
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: #c9a961;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0px 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-bottom: 80px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .package-card {
+            background: white;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            border: 1px solid #e8e8e8;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .package-image {
+            width: 100%;
+            height: 320px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .package-card:hover .package-image::after {
+            opacity: 1;
+        }
+
+        .img-adventure {
+            background-image: url('https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&h=600&fit=crop');
+        }
+
+        .img-culinary {
+            background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop');
+        }
+
+        .img-cultural {
+            background-image: url('https://images.unsplash.com/photo-1533130061792-64b345e4a833?w=800&h=600&fit=crop');
+        }
+
+        .img-nature {
+            background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop');
+        }
+
+        .img-complete {
+            background-image: url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop');
+        }
+
+        .img-family {
+            background-image: url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&h=600&fit=crop');
+        }
+
+        .package-content {
+            padding: 40px;
+        }
+
+        .package-content h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .package-content p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .package-features li {
+            padding: 12px 0;
+            color: #555;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+        }
+
+        .package-features li::before {
+            content: '—';
+            color: #c9a961;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .price {
+            font-size: 2.2em;
+            color: #c9a961;
+            font-weight: 300;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 15px 45px;
+            text-decoration: none;
+            font-weight: 400;
+            transition: background 0.3s, transform 0.3s;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+
+        .btn:hover {
+            background: #c9a961;
+            transform: translateY(-2px);
+        }
+
+        .featured-section {
+            background: white;
+            padding: 60px 40px;
+            margin: 40px 0;
+        }
+
+        .featured-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 40px 20px;
+            border-right: 1px solid #e8e8e8;
+        }
+
+        .feature-item:last-child {
+            border-right: none;
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 25px;
+            color: #c9a961;
+        }
+
+        .feature-item h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: #2c3e50;
+        }
+
+        .feature-item p {
+            color: #7f8c8d;
+            line-height: 1.8;
+            font-size: 0.95em;
+        }
+
+        .gallery {
+            background: #f8f9fa;
+            padding: 0px 40px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            height: 350px;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
+        }
+
+        .gallery-item::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            color: white;
+            font-size: 1.3em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-1 { background-image: url('https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?w=800&h=600&fit=crop'); }
+        .gallery-2 { background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&h=600&fit=crop'); }
+        .gallery-3 { background-image: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&h=600&fit=crop'); }
+        .gallery-4 { background-image: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&h=600&fit=crop'); }
+        .gallery-5 { background-image: url('https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=800&h=600&fit=crop'); }
+        .gallery-6 { background-image: url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=800&h=600&fit=crop'); }
+        .gallery-7 { background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop'); }
+        .gallery-8 { background-image: url('https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&h=600&fit=crop'); }
+        .gallery-9 { background-image: url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&h=600&fit=crop'); }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        footer h3 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 3px;
+        }
+
+        footer p {
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .contact-info {
+            margin-top: 40px;
+        }
+
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            margin: 0 25px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+            font-size: 0.95em;
+        }
+
+        .contact-info a:hover {
+            color: #c9a961;
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+                letter-spacing: 4px;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .hero {
+                padding: 120px 20px 80px;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .burger-menu {
+                display: flex;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+            }
+
+            nav ul.active {
+                max-height: 400px;
+                padding-top: 20px;
+            }
+
+            nav li {
+                margin: 15px 0;
+                opacity: 0;
+                transform: translateY(-10px);
+                transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            nav ul.active li {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            nav ul.active li:nth-child(1) { transition-delay: 0.1s; }
+            nav ul.active li:nth-child(2) { transition-delay: 0.2s; }
+            nav ul.active li:nth-child(3) { transition-delay: 0.3s; }
+            nav ul.active li:nth-child(4) { transition-delay: 0.4s; }
+            nav ul.active li:nth-child(5) { transition-delay: 0.5s; }
+
+            .feature-item {
+                border-right: none;
+                border-bottom: 1px solid #e8e8e8;
+            }
+
+            .feature-item:last-child {
+                border-bottom: none;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 60px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 100px 15px 60px;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+                letter-spacing: 2px;
+            }
+
+            .package-content {
+                padding: 30px;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="user-info">
+            <span class="user-name">Welcome, <span id="customerName">Guest</span></span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="hero">
+        <h1>Pantukan</h1>
+        <div class="divider"></div>
+        <p>A Refined Escape in Davao de Oro</p>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="burger-menu" id="burgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="navMenu">
+                <li><a href="#packages">Experiences</a></li>
+                <li><a href="#food">Gastronomy</a></li>
+                <li><a href="#places">Destinations</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Inquire</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="featured-section">
+        <div class="featured-grid">
+            <div class="feature-item">
+                <div class="feature-icon">✦</div>
+                <h3>Curated Experiences</h3>
+                <p>Every journey is thoughtfully designed to showcase the finest of Pantukan's natural beauty and cultural heritage</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✦</div>
+                <h3>Expert Guidance</h3>
+                <p>Our knowledgeable local guides ensure an authentic and enriching exploration of the region</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✦</div>
+                <h3>Exclusive Access</h3>
+                <p>Discover hidden gems and pristine locations known only to those who truly understand Pantukan</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="packages">
+        <h2 class="section-title">Our Experiences</h2>
+        <p class="section-subtitle">Carefully crafted journeys for the discerning traveler</p>
+        <div class="packages-grid">
+            <div class="package-card">
+                <div class="package-image img-adventure"></div>
+                <div class="package-content">
+                    <h3>Adventure Explorer</h3>
+                    <p>Embark on an exhilarating journey through Pantukan's untamed landscapes and discover nature's most breathtaking spectacles</p>
+                    <ul class="package-features">
+                        <li>Private mountain trekking with expert guide</li>
+                        <li>Pristine waterfall exploration</li>
+                        <li>River tubing through scenic valleys</li>
+                        <li>Cave discovery expedition</li>
+                    </ul>
+                    <div class="price">₱3,500</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+
+            <div class="package-card" id="food">
+                <div class="package-image img-culinary"></div>
+                <div class="package-content">
+                    <h3>Culinary Journey</h3>
+                    <p>Savor the authentic flavors of Pantukan through an exclusive gastronomic experience celebrating local traditions</p>
+                    <ul class="package-features">
+                        <li>Premium restaurant tasting tour</li>
+                        <li>Private cooking class with local chef</li>
+                        <li>Fresh seafood coastal experience</li>
+                        <li>Exotic fruit tasting including durian</li>
+                    </ul>
+                    <div class="price">₱2,800</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+
+            <div class="package-card" id="places">
+                <div class="package-image img-cultural"></div>
+                <div class="package-content">
+                    <h3>Cultural Heritage</h3>
+                    <p>Immerse yourself in the rich tapestry of Pantukan's history and indigenous traditions</p>
+                    <ul class="package-features">
+                        <li>Historical landmark private tour</li>
+                        <li>Indigenous community cultural exchange</li>
+                        <li>Traditional gold panning experience</li>
+                        <li>Artisan crafts workshop</li>
+                    </ul>
+                    <div class="price">₱3,200</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+
+            <div class="package-card">
+                <div class="package-image img-nature"></div>
+                <div class="package-content">
+                    <h3>Nature Sanctuary</h3>
+                    <p>Retreat into tranquility and reconnect with nature in Pantukan's most serene environments</p>
+                    <ul class="package-features">
+                        <li>Natural hot springs wellness visit</li>
+                        <li>Eco-sanctuary guided exploration</li>
+                        <li>Endemic bird watching excursion</li>
+                        <li>Scenic viewpoint private picnic</li>
+                    </ul>
+                    <div class="price">₱2,500</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+
+            <div class="package-card">
+                <div class="package-image img-complete"></div>
+                <div class="package-content">
+                    <h3>Grand Experience</h3>
+                    <p>The pinnacle of Pantukan luxury travel with comprehensive access to all premier attractions</p>
+                    <ul class="package-features">
+                        <li>Full access to all destinations</li>
+                        <li>Three nights premium accommodation</li>
+                        <li>Gourmet meals and refreshments</li>
+                        <li>Private transportation and concierge</li>
+                    </ul>
+                    <div class="price">₱8,999</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+
+            <div class="package-card">
+                <div class="package-image img-family"></div>
+                <div class="package-content">
+                    <h3>Family Collection</h3>
+                    <p>Thoughtfully designed experiences that create cherished memories for the entire family</p>
+                    <ul class="package-features">
+                        <li>Family-oriented activities and games</li>
+                        <li>Interactive farm visit experience</li>
+                        <li>Secure swimming and recreation areas</li>
+                        <li>Educational nature discovery tour</li>
+                    </ul>
+                    <div class="price">₱4,200</div>
+                    <button class="btn">Reserve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="gallery" id="gallery">
+        <h2 class="section-title">Discover Pantukan</h2>
+        <p class="section-subtitle">A visual journey through our pristine landscapes</p>
+        <div class="gallery-grid">
+            <div class="gallery-item gallery-1" data-label="Majestic Waterfalls"></div>
+            <div class="gallery-item gallery-2" data-label="Mountain Peaks"></div>
+            <div class="gallery-item gallery-3" data-label="Local Cuisine"></div>
+            <div class="gallery-item gallery-4" data-label="Rice Terraces"></div>
+            <div class="gallery-item gallery-5" data-label="Golden Sunsets"></div>
+            <div class="gallery-item gallery-6" data-label="Traditional Crafts"></div>
+            <div class="gallery-item gallery-7" data-label="Coastal Beauty"></div>
+            <div class="gallery-item gallery-8" data-label="Adventure Trails"></div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h3>Begin Your Journey</h3>
+        <div class="divider" style="background: white;"></div>
+        <p>Experience the refined beauty of Pantukan</p>
+        <div class="contact-info">
+            <a href="tel:+639123456789">+63 912 345 6789</a>
+            <a href="mailto:concierge@pantukan.travel">concierge@pantukan.travel</a>
+        </div>
+        <p style="margin-top: 50px; opacity: 0.6; font-size: 0.9em;">© 2026 Pantukan Luxury Travel. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Load user info
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.name) {
+            document.getElementById('customerName').textContent = currentUser.name;
+        }
+
+        // Check if user is logged in
+        if (!currentUser.email || currentUser.role !== 'customer') {
+            window.location.href = 'login.html';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Burger menu toggle
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
+
+        burgerMenu.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                burgerMenu.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const cards = document.querySelectorAll('.package-card');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.8s ease-out';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => observer.observe(card));
+
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (this.textContent === 'Reserve') {
+                    e.preventDefault();
+                    alert('Thank you for your interest in our luxury experiences. Our concierge team will contact you shortly at +63 912 345 6789.');
+                }
+            });
+        });
+    </script>
+
+    <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker registered'))
+            .catch(err => console.error('SW registration failed', err));
+    }
+
+    // Online/Offline Detection
+    window.addEventListener('online', () => {
+        console.log('Back online');
+    });
+
+    window.addEventListener('offline', () => {
+        console.log('Connection lost');
+    });
+</script>
+</body>
+</html>

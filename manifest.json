@@ -1,0 +1,32 @@
+{
+  "name": "Pantukan Luxury Tourism",
+  "short_name": "Pantukan",
+  "description": "Discover refined travel experiences in Davao de Oro",
+  "start_url": "/login.html",
+  "display": "standalone",
+  "background_color": "#2c3e50",
+  "theme_color": "#2c3e50",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%232c3e50' width='192' height='192'/><text x='96' y='120' text-anchor='middle' font-size='96' fill='%23c9a961' font-family='serif' font-weight='300'>P</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%232c3e50' width='512' height='512'/><text x='256' y='320' text-anchor='middle' font-size='256' fill='%23c9a961' font-family='serif' font-weight='300'>P</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "tourism", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1080&h=1920&fit=crop",
+      "sizes": "1080x1920",
+      "type": "image/jpeg"
+    }
+  ]
+}
