@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Adventure Explorer - Pantukan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .header-actions {
+            background: #2c3e50;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            justify-content: space-between;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-back:hover {
+            background: #354250;
+            transform: translateY(-2px);
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-icon {
+            border-radius: 20px;
+            background:  #ecf0f1;
+            padding: 10px 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .profile-icon:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #2c3e50;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .btn-logout {
+            width: 100%;
+            background: transparent;
+            color: #ecf0f1;
+            border: 1px solid #ecf0f1;
+            padding: 15px 20px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .btn-logout:hover {
+            background: #354250;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+                        url('https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/08/83/03/23.jpg') center/cover;
+            color: #ecf0f1;
+            padding: 120px 20px 80px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: #ecf0f1;
+            margin: 30px auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-bottom: 80px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            align-items: stretch;
+        }
+
+        .package-card {
+            background: #ecf0f1;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            border: 1px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .package-image {
+            width: 100%;
+            height: 320px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .package-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .package-card:hover .package-image::after {
+            opacity: 1;
+        }
+
+        .image-gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 62, 80, 0.8);
+            color: #ecf0f1;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .package-card:hover .image-gallery-nav {
+            opacity: 1;
+        }
+
+        .image-gallery-nav:hover {
+            background: rgba(201, 169, 97, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .image-gallery-nav.prev {
+            left: 10px;
+        }
+
+        .image-gallery-nav.next {
+            right: 10px;
+        }
+
+        .image-gallery-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0;
+        }
+
+        .gallery-dot.active {
+            background: #c9a961;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .package-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .package-content h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .package-content p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1em;
+            line-height: 1.8;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .package-features li {
+            padding: 12px 0;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .package-features li::before {
+            content: '—';
+            color: #c9a961;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+
+        .price {
+            font-size: 2.2em;
+            color: #c9a961;
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        .host-info {
+            font-size: 0.85em;
+            color: #95a5a6;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px 45px;
+            text-decoration: none;
+            font-weight: 400;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            margin-top: auto;
+            align-self: flex-start;
+        }
+
+        .btn:hover {
+            background: #c9a961;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #95a5a6;
+            background: #ecf0f1;
+            border: 2px dashed #e0e0e0;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state::before {
+            content: '✦';
+            display: block;
+            font-size: 3em;
+            color: #c9a961;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 60px 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+                letter-spacing: 4px;
+            }
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 60px 20px;
+            }
+            .header-actions {
+                flex-direction: row;
+                width: 100%;
+            }
+            .right-section {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-info">
+        <div class="header-actions">
+            <a href="../customer-dashboard.html" class="btn-back">◀ Back to Dashboard</a>
+            <div class="right-section">
+                <div class="profile-dropdown">
+                    <button class="profile-icon" id="profileIcon">👤</button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <button class="btn-logout" id="logoutBtn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1>Adventure Explorer</h1>
+        <div class="divider"></div>
+        <p>Get your adrenaline going with water-based thrills</p>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title">Available Packages</h2>
+        <p class="section-subtitle">Thrilling adventures along Pantukan's shores</p>
+        <div class="packages-grid" id="packagesContainer">
+            <!-- Packages will be loaded here -->
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Pantukan Luxury Travel. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || currentUser.role !== 'customer') {
+            window.location.href = 'login.html';
+        }
+
+        const profileIcon = document.getElementById('profileIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        logoutBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../login.html';
+            }
+        });
+
+        function changeImage(event, packageId, direction) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-package-id="${packageId}"]`);
+            const imageDiv = card.querySelector('.package-image');
+            const imagesData = imageDiv.getAttribute('data-images');
+            const images = JSON.parse(imagesData);
+            
+            let currentIndex = parseInt(imageDiv.getAttribute('data-current-index'));
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            
+            imageDiv.style.backgroundImage = `url('${images[currentIndex]}')`;
+            imageDiv.setAttribute('data-current-index', currentIndex);
+            
+            const dots = card.querySelectorAll('.gallery-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function setImage(event, packageId, index) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-package-id="${packageId}"]`);
+            const imageDiv = card.querySelector('.package-image');
+            const imagesData = imageDiv.getAttribute('data-images');
+            const images = JSON.parse(imagesData);
+            
+            imageDiv.style.backgroundImage = `url('${images[index]}')`;
+            imageDiv.setAttribute('data-current-index', index);
+            
+            const dots = card.querySelectorAll('.gallery-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function loadPackages() {
+            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
+            const adventurePackages = packages.filter(pkg => pkg.type === 'adventure');
+            const container = document.getElementById('packagesContainer');
+            
+            if (adventurePackages.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No adventure packages available at the moment.</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Check back soon for exciting new experiences!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = adventurePackages.map(pkg => {
+                const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
+                const imageCount = pkgImages.length;
+                
+                return `
+                <div class="package-card" data-package-id="${pkg.id}">
+                    <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0" data-images='${JSON.stringify(pkgImages)}'>
+                        ${imageCount > 1 ? `
+                            <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
+                            <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
+                            <div class="image-gallery-dots">
+                                ${pkgImages.map((_, index) => `
+                                    <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="package-content">
+                        <h3>${pkg.name}</h3>
+                        <p>${pkg.description}</p>
+                        ${pkg.features && pkg.features.length > 0 ? `
+                            <ul class="package-features">
+                                ${pkg.features.map(feature => `<li>${feature}</li>`).join('')}
+                            </ul>
+                        ` : ''}
+                        <div class="price">₱${pkg.price.toLocaleString()}</div>
+                        <div class="host-info">Hosted by ${pkg.hostName || 'Local Expert'}</div>
+                        <button class="btn" onclick="bookPackage('${pkg.id}')">Book Now</button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function bookPackage(packageId) {
+            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
+            const pkg = packages.find(p => p.id === packageId);
+            
+            if (pkg) {
+                alert(`Thank you for your interest in "${pkg.name}"!\n\nOur concierge team will contact you shortly.\n\nContact: +63 912 345 6789`);
+            }
+        }
+
+        loadPackages();
+    </script>
+</body>
+</html>

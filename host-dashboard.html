@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Add after the viewport meta tag -->
     <meta name="theme-color" content="#2c3e50">
     <meta name="description" content="Pantukan Tourism Dashboard">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +10,6 @@
 
     <title>Pantukan - Host Dashboard</title>
 
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
     <style>
@@ -50,12 +48,11 @@
             text-transform: uppercase;
         }
 
-
         .user-info {
             background: #2c3e50;
             padding: 15px 30px;
             display: flex;
-            align-items: left;
+            align-items: center;
             gap: 30px;
             justify-content: space-between;
         }
@@ -67,24 +64,66 @@
             font-weight: 300;
         }
 
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-icon {
+            border-radius: 20px;
+            background: #ecf0f1;
+            padding: 10px 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .profile-icon:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #2c3e50;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
         .btn-logout {
+            width: 100%;
             background: transparent;
             color: #ecf0f1;
             border: 1px solid #ecf0f1;
-            padding: 10px 15px;
+            padding: 15px 20px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
+            text-align: left;
         }
 
         .btn-logout:hover {
-            background: #354250 ;
-            color:  #ecf0f1;
-            transform: translateY(-2px);
+            background: #354250;
         }
 
         .container {
@@ -224,6 +263,68 @@
 
         .package-card:hover .package-image::after {
             opacity: 1;
+        }
+
+        .image-gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(44, 62, 80, 0.8);
+            color: #ecf0f1;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .package-card:hover .image-gallery-nav {
+            opacity: 1;
+        }
+
+        .image-gallery-nav:hover {
+            background: rgba(201, 169, 97, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .image-gallery-nav.prev {
+            left: 10px;
+        }
+
+        .image-gallery-nav.next {
+            right: 10px;
+        }
+
+        .image-gallery-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gallery-dot.active {
+            background: #c9a961;
+            width: 24px;
+            border-radius: 4px;
         }
 
         .package-content {
@@ -418,6 +519,8 @@
             cursor: pointer;
             font-size: 1em;
             transition: all 0.3s;
+            font-family: 'Garamond', 'Georgia', serif;
+            letter-spacing: 1px;
         }
 
         .btn-add-feature:hover {
@@ -453,7 +556,6 @@
             gap: 15px;
             margin-top: 40px;
         }
-
 
         .btn-submit, .btn-cancel {
             flex: 1;
@@ -515,7 +617,7 @@
             opacity: 0.3;
         }
 
-             nav {
+        nav {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0,0,0,0.08);
@@ -526,7 +628,7 @@
         }
 
         .nav-container {
-            max-width: 1900px   ;
+            max-width: 1900px;
             margin: 0 auto;
             padding: 20px;
             position: relative;
@@ -558,8 +660,6 @@
         .burger-menu.active span:nth-child(3) {
             transform: rotate(45deg) translate(-5px, -6px);
         }
-
-        
 
         nav ul {
             list-style: none;
@@ -604,6 +704,20 @@
             color: #c9a961;
         }
 
+        .image-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .image-thumbnail {
+            width: 60px;
+            height: 60px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #e0e0e0;
+            flex-shrink: 0;
+        }
 
         @media (max-width: 768px) {
             .header {
@@ -658,7 +772,6 @@
             nav ul.active li:nth-child(4) { transition-delay: 0.4s; }
             nav ul.active li:nth-child(5) { transition-delay: 0.5s; }
 
-
             .modal-content {
                 padding: 30px 25px;
             }
@@ -675,7 +788,12 @@
     <div class="top-header">
         <div class="user-info">
             <span class="user-name">Host: <span id="hostName">Juan Dela Cruz</span></span>
-            <button class="btn-logout" onclick="logout()">Logout</button>
+            <div class="profile-dropdown">
+                <button class="profile-icon" id="profileIcon">👤</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="btn-logout" id="logoutBtn">Logout</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="header">
@@ -684,21 +802,20 @@
         </div>
     </div>
 
-        <nav>
+    <nav>
         <div class="nav-container">
             <div class="burger-menu" id="burgerMenu">
                 <span></span>
                 <span></span>
                 <span></span>
-                
             </div>
             <ul id="navMenu">
+                <li><a href="#count-beach">Beach Bliss </a></li>
                 <li><a href="#count-adventure">Adventure Explorer</a></li>
-                <li><a href="#count-culinary">Culinary Journey</a></li>
-                <li><a href="#count-cultural">Cultural Heritage</a></li>
                 <li><a href="#count-nature">Nature Sanctuary</a></li>
-                <li><a href="#count-grand">Grand Experience</a></li>
-                <li><a href="#count-family">Family Collection</a></li>
+                <li><a href="#count-cultural">Cultural Heritage</a></li>
+                <li><a href="#count-culinary">Culinary Journey</a></li>
+                <li><a href="#count-family">Family Collection </a></li>
             </ul>
         </div>
     </nav>
@@ -711,7 +828,18 @@
             <button class="btn-add-package" onclick="openModal()">Add New Package</button>
         </div>
 
-        <!-- Adventure Explorer -->
+        <div class="experience-section">
+            <div class="experience-header">
+                <h3>Beach Bliss & Coastal Escape</h3>
+                <span class="experience-count"><span id="count-beach">0</span> packages</span>
+            </div>
+            <div class="packages-grid" id="beach-grid">
+                <div class="empty-state">
+                    <p>No packages yet. Click "Add New Package" to create one.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="experience-section">
             <div class="experience-header">
                 <h3>Adventure Explorer</h3>
@@ -724,33 +852,6 @@
             </div>
         </div>
 
-        <!-- Culinary Journey -->
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Culinary Journey</h3>
-                <span class="experience-count"><span id="count-culinary">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="culinary-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cultural Heritage -->
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Cultural Heritage</h3>
-                <span class="experience-count"><span id="count-cultural">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="cultural-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Nature Sanctuary -->
         <div class="experience-section">
             <div class="experience-header">
                 <h3>Nature Sanctuary</h3>
@@ -763,23 +864,33 @@
             </div>
         </div>
 
-        <!-- Grand Experience -->
         <div class="experience-section">
             <div class="experience-header">
-                <h3>Grand Experience</h3>
-                <span class="experience-count"><span id="count-grand">0</span> packages</span>
+                <h3>Cultural Heritage</h3>
+                <span class="experience-count"><span id="count-cultural">0</span> packages</span>
             </div>
-            <div class="packages-grid" id="grand-grid">
+            <div class="packages-grid" id="cultural-grid">
                 <div class="empty-state">
                     <p>No packages yet. Click "Add New Package" to create one.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Family Collection -->
         <div class="experience-section">
             <div class="experience-header">
-                <h3>Family Collection</h3>
+                <h3>Culinary Journey</h3>
+                <span class="experience-count"><span id="count-culinary">0</span> packages</span>
+            </div>
+            <div class="packages-grid" id="culinary-grid">
+                <div class="empty-state">
+                    <p>No packages yet. Click "Add New Package" to create one.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="experience-section">
+            <div class="experience-header">
+                <h3>Family Collection / Grand Experience</h3>
                 <span class="experience-count"><span id="count-family">0</span> packages</span>
             </div>
             <div class="packages-grid" id="family-grid">
@@ -790,7 +901,6 @@
         </div>
     </div>
 
-    <!-- Add/Edit Package Modal -->
     <div class="modal" id="packageModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -802,18 +912,18 @@
                     <label for="experienceType">Experience Type</label>
                     <select id="experienceType" required>
                         <option value="">Select Experience Type</option>
+                        <option value="beach">Beach Bliss & Coastal Escape</option>
                         <option value="adventure">Adventure Explorer</option>
-                        <option value="culinary">Culinary Journey</option>
-                        <option value="cultural">Cultural Heritage</option>
                         <option value="nature">Nature Sanctuary</option>
-                        <option value="grand">Grand Experience</option>
-                        <option value="family">Family Collection</option>
+                        <option value="cultural">Cultural Heritage</option>
+                        <option value="culinary">Culinary Journey</option>
+                        <option value="family">Family Collection / Grand Experience</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="packageName">Package Name</label>
-                    <input type="text" id="packageName" required placeholder="Mountain Trek Adventure">
+                    <input type="text" id="packageName" required placeholder="Package Name">
                 </div>
 
                 <div class="form-group">
@@ -827,8 +937,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="packageImage">Image URL</label>
-                    <input type="text" id="packageImage" required placeholder="https://images.unsplash.com/...">
+                    <label>Image URLs</label>
+                    <div class="features-input">
+                        <input type="text" id="imageInput" placeholder="https://images.unsplash.com/...">
+                        <button type="button" class="btn-add-feature" onclick="addImage()">Add</button>
+                    </div>
+                    <div id="imagesList"></div>
                 </div>
 
                 <div class="form-group">
@@ -852,14 +966,40 @@
         let packages = [];
         let editingPackageId = null;
         let features = [];
+        let images = [];
 
-        // Load user info
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (currentUser.name) {
             document.getElementById('hostName').textContent = currentUser.name;
         }
 
-        // Load packages from localStorage
+        // Profile dropdown functionality
+        const profileIcon = document.getElementById('profileIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Toggle dropdown on profile icon click
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        });
+
         function loadPackages() {
             const stored = localStorage.getItem('tourPackages');
             if (stored) {
@@ -868,14 +1008,12 @@
             }
         }
 
-        // Save packages to localStorage
         function savePackages() {
             localStorage.setItem('tourPackages', JSON.stringify(packages));
         }
 
-        // Render all packages
         function renderAllPackages() {
-            const types = ['adventure', 'culinary', 'cultural', 'nature', 'grand', 'family'];
+            const types = ['beach', 'adventure', 'nature', 'cultural', 'culinary', 'family'];
             types.forEach(type => {
                 const grid = document.getElementById(`${type}-grid`);
                 const typePackages = packages.filter(p => p.type === type);
@@ -885,12 +1023,27 @@
                 if (typePackages.length === 0) {
                     grid.innerHTML = '<div class="empty-state"><p>No packages yet. Click "Add New Package" to create one.</p></div>';
                 } else {
-                    grid.innerHTML = typePackages.map(pkg => `
-                        <div class="package-card">
-                            <div class="package-image" style="background-image: url('${pkg.image}')"></div>
+                    grid.innerHTML = typePackages.map(pkg => {
+                        const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
+                        const imageCount = pkgImages.length;
+                        
+                        return `
+                        <div class="package-card" data-package-id="${pkg.id}">
+                            <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
+                                ${imageCount > 1 ? `
+                                    <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
+                                    <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
+                                    <div class="image-gallery-dots">
+                                        ${pkgImages.map((_, index) => `
+                                            <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
                             <div class="package-content">
                                 <h4>${pkg.name}</h4>
                                 <p style="color: #7f8c8d; font-size: 0.95em; margin: 10px 0;">${pkg.description}</p>
+                                ${imageCount > 1 ? `<p style="color: #c9a961; font-size: 0.85em; margin: 5px 0;">📷 ${imageCount} images</p>` : ''}
                                 <div class="package-price">₱${pkg.price.toLocaleString()}</div>
                                 <div class="package-actions">
                                     <button class="btn-edit" onclick="editPackage('${pkg.id}')">Edit</button>
@@ -898,30 +1051,59 @@
                                 </div>
                             </div>
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
                 }
             });
         }
 
-        // Open modal
         function openModal() {
             document.getElementById('packageModal').classList.add('active');
             document.getElementById('modalTitle').textContent = 'Add Package';
             editingPackageId = null;
             document.getElementById('packageForm').reset();
             features = [];
+            images = [];
             renderFeatures();
+            renderImages();
         }
 
-        // Close modal
         function closeModal() {
             document.getElementById('packageModal').classList.remove('active');
             document.getElementById('packageForm').reset();
             features = [];
+            images = [];
             editingPackageId = null;
         }
 
-        // Add feature
+        function addImage() {
+            const input = document.getElementById('imageInput');
+            const value = input.value.trim();
+            if (value) {
+                images.push(value);
+                input.value = '';
+                renderImages();
+            }
+        }
+
+        function renderImages() {
+            const list = document.getElementById('imagesList');
+            list.innerHTML = images.map((image, index) => `
+                <div class="feature-item">
+                    <div class="image-preview">
+                        <div class="image-thumbnail" style="background-image: url('${image}')"></div>
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image}</span>
+                    </div>
+                    <button type="button" class="btn-remove-feature" onclick="removeImage(${index})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function removeImage(index) {
+            images.splice(index, 1);
+            renderImages();
+        }
+
         function addFeature() {
             const input = document.getElementById('featureInput');
             const value = input.value.trim();
@@ -932,7 +1114,6 @@
             }
         }
 
-        // Render features list
         function renderFeatures() {
             const list = document.getElementById('featuresList');
             list.innerHTML = features.map((feature, index) => `
@@ -943,7 +1124,11 @@
             `).join('');
         }
 
-        // Burger menu toggle
+        function removeFeature(index) {
+            features.splice(index, 1);
+            renderFeatures();
+        }
+
         const burgerMenu = document.getElementById('burgerMenu');
         const navMenu = document.getElementById('navMenu');
 
@@ -952,7 +1137,6 @@
             navMenu.classList.toggle('active');
         });
 
-                // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -963,7 +1147,6 @@
             });
         });
 
-        // Close menu when clicking a link
         document.querySelectorAll('nav a').forEach(link => {
             link.addEventListener('click', function() {
                 burgerMenu.classList.remove('active');
@@ -971,15 +1154,13 @@
             });
         });
 
-        // Remove feature
-        function removeFeature(index) {
-            features.splice(index, 1);
-            renderFeatures();
-        }
-
-        // Handle form submission
         document.getElementById('packageForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            if (images.length === 0) {
+                alert('Please add at least one image');
+                return;
+            }
             
             const packageData = {
                 id: editingPackageId || Date.now().toString(),
@@ -987,7 +1168,7 @@
                 name: document.getElementById('packageName').value,
                 description: document.getElementById('packageDescription').value,
                 price: parseFloat(document.getElementById('packagePrice').value),
-                image: document.getElementById('packageImage').value,
+                images: [...images],
                 features: [...features],
                 hostEmail: currentUser.email,
                 hostName: currentUser.name,
@@ -1006,7 +1187,6 @@
             closeModal();
         });
 
-        // Edit package
         function editPackage(id) {
             const pkg = packages.find(p => p.id === id);
             if (pkg) {
@@ -1016,14 +1196,14 @@
                 document.getElementById('packageName').value = pkg.name;
                 document.getElementById('packageDescription').value = pkg.description;
                 document.getElementById('packagePrice').value = pkg.price;
-                document.getElementById('packageImage').value = pkg.image;
+                images = pkg.images ? [...pkg.images] : (pkg.image ? [pkg.image] : []);
                 features = [...pkg.features];
+                renderImages();
                 renderFeatures();
                 document.getElementById('packageModal').classList.add('active');
             }
         }
 
-        // Delete package
         function deletePackage(id) {
             if (confirm('Are you sure you want to delete this package?')) {
                 packages = packages.filter(p => p.id !== id);
@@ -1032,39 +1212,64 @@
             }
         }
 
-        // Logout
-        function logout() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'login.html';
+        function changeImage(event, packageId, direction) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-package-id="${packageId}"]`);
+            const imageDiv = card.querySelector('.package-image');
+            const pkg = packages.find(p => p.id === packageId);
+            const images = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
+            
+            let currentIndex = parseInt(imageDiv.getAttribute('data-current-index'));
+            currentIndex = (currentIndex + direction + images.length) % images.length;
+            
+            imageDiv.style.backgroundImage = `url('${images[currentIndex]}')`;
+            imageDiv.setAttribute('data-current-index', currentIndex);
+            
+            // Update dots
+            const dots = card.querySelectorAll('.gallery-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
         }
 
-        // Close modal when clicking outside
+        function setImage(event, packageId, index) {
+            event.stopPropagation();
+            const card = document.querySelector(`[data-package-id="${packageId}"]`);
+            const imageDiv = card.querySelector('.package-image');
+            const pkg = packages.find(p => p.id === packageId);
+            const images = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
+            
+            imageDiv.style.backgroundImage = `url('${images[index]}')`;
+            imageDiv.setAttribute('data-current-index', index);
+            
+            // Update dots
+            const dots = card.querySelectorAll('.gallery-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
         document.getElementById('packageModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
         });
 
-        // Initialize
         loadPackages();
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.error('SW registration failed', err));
+        }
+
+        window.addEventListener('online', () => {
+            console.log('Back online');
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('Connection lost');
+        });
     </script>
-
-    <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker registered'))
-            .catch(err => console.error('SW registration failed', err));
-    }
-
-    // Online/Offline Detection
-    window.addEventListener('online', () => {
-        console.log('Back online');
-    });
-
-    window.addEventListener('offline', () => {
-        console.log('Connection lost');
-    });
-</script>
 </body>
 </html>

@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
-    <!-- Add after the viewport meta tag -->
     <meta name="theme-color" content="#2c3e50">
     <meta name="description" content="Pantukan Tourism Dashboard">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <title>Pantukan - Luxury Tourism Experience</title>
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
     <style>
@@ -28,12 +26,11 @@
             background: #f8f9fa;
         }
 
-
         .user-info {
             background: #2c3e50;
             padding: 15px 30px;
             display: flex;
-            align-items: left;
+            align-items: center;
             gap: 25px;
             justify-content: space-between;
         }
@@ -45,24 +42,65 @@
             font-weight: 300;
         }
 
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-icon {
+            border-radius: 20px;
+            background:  #ecf0f1;
+            padding: 10px 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-icon:hover {
+            background: #ecf0f1;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #2c3e50;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
         .btn-logout {
+            width: 100%;
             background: transparent;
             color: #ecf0f1;
             border: 1px solid #ecf0f1;
-            padding: 10px 15px;
+            padding: 15px 20px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
+            text-align: left;
         }
 
         .btn-logout:hover {
-            background: #354250 ;
-            color:  #ecf0f1;
-            transform: translateY(-2px);
+            background: #354250;
         }
 
         .hero {
@@ -222,7 +260,6 @@
             letter-spacing: 1px;
         }
 
-        /* FIXED: Added align-items: stretch */
         .packages-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -231,7 +268,6 @@
             align-items: stretch;
         }
 
-        /* FIXED: Added height: 100% and flexbox */
         .package-card {
             background: #ecf0f1;
             overflow: hidden;
@@ -297,13 +333,11 @@
             background-image: url('https://a0.muscache.com/im/pictures/a9bf5b5c-efe0-47a4-88ae-79ee3a74c15e.jpg');
         }
 
-        /* FIXED: Added flexbox properties */
         .package-content {
             padding: 40px;
             display: flex;
             flex-direction: column;
             flex: 1;
-            color: white
         }
 
         .package-content h3 {
@@ -348,7 +382,6 @@
             letter-spacing: 1px;
         }
 
-        /* FIXED: Added margin-top: auto and align-self */
         .btn {
             display: inline-block;
             background: #2c3e50;
@@ -611,6 +644,10 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+
+            .user-info {
+                flex-direction: row;
+            }
         }
 
         @media (max-width: 480px) {
@@ -638,7 +675,12 @@
     <div class="top-header">
         <div class="user-info">
             <span class="user-name">Welcome, <span id="customerName">Guest</span></span>
-            <button class="btn-logout" onclick="logout()">Logout</button>
+            <div class="profile-dropdown">
+                <button class="profile-icon" id="profileIcon">👤</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -654,7 +696,6 @@
                 <span></span>
                 <span></span>
                 <span></span>
-                
             </div>
             <ul id="navMenu">
                 <li><a href="#packages">Experiences & Destinations</a></li>
@@ -688,7 +729,7 @@
         <h2 class="section-title">Our Experiences</h2>
         <p class="section-subtitle">Carefully crafted journeys for the discerning traveler</p>
         <div class="packages-grid">
-            <div class="package-card">
+            <div class="package-card" id="beach">
                 <div class="package-image img-adventure"></div>
                 <div class="package-content">
                     <h3>Beach Bliss & Coastal Escape</h3>
@@ -699,8 +740,7 @@
                         <li>Serene swimming & sunbathing at Puting Bonbon Beach</li>
                         <li>Exclusive resort beach access</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/beach-bliss.html" class="btn">See packages</a>
                 </div>
             </div>
 
@@ -715,8 +755,7 @@
                         <li>Coastal paddle adventures from resort decks</li>
                         <li>Expert-led active beach exploration</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/adventure-explorer.html" class="btn">See packages</a>
                 </div>
             </div>
 
@@ -731,8 +770,7 @@
                         <li>Tranquil beachside immersion in coconut groves</li>
                         <li>Sustainable activities with resort guidance</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/nature-sanctuary.html" class="btn">See packages</a>
                 </div>
             </div>
 
@@ -747,8 +785,7 @@
                         <li>Encounters with local fishing traditions</li>
                         <li>Resort-hosted cultural interactions</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/cultural-heritage.html" class="btn">See packages</a>
                 </div>
             </div>
 
@@ -759,12 +796,11 @@
                     <p>Savor fresh gulf seafood, quirky local treats, and beachside dining that highlight Pantukan's coastal bounty.</p>
                     <ul class="package-features">
                         <li>Grilled tuna, bangus & daily gulf catches</li>
-                        <li>Signature “Dinner by the Beach” experiences</li>
+                        <li>Signature "Dinner by the Beach" experiences</li>
                         <li>Tastings of quirky treats like bacon-wrapped banana</li>
                         <li>Resort dining with tropical fruit accents</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/culinary-journey.html" class="btn">See packages</a>
                 </div>
             </div>
 
@@ -779,8 +815,7 @@
                         <li>Relaxed baywalk strolls & sunset watching</li>
                         <li>Group resort stays with games, volleyball & casual fishing</li>
                     </ul>
-                    
-                    <button class="btn">See packages</button>
+                    <a href="package/family-collection.html" class="btn">See packages</a>
                 </div>
             </div>
         </div>
@@ -823,6 +858,22 @@
         if (!currentUser.email || currentUser.role !== 'customer') {
             window.location.href = 'login.html';
         }
+
+        // Profile dropdown toggle
+        const profileIcon = document.getElementById('profileIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
 
         // Logout function
         function logout() {
@@ -879,24 +930,22 @@
                 }
             });
         });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.error('SW registration failed', err));
+        }
+
+        // Online/Offline Detection
+        window.addEventListener('online', () => {
+            console.log('Back online');
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('Connection lost');
+        });
     </script>
-
-    <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker registered'))
-            .catch(err => console.error('SW registration failed', err));
-    }
-
-    // Online/Offline Detection
-    window.addEventListener('online', () => {
-        console.log('Back online');
-    });
-
-    window.addEventListener('offline', () => {
-        console.log('Connection lost');
-    });
-</script>
 </body>
 </html>
