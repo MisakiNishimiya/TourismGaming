@@ -549,14 +549,9 @@
             }).join('');
         }
 
-        function bookPackage(packageId) {
-            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
-            const pkg = packages.find(p => p.id === packageId);
-            
-            if (pkg) {
-                alert(`Thank you for your interest in "${pkg.name}"!\n\nOur concierge team will contact you shortly.\n\nContact: +63 912 345 6789`);
-            }
-        }
+function bookPackage(packageId) {
+    window.location.href = `booking-transaction.html?package=${packageId}`;
+}
 
         loadPackages();
     </script>

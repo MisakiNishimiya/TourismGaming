@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Complete Your Booking - Pantukan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .header-actions {
+            background: #2c3e50;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-back:hover {
+            background: #354250;
+            transform: translateY(-2px);
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-icon {
+            border-radius: 20px;
+            background: #ecf0f1;
+            padding: 10px 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .profile-icon:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #2c3e50;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .btn-logout {
+            width: 100%;
+            background: transparent;
+            color: #ecf0f1;
+            border: 1px solid #ecf0f1;
+            padding: 15px 20px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .btn-logout:hover {
+            background: #354250;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            color: #7f8c8d;
+            margin-bottom: 60px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .booking-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .booking-form-section {
+            background: white;
+            padding: 50px;
+            border: 1px solid #e8e8e8;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 1em;
+            color: #2c3e50;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #c9a961;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .booking-summary {
+            background: #2c3e50;
+            padding: 40px;
+            color: #ecf0f1;
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        .package-preview {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(236, 240, 241, 0.2);
+        }
+
+        .package-preview img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .package-name {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #c9a961;
+            letter-spacing: 1px;
+        }
+
+        .package-type {
+            font-size: 0.9em;
+            color: #95a5a6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .summary-details {
+            margin-bottom: 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(236, 240, 241, 0.1);
+        }
+
+        .detail-label {
+            color: #95a5a6;
+            font-size: 0.9em;
+        }
+
+        .detail-value {
+            color: #ecf0f1;
+            font-weight: 500;
+        }
+
+        .price-breakdown {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(201, 169, 97, 0.3);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 0.95em;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0 10px;
+            font-size: 1.5em;
+            color: #c9a961;
+            border-top: 1px solid rgba(236, 240, 241, 0.2);
+            margin-top: 15px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #c9a961;
+            color: #2c3e50;
+            padding: 18px 40px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.95em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-weight: 500;
+            margin-top: 30px;
+        }
+
+        .btn-submit:hover {
+            background: #d4b975;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 169, 97, 0.3);
+        }
+
+        .btn-submit:disabled {
+            background: #7f8c8d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .info-box {
+            background: #ecf0f1;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #c9a961;
+        }
+
+        .info-box p {
+            color: #2c3e50;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 40px;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 968px) {
+            .booking-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-summary {
+                position: static;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 40px 20px;
+            }
+
+            .booking-form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-actions">
+        <button class="btn-back" onclick="history.back()">◀ Back</button>
+        <div class="right-section">
+            <div class="profile-dropdown">
+                <button class="profile-icon" id="profileIcon">👤</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="btn-logout" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">Complete Your Booking</h1>
+        <p class="page-subtitle">Just a few details to confirm your experience</p>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <div class="booking-layout">
+            <div class="booking-form-section">
+                <div class="info-box">
+                    <p><strong>Important:</strong> All bookings are subject to availability. Our team will contact you within 24 hours to confirm your reservation and discuss payment options.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="phone" required placeholder="+63 912 345 6789">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Check-in Date *</label>
+                        <input type="date" id="checkInDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Check-out Date *</label>
+                        <input type="date" id="checkOutDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Number of Adults *</label>
+                        <input type="number" id="adults" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Children</label>
+                        <input type="number" id="children" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Special Requests or Notes</label>
+                    <textarea id="specialRequests" placeholder="Any dietary restrictions, accessibility needs, or special occasions?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>How did you hear about us?</label>
+                    <select id="referralSource">
+                        <option value="">Select an option</option>
+                        <option value="social-media">Social Media</option>
+                        <option value="search-engine">Search Engine</option>
+                        <option value="friend">Friend or Family</option>
+                        <option value="travel-agent">Travel Agent</option>
+                        <option value="advertisement">Advertisement</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <button class="btn-submit" id="submitBooking">Confirm Booking</button>
+            </div>
+
+            <div class="booking-summary">
+                <h2 class="summary-title">Booking Summary</h2>
+                
+                <div class="package-preview" id="packagePreview">
+                    <!-- Package details will be loaded here -->
+                </div>
+
+                <div class="summary-details" id="bookingDetails">
+                    <div class="detail-row">
+                        <span class="detail-label">Check-in</span>
+                        <span class="detail-value" id="summaryCheckIn">Select date</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Check-out</span>
+                        <span class="detail-value" id="summaryCheckOut">Select date</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Duration</span>
+                        <span class="detail-value" id="summaryDuration">0 nights</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Guests</span>
+                        <span class="detail-value" id="summaryGuests">1 adult</span>
+                    </div>
+                </div>
+
+                <div class="price-breakdown">
+                    <div class="price-row">
+                        <span>Package Price</span>
+                        <span id="basePrice">₱0</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Number of Nights</span>
+                        <span id="nightsCount">× 0</span>
+                    </div>
+                    <div class="price-row">
+                        <span>Service Fee (5%)</span>
+                        <span id="serviceFee">₱0</span>
+                    </div>
+                    <div class="total-row">
+                        <strong>Total</strong>
+                        <strong id="totalPrice">₱0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Pantukan Luxury Travel. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Authentication check
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || currentUser.role !== 'customer') {
+            window.location.href = '../login.html';
+        }
+
+        // Profile dropdown functionality
+        const profileIcon = document.getElementById('profileIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        logoutBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../login.html';
+            }
+        });
+
+        // Get package ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const packageId = urlParams.get('package');
+        let selectedPackage = null;
+
+        // Load package details
+        function loadPackageDetails() {
+            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
+            selectedPackage = packages.find(p => p.id === packageId);
+
+            if (!selectedPackage) {
+                document.getElementById('errorMessage').textContent = 'Package not found. Please select a package from the listings.';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('submitBooking').disabled = true;
+                return;
+            }
+
+            // Display package preview
+            const pkgImages = selectedPackage.images && selectedPackage.images.length > 0 
+                ? selectedPackage.images 
+                : (selectedPackage.image ? [selectedPackage.image] : []);
+
+            document.getElementById('packagePreview').innerHTML = `
+                ${pkgImages.length > 0 ? `<img src="${pkgImages[0]}" alt="${selectedPackage.name}">` : ''}
+                <div class="package-name">${selectedPackage.name}</div>
+                <div class="package-type">${selectedPackage.type || 'Experience'}</div>
+            `;
+
+            // Prefill user email
+            document.getElementById('email').value = currentUser.email;
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('checkInDate').min = today;
+            document.getElementById('checkOutDate').min = today;
+
+            updateSummary();
+        }
+
+        // Update booking summary
+        function updateSummary() {
+            if (!selectedPackage) return;
+
+            const checkIn = document.getElementById('checkInDate').value;
+            const checkOut = document.getElementById('checkOutDate').value;
+            const adults = parseInt(document.getElementById('adults').value) || 1;
+            const children = parseInt(document.getElementById('children').value) || 0;
+
+            // Update dates
+            document.getElementById('summaryCheckIn').textContent = checkIn || 'Select date';
+            document.getElementById('summaryCheckOut').textContent = checkOut || 'Select date';
+
+            // Calculate nights
+            let nights = 0;
+            if (checkIn && checkOut) {
+                const start = new Date(checkIn);
+                const end = new Date(checkOut);
+                nights = Math.max(0, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+            }
+            document.getElementById('summaryDuration').textContent = `${nights} night${nights !== 1 ? 's' : ''}`;
+
+            // Update guests
+            let guestsText = `${adults} adult${adults !== 1 ? 's' : ''}`;
+            if (children > 0) {
+                guestsText += `, ${children} child${children !== 1 ? 'ren' : ''}`;
+            }
+            document.getElementById('summaryGuests').textContent = guestsText;
+
+            // Calculate pricing
+            const basePrice = selectedPackage.price;
+            const subtotal = basePrice * Math.max(1, nights);
+            const serviceFee = subtotal * 0.05;
+            const total = subtotal + serviceFee;
+
+            document.getElementById('basePrice').textContent = `₱${basePrice.toLocaleString()}`;
+            document.getElementById('nightsCount').textContent = `× ${Math.max(1, nights)}`;
+            document.getElementById('serviceFee').textContent = `₱${serviceFee.toLocaleString()}`;
+            document.getElementById('totalPrice').textContent = `₱${total.toLocaleString()}`;
+        }
+
+        // Form event listeners
+        document.getElementById('checkInDate').addEventListener('change', function() {
+            const checkInDate = this.value;
+            document.getElementById('checkOutDate').min = checkInDate;
+            updateSummary();
+        });
+
+        document.getElementById('checkOutDate').addEventListener('change', updateSummary);
+        document.getElementById('adults').addEventListener('input', updateSummary);
+        document.getElementById('children').addEventListener('input', updateSummary);
+
+        // Submit booking
+        document.getElementById('submitBooking').addEventListener('click', function() {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.style.display = 'none';
+
+            // Validate required fields
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const checkIn = document.getElementById('checkInDate').value;
+            const checkOut = document.getElementById('checkOutDate').value;
+
+            if (!fullName || !email || !phone || !checkIn || !checkOut) {
+                errorMsg.textContent = 'Please fill in all required fields.';
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Validate dates
+            const start = new Date(checkIn);
+            const end = new Date(checkOut);
+            if (end <= start) {
+                errorMsg.textContent = 'Check-out date must be after check-in date.';
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Create booking object
+            const booking = {
+                id: 'BK' + Date.now(),
+                packageId: selectedPackage.id,
+                packageName: selectedPackage.name,
+                customerEmail: currentUser.email,
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                checkIn: checkIn,
+                checkOut: checkOut,
+                adults: parseInt(document.getElementById('adults').value),
+                children: parseInt(document.getElementById('children').value),
+                specialRequests: document.getElementById('specialRequests').value,
+                referralSource: document.getElementById('referralSource').value,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                totalPrice: document.getElementById('totalPrice').textContent
+            };
+
+            // Save booking
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push(booking);
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            // Show success message
+            alert(`Booking Confirmed!\n\nBooking ID: ${booking.id}\n\nThank you for booking "${selectedPackage.name}"!\n\nOur team will contact you at ${email} or ${phone} within 24 hours to confirm your reservation.\n\nYou can view your booking details in your dashboard.`);
+
+            // Redirect to dashboard
+            window.location.href = '../customer-dashboard.html';
+        });
+
+        // Initialize
+        loadPackageDetails();
+    </script>
+</body>
+</html>
