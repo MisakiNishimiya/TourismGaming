@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2c3e50">
-    <meta name="description" content="Pantukan Tourism - A Refined Escape in Davao de Oro">
+    <meta name="description" content="NaviBay Pantukan Tourism - A Refined Escape in Davao de Oro">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Pantukan">
+    <meta name="apple-mobile-web-app-title" content="NaviBay">
     
-    <title>Pantukan - Luxury Tourism Experience</title>
+    <title>NaviBay Pantukan - Luxury Tourism Experience</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -19,36 +19,121 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
     
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             font-family: 'Garamond', 'Georgia', serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #ecf0f1;
+        }
+
+        .splash-container {
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 4em;
+            font-weight: 300;
+            letter-spacing: 12px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: #ecf0f1;
+            margin: 30px auto;
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-bottom: 50px;
+        }
+
+        .loading {
+            font-size: 0.9em;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
     </style>
 </head>
 <body>
+    <div class="splash-container">
+        <div class="logo">NAVIBAY</div>
+        <div class="divider"></div>
+        <div class="tagline">Pantukan Tourism</div>
+        <div class="loading">Loading</div>
+    </div>
+
     <script>
-        // Register Service Worker
+        // Register Service Worker FIRST
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registered'))
-                .catch(err => console.error('SW registration failed', err));
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js', { scope: '/' })
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration.scope);
+                    })
+                    .catch(err => {
+                        console.error('ServiceWorker registration failed:', err);
+                    });
+            });
         }
 
-        // Check if user is already logged in and redirect immediately
-        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        
-        if (currentUser.email && currentUser.role) {
-            // User is logged in, redirect to appropriate dashboard
-            if (currentUser.role === 'host') {
-                window.location.replace('host-dashboard.html');
-            } else {
-                window.location.replace('customer-dashboard.html');
-            }
-        } else {
-            // No user logged in, redirect to login page
-            window.location.replace('login.html');
-        }
+        // Wait for page to fully load before redirecting
+        window.addEventListener('load', () => {
+            // Small delay to show splash screen
+            setTimeout(() => {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                
+                if (currentUser.email && currentUser.role) {
+                    // User is logged in, redirect to appropriate dashboard
+                    if (currentUser.role === 'host') {
+                        window.location.href = 'host-dashboard.html';
+                    } else {
+                        window.location.href = 'customer-dashboard.html';
+                    }
+                } else {
+                    // No user logged in, redirect to login page
+                    window.location.href = 'login.html';
+                }
+            }, 1000); // 1 second delay for splash screen
+        });
     </script>
 </body>
 </html>

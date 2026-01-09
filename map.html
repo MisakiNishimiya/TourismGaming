@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2c3e50">
+    <title>Explore Pantukan - Interactive Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Georgia', serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+
+        .header-actions {
+            background: #2c3e50;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            justify-content: space-between;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-back:hover {
+            background: #354250;
+            transform: translateY(-2px);
+        }
+
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+        }
+
+        .profile-icon {
+            border-radius: 20px;
+            background: #ecf0f1;
+            padding: 10px 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .profile-icon:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background: #2c3e50;
+            min-width: 150px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .btn-logout {
+            width: 100%;
+            background: transparent;
+            color: #ecf0f1;
+            border: 1px solid #ecf0f1;
+            padding: 15px 20px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .btn-logout:hover {
+            background: #354250;
+        }
+
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
+            color: #ecf0f1;
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 300;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+        }
+
+        .page-header p {
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: #ecf0f1;
+            margin: 20px auto;
+        }
+
+        .map-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 20px;
+        }
+
+        .map-controls {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .burger-menu {
+            display: none;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border-radius: 4px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Garamond', 'Georgia', serif;
+            letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+        }
+
+        .burger-menu:hover {
+            background: linear-gradient(135deg, #c9a961 0%, #d4b574 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 169, 97, 0.4);
+        }
+
+        .burger-menu span {
+            font-size: 0.5em;
+            text-transform: uppercase;
+        }
+
+        .controls-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-row label {
+            font-size: 0.8em;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .control-row select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.95em;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 6px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-row select {
+            flex: 1;
+            width: auto;
+        }
+
+        .filter-row button {
+            flex-shrink: 0;
+        }
+
+        .control-row select:hover,
+        .control-row select:focus {
+            border-color: #c9a961;
+            outline: none;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-row button {
+            padding: 14px 32px;
+            border: none;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+            font-weight: 400;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-row button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .control-row button:hover::before {
+            left: 100%;
+        }
+
+        .control-row button:hover {
+            background: linear-gradient(135deg, #c9a961 0%, #d4b574 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(201, 169, 97, 0.4);
+        }
+
+        .control-row button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+        }
+
+        .control-row button:disabled {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 8px rgba(149, 165, 166, 0.2);
+            opacity: 0.6;
+        }
+
+        .control-row button:disabled::before {
+            display: none;
+        }
+
+        .download-section {
+            border-top: 1px solid #e8e8e8;
+            padding-top: 20px;
+        }
+
+        .download-section button {
+            width: 100%;
+            background: white;
+            color: #27ae60;
+            border: 2px solid #27ae60;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.15);
+        }
+
+        .download-section button:hover:not(:disabled) {
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3);
+        }
+
+        .download-section button:disabled {
+            background: white;
+            color: #95a5a6;
+            border-color: #95a5a6;
+            box-shadow: 0 2px 8px rgba(149, 165, 166, 0.15);
+        }
+
+        .location-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            font-size: 0.85em;
+            border-radius: 6px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .location-status::before {
+            content: '●';
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .location-error {
+            background: #e74c3c;
+        }
+
+        .location-error::before {
+            content: '✕';
+            animation: none;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            border: 1px solid rgba(201, 169, 97, 0.1);
+        }
+
+        .legend {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            padding: 35px 40px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(201, 169, 97, 0.1);
+        }
+
+        .legend h3 {
+            font-size: 0.75em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+
+        .legend-grid {
+            display: flex;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.9em;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            background: white;
+            border: 1px solid transparent;
+        }
+
+        .legend-item:hover {
+            background: #f8f9fa;
+            border-color: rgba(201, 169, 97, 0.2);
+            transform: translateX(4px);
+        }
+
+        .legend-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .icon-beach { background: #3498db; }
+        .icon-adventure { background: #e74c3c; }
+        .icon-nature { background: #27ae60; }
+        .icon-cultural { background: #f39c12; }
+        .icon-culinary { background: #9b59b6; }
+        .icon-family { background: #1abc9c; }
+
+        /* Custom Leaflet Popup Styling */
+        .leaflet-popup-content-wrapper {
+            font-family: 'Garamond', 'Georgia', serif;
+            border-radius: 0;
+        }
+
+        .leaflet-popup-content {
+            margin: 15px;
+            min-width: 250px;
+        }
+
+        .popup-title {
+            font-size: 1.2em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .popup-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #c9a961;
+            color: #ecf0f1;
+            font-size: 0.7em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .popup-description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .popup-button {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .popup-button:hover {
+            background: #c9a961;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2em;
+                letter-spacing: 3px;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+                flex-direction: column;
+            }
+
+            .map-controls {
+                padding: 0;
+                background: transparent;
+                box-shadow: none;
+            }
+
+            .burger-menu {
+                display: flex;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .controls-content {
+                display: none;
+                background: white;
+                padding: 20px;
+                border-radius: 6px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
+            .controls-content.active {
+                display: flex;
+            }
+
+            .control-buttons {
+                flex-direction: column;
+            }
+
+            .control-buttons button {
+                width: 100%;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
+            .filter-row select,
+            .filter-row button {
+                width: 100%;
+            }
+
+            .control-row button {
+                width: 100%;
+            }
+
+            .header-actions {
+                padding: 15px 20px;
+                gap: 15px;
+            }
+
+            .btn-back {
+                font-size: 0.7em;
+                padding: 8px 12px;
+            }
+        }
+
+        /* Custom Progress Bar Styling */
+        progress {
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #ecf0f1;
+            border-radius: 4px;
+        }
+
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-actions">
+        <a href="customer-dashboard.html" class="btn-back">◀ Back to Dashboard</a>
+        <div class="right-section">
+            <div class="profile-dropdown">
+                <button class="profile-icon" id="profileIcon">👤</button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="btn-logout" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h1>Explore Pantukan</h1>
+        <div class="divider"></div>
+        <p>Discover destinations and experiences on the map</p>
+    </div>
+
+    <div class="legend">
+        <h3>Map Legend</h3>
+        <div class="legend-grid">
+            <div class="legend-item">
+                <div class="legend-icon icon-beach"></div>
+                <span>Beach Bliss & Coastal Escape</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon icon-adventure"></div>
+                <span>Adventure Explorer</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon icon-nature"></div>
+                <span>Nature Sanctuary</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon icon-cultural"></div>
+                <span>Cultural Heritage</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon icon-culinary"></div>
+                <span>Culinary Journey</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-icon icon-family"></div>
+                <span>Family Collection</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="map-container">
+        <div class="map-controls">
+            <button class="burger-menu" id="burgerMenu">
+                ☰ <span>Map Controls</span>
+            </button>
+            
+            <div class="controls-content" id="controlsContent">
+                <div class="control-row">
+                    <label>Filter by Experience:</label>
+                    <div class="filter-row">
+                        <select id="filterType">
+                            <option value="all">All Experiences</option>
+                            <option value="beach">Beach Bliss</option>
+                            <option value="adventure">Adventure Explorer</option>
+                            <option value="nature">Nature Sanctuary</option>
+                            <option value="cultural">Cultural Heritage</option>
+                            <option value="culinary">Culinary Journey</option>
+                            <option value="family">Family Collection</option>
+                        </select>
+                        <button id="showAllBtn">Show All</button>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <label>Location & Navigation:</label>
+                    <div class="control-buttons">
+                        <button id="myLocationBtn">📍 My Location</button>
+                        <button id="directionsBtn" disabled>🧭 Get Directions</button>
+                    </div>
+                    <span id="locationStatus"></span>
+                </div>
+
+                <div class="download-section">
+                    <button id="downloadMapBtn">📥 Download Offline Maps</button>
+                    <div id="downloadProgress" style="display:none; margin-top: 15px;">
+                        <progress id="progressBar" value="0" max="100" style="width: 100%; height: 8px; border-radius: 4px;"></progress>
+                        <div id="progressText" style="margin-top: 8px; font-size: 0.9em; color: #7f8c8d; text-align: center;">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script>
+        // Check authentication
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || currentUser.role !== 'customer') {
+            window.location.href = 'login.html';
+        }
+
+        // Burger menu toggle
+        const burgerMenu = document.getElementById('burgerMenu');
+        const controlsContent = document.getElementById('controlsContent');
+
+        burgerMenu.addEventListener('click', function() {
+            controlsContent.classList.toggle('active');
+            this.innerHTML = controlsContent.classList.contains('active') 
+                ? '✕ <span>Close Controls</span>' 
+                : '☰ <span>Map Controls</span>';
+        });
+
+        // Profile dropdown
+        const profileIcon = document.getElementById('profileIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+            }
+        });
+
+        logoutBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Pantukan, Davao de Oro coordinates (Municipal Center)
+        const pantukan = [7.1333, 125.9000];
+
+        // Initialize map
+        const map = L.map('map').setView(pantukan, 12);
+
+        // Add OpenStreetMap tile layer
+        const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+            onReady: function() {
+                console.log('Tile layer ready for offline use');
+            }
+        }).addTo(map);
+
+        // Check if offline tiles are available
+        if (window.indexedDB) {
+            const request = indexedDB.open('leaflet.offline', 1);
+            request.onsuccess = () => {
+                console.log('Offline database ready');
+                request.result.close();
+            };
+        }
+
+        // Color mapping for experience types
+        const typeColors = {
+            beach: '#3498db',
+            adventure: '#e74c3c',
+            nature: '#27ae60',
+            cultural: '#f39c12',
+            culinary: '#9b59b6',
+            family: '#1abc9c'
+        };
+
+        // Base locations in Pantukan (default if no packages exist)
+        const baseLocations = [
+            {
+                name: 'Magnaga Waters Beach Resort',
+                type: 'beach',
+                coords: [7.0850, 125.9500],
+                description: '12-hectare beachfront resort with 500-meter shoreline',
+                isBase: true
+            },
+            {
+                name: 'Pantukan Water World',
+                type: 'adventure',
+                coords: [7.1200, 125.8950],
+                description: 'Beach resort with water activities and pools',
+                isBase: true
+            },
+            {
+                name: 'Municipal Center & Baywalk',
+                type: 'cultural',
+                coords: [7.1333, 125.9000],
+                description: 'Town center with baywalk and local markets',
+                isBase: true
+            },
+            {
+                name: 'Puting Bonbon Beach',
+                type: 'beach',
+                coords: [7.0650, 125.9650],
+                description: 'Pristine white sand beach',
+                isBase: true
+            },
+            {
+                name: 'Coastal Mangrove Sanctuary',
+                type: 'nature',
+                coords: [7.1100, 125.9200],
+                description: 'Protected mangrove ecosystem',
+                isBase: true
+            },
+            {
+                name: 'Davao Gulf Fishing Area',
+                type: 'culinary',
+                coords: [7.1450, 125.8800],
+                description: 'Fresh seafood fishing waters',
+                isBase: true
+            },
+            {
+                name: 'Kingking Mining Heritage',
+                type: 'cultural',
+                coords: [7.1500, 125.8700],
+                description: 'Gold mining history site',
+                isBase: true
+            },
+            {
+                name: 'Family Beach & Resort Area',
+                type: 'family',
+                coords: [7.1000, 125.9100],
+                description: 'Family-friendly beach zone',
+                isBase: true
+            }
+        ];
+
+        // Load packages from localStorage and convert to map locations
+        function loadPackageLocations() {
+            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
+            const packageLocations = [];
+
+            packages.forEach(pkg => {
+                const baseLocation = baseLocations.find(loc => loc.type === pkg.type);
+                
+                packageLocations.push({
+                    name: pkg.name,
+                    type: pkg.type,
+                    coords: pkg.coords || (baseLocation ? baseLocation.coords : pantukan),
+                    description: pkg.description,
+                    price: pkg.price,
+                    hostName: pkg.hostName,
+                    packageId: pkg.id,
+                    images: pkg.images || [],
+                    isPackage: true
+                });
+            });
+
+            return packageLocations;
+        }
+
+        let locations = [...baseLocations, ...loadPackageLocations()];
+        let markers = [];
+        let userMarker = null;
+        let userLocation = null;
+        let selectedLocation = null;
+
+        function createCustomIcon(type, isUser = false) {
+            if (isUser) {
+                return L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="
+                        background-color: #3498db;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        border: 4px solid white;
+                        box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+                        animation: pulse 2s infinite;
+                    "></div>
+                    <style>
+                        @keyframes pulse {
+                            0%, 100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.8); }
+                            50% { box-shadow: 0 0 20px rgba(52, 152, 219, 1); }
+                        }
+                    </style>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+            }
+            
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background-color: ${typeColors[type]};
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                "></div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+        }
+
+        function addMarkers(filterType = 'all') {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            locations.forEach(location => {
+                if (filterType === 'all' || location.type === filterType) {
+                    const marker = L.marker(location.coords, {
+                        icon: createCustomIcon(location.type)
+                    }).addTo(map);
+
+                    const typeLabels = {
+                        beach: 'Beach',
+                        adventure: 'Adventure',
+                        nature: 'Nature',
+                        cultural: 'Cultural',
+                        culinary: 'Culinary',
+                        family: 'Family'
+                    };
+
+                    let popupContent;
+                    if (location.isPackage) {
+                        const imageUrl = location.images && location.images[0] ? location.images[0] : '';
+                        popupContent = `
+                            <div>
+                                ${imageUrl ? `<img src="${imageUrl}" style="width: 100%; height: 150px; object-fit: cover; margin-bottom: 10px; border-radius: 4px;">` : ''}
+                                <div class="popup-title">${location.name}</div>
+                                <div class="popup-type">${typeLabels[location.type]} Package</div>
+                                <div class="popup-description">${location.description}</div>
+                                <div style="font-size: 1.3em; color: #c9a961; font-weight: 300; margin: 10px 0;">₱${location.price.toLocaleString()}</div>
+                                <div style="font-size: 0.85em; color: #95a5a6; margin-bottom: 10px;">Hosted by ${location.hostName}</div>
+                                <a href="package/${location.type}.html" class="popup-button">View Details</a>
+                            </div>
+                        `;
+                    } else {
+                        popupContent = `
+                            <div>
+                                <div class="popup-title">${location.name}</div>
+                                <div class="popup-type">${typeLabels[location.type]}</div>
+                                <div class="popup-description">${location.description}</div>
+                                <a href="package/${location.type}.html" class="popup-button">View Packages</a>
+                            </div>
+                        `;
+                    }
+
+                    marker.bindPopup(popupContent);
+
+                    marker.on('click', function() {
+                        selectedLocation = location;
+                        document.getElementById('directionsBtn').disabled = !userLocation;
+                    });
+
+                    markers.push(marker);
+                }
+            });
+        }
+
+        addMarkers();
+
+        document.getElementById('filterType').addEventListener('change', function(e) {
+            addMarkers(e.target.value);
+        });
+
+        function refreshMapData() {
+            locations = [...baseLocations, ...loadPackageLocations()];
+            const currentFilter = document.getElementById('filterType').value;
+            addMarkers(currentFilter);
+        }
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'tourPackages') {
+                refreshMapData();
+            }
+        });
+
+        document.getElementById('showAllBtn').addEventListener('click', function() {
+            document.getElementById('filterType').value = 'all';
+            addMarkers('all');
+            
+            if (markers.length > 0) {
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        });
+
+        document.getElementById('myLocationBtn').addEventListener('click', function() {
+            const statusEl = document.getElementById('locationStatus');
+            statusEl.textContent = 'Getting location...';
+            statusEl.className = 'location-status';
+
+            if (!navigator.geolocation) {
+                statusEl.textContent = 'Geolocation not supported';
+                statusEl.className = 'location-status location-error';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    userLocation = [position.coords.latitude, position.coords.longitude];
+                    
+                    if (userMarker) {
+                        map.removeLayer(userMarker);
+                    }
+
+                    userMarker = L.marker(userLocation, {
+                        icon: createCustomIcon('beach', true)
+                    }).addTo(map);
+
+                    userMarker.bindPopup(`
+                        <div>
+                            <div class="popup-title">Your Location</div>
+                            <div class="popup-description">
+                                Lat: ${position.coords.latitude.toFixed(6)}<br>
+                                Lng: ${position.coords.longitude.toFixed(6)}<br>
+                                Accuracy: ±${Math.round(position.coords.accuracy)}m
+                            </div>
+                        </div>
+                    `).openPopup();
+
+                    map.setView(userLocation, 14);
+
+                    statusEl.textContent = 'Location found!';
+                    statusEl.className = 'location-status';
+                    
+                    if (selectedLocation) {
+                        document.getElementById('directionsBtn').disabled = false;
+                    }
+
+                    setTimeout(() => {
+                        statusEl.textContent = '';
+                    }, 3000);
+                },
+                function(error) {
+                    let errorMsg = 'Location access denied';
+                    if (error.code === 1) errorMsg = 'Location access denied';
+                    else if (error.code === 2) errorMsg = 'Location unavailable';
+                    else if (error.code === 3) errorMsg = 'Location timeout';
+                    
+                    statusEl.textContent = errorMsg;
+                    statusEl.className = 'location-status location-error';
+
+                    setTimeout(() => {
+                        statusEl.textContent = '';
+                    }, 5000);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        });
+
+        document.getElementById('directionsBtn').addEventListener('click', function() {
+            if (!userLocation || !selectedLocation) {
+                alert('Please enable location and select a destination first.');
+                return;
+            }
+
+            const distance = calculateDistance(
+                userLocation[0], userLocation[1],
+                selectedLocation.coords[0], selectedLocation.coords[1]
+            );
+
+            const routeLine = L.polyline([userLocation, selectedLocation.coords], {
+                color: '#c9a961',
+                weight: 4,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+
+            map.fitBounds(routeLine.getBounds().pad(0.2));
+
+            const popup = L.popup()
+                .setLatLng([(userLocation[0] + selectedLocation.coords[0]) / 2, 
+                           (userLocation[1] + selectedLocation.coords[1]) / 2])
+                .setContent(`
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.1em; font-weight: 400; margin-bottom: 10px;">
+                            Distance to ${selectedLocation.name}
+                        </div>
+                        <div style="font-size: 1.5em; color: #c9a961;">
+                            ${distance.toFixed(2)} km
+                        </div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">
+                            <a href="https://www.google.com/maps/dir/?api=1&origin=${userLocation[0]},${userLocation[1]}&destination=${selectedLocation.coords[0]},${selectedLocation.coords[1]}" 
+                               target="_blank" 
+                               style="color: #2c3e50; text-decoration: underline;">
+                                Open in Google Maps
+                            </a>
+                        </div>
+                    </div>
+                `)
+                .openOn(map);
+
+            setTimeout(() => {
+                map.removeLayer(routeLine);
+            }, 30000);
+        });
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                     Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        L.control.scale({
+            metric: true,
+            imperial: false
+        }).addTo(map);
+
+        map.zoomControl.setPosition('topright');
+
+        // Offline Maps Download - IndexedDB Implementation
+        document.getElementById('downloadMapBtn').addEventListener('click', async () => {
+            const progressDiv = document.getElementById('downloadProgress');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const downloadBtn = document.getElementById('downloadMapBtn');
+            
+            const confirmed = confirm(
+                'Download offline maps for Pantukan area?\n\n' +
+                'This will cache map tiles (zoom 11-15) for offline use.\n' +
+                'Approximately 50-100MB will be stored in your browser.'
+            );
+            
+            if (!confirmed) return;
+            
+            progressDiv.style.display = 'block';
+            downloadBtn.disabled = true;
+            downloadBtn.textContent = '⏳ Downloading...';
+            
+            try {
+                const bounds = L.latLngBounds([7.0, 125.8], [7.3, 126.1]);
+                
+                let allTileUrls = [];
+                for (let zoom = 11; zoom <= 14; zoom++) {
+                    const tiles = [];
+                    const tileBounds = bounds.toBBoxString().split(',').map(Number);
+                    
+                    const minTile = latLngToTile(tileBounds[1], tileBounds[0], zoom);
+                    const maxTile = latLngToTile(tileBounds[3], tileBounds[2], zoom);
+                    
+                    for (let x = minTile.x; x <= maxTile.x; x++) {
+                        for (let y = minTile.y; y <= maxTile.y; y++) {
+                            tiles.push({
+                                url: `https://a.tile.openstreetmap.org/${zoom}/${x}/${y}.png`,
+                                key: `${zoom}_${x}_${y}`,
+                                z: zoom,
+                                x: x,
+                                y: y
+                            });
+                        }
+                    }
+                    allTileUrls = allTileUrls.concat(tiles);
+                }
+                
+                const totalTiles = allTileUrls.length;
+                let downloadedTiles = 0;
+                
+                const dbName = 'leaflet.offline';
+                const storeName = 'tileStore';
+                
+                const db = await openDB(dbName, storeName);
+                
+                const batchSize = 5;
+                for (let i = 0; i < allTileUrls.length; i += batchSize) {
+                    const batch = allTileUrls.slice(i, i + batchSize);
+                    
+                    await Promise.all(batch.map(async (tile) => {
+                        try {
+                            const response = await fetch(tile.url);
+                            if (response.ok) {
+                                const blob = await response.blob();
+                                await saveToIndexedDB(db, storeName, tile.key, blob);
+                                downloadedTiles++;
+                                
+                                const progress = (downloadedTiles / totalTiles) * 100;
+                                progressBar.value = progress;
+                                progressText.textContent = `${Math.round(progress)}% (${downloadedTiles}/${totalTiles})`;
+                            }
+                        } catch (err) {
+                            console.warn('Failed to download tile:', tile.url, err);
+                        }
+                    }));
+                    
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                progressBar.value = 100;
+                progressText.textContent = '100%';
+                
+                setTimeout(() => {
+                    alert(`✅ Success! Downloaded ${downloadedTiles} tiles.\n\nYour map will now work offline in the Pantukan area.`);
+                    progressDiv.style.display = 'none';
+                    downloadBtn.disabled = false;
+                    downloadBtn.textContent = '📥 Download Offline Maps';
+                }, 500);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                alert('❌ Download failed: ' + error.message + '\n\nPlease check your internet connection and try again.');
+                progressDiv.style.display = 'none';
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = '📥 Download Offline Maps';
+            }
+        });
+
+        function latLngToTile(lat, lng, zoom) {
+            const n = Math.pow(2, zoom);
+            const x = Math.floor((lng + 180) / 360 * n);
+            const y = Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * n);
+            return { x, y };
+        }
+
+        function openDB(dbName, storeName) {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => resolve(request.result);
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName);
+                    }
+                };
+            });
+        }
+
+        function saveToIndexedDB(db, storeName, key, value) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                const request = store.put(value, key);
+                
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
+    </script>
+</body>
+</html>
