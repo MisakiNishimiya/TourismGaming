@@ -197,6 +197,95 @@
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
 
+        .experience-section.bookings {
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #e8e8e8;
+            margin-bottom: 60px;
+        }
+
+        .bookings-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .bookings-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .bookings-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            color: #2c3e50;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        .bookings-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-status {
+            padding: 8px 12px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background: #fff;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm {
+            color: #27ae60;
+            border-color: #27ae60;
+        }
+
+        .btn-confirm:hover {
+            background: #27ae60;
+            color: #fff;
+        }
+
+        .btn-cancel-bk {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        .btn-cancel-bk:hover {
+            background: #e74c3c;
+            color: #fff;
+        }
+
         .experience-section {
             margin-bottom: 80px;
         }
@@ -850,6 +939,34 @@
             <button class="btn-add-package" onclick="openModal()">Add New Package</button>
         </div>
 
+        <div class="experience-section bookings">
+            <div class="experience-header">
+                <h3>Recent Bookings</h3>
+                <span class="experience-count"><span id="booking-count">0</span> active</span>
+            </div>
+            <div class="bookings-table-container">
+                <table class="bookings-table">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Package</th>
+                            <th>Dates</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-body">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #7f8c8d;">
+                                Loading bookings...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="experience-section">
             <div class="experience-header">
                 <h3>Beach Bliss & Coastal Escape</h3>
@@ -993,6 +1110,10 @@
         let images = [];
 
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!currentUser.email || currentUser.role !== 'host') {
+            window.location.href = 'login.html';
+        }
+
         if (currentUser.name) {
             document.getElementById('hostName').textContent = currentUser.name;
         }
@@ -1023,7 +1144,7 @@
 
         // LIVE CLOUD LISTENER (Real-time sync)
         function initRealTimePackages() {
-            const q = query(collection(db, "packages"));
+            const q = query(collection(db, "packages"), where("hostEmail", "==", currentUser.email));
 
             onSnapshot(q, (querySnapshot) => {
                 packages = [];
@@ -1253,6 +1374,70 @@
             });
         };
 
+        // BOOKINGS SYNC
+        function initRealTimeBookings() {
+            const q = query(collection(db, "bookings"), where("hostEmail", "==", currentUser.email));
+
+            onSnapshot(q, (querySnapshot) => {
+                const bookings = [];
+                querySnapshot.forEach((doc) => {
+                    bookings.push({ id: doc.id, ...doc.data() });
+                });
+                renderBookings(bookings);
+            }, (error) => {
+                console.error("Bookings sync error:", error);
+            });
+        }
+
+        function renderBookings(bookings) {
+            const body = document.getElementById('bookings-body');
+            const countEl = document.getElementById('booking-count');
+            countEl.textContent = bookings.length;
+
+            if (bookings.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #7f8c8d;">No bookings found yet.</td></tr>';
+                return;
+            }
+
+            // Sort by createdAt desc
+            bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            body.innerHTML = bookings.map(bk => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 500; color: #2c3e50;">${bk.fullName}</div>
+                        <div style="font-size: 0.85em; color: #7f8c8d;">${bk.email}</div>
+                    </td>
+                    <td>${bk.packageName}</td>
+                    <td>
+                        <div style="font-size: 0.9em;">In: ${bk.checkIn}</div>
+                        <div style="font-size: 0.9em;">Out: ${bk.checkOut}</div>
+                    </td>
+                    <td style="font-weight: 500; color: #c9a961;">${bk.totalPrice}</td>
+                    <td><span class="status-badge status-${bk.status || 'pending'}">${bk.status || 'pending'}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 5px;">
+                            ${bk.status === 'pending' ? `
+                                <button class="btn-status btn-confirm" onclick="updateBookingStatus('${bk.id}', 'confirmed')">Confirm</button>
+                                <button class="btn-status btn-cancel-bk" onclick="updateBookingStatus('${bk.id}', 'cancelled')">Cancel</button>
+                            ` : `
+                                <span style="font-size: 0.8em; color: #999;">Finalized</span>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.updateBookingStatus = async function (id, status) {
+            if (!confirm(`Are you sure you want to set this booking to ${status}?`)) return;
+            try {
+                await setDoc(doc(db, "bookings", id), { status }, { merge: true });
+            } catch (error) {
+                alert("Status Update Error: " + error.message);
+            }
+        };
+
         // Navigation burger menu
         const burgerMenu = document.getElementById('burgerMenu');
         const navMenu = document.getElementById('navMenu');
@@ -1263,6 +1448,7 @@
 
         // Start Cloud Sync
         initRealTimePackages();
+        initRealTimeBookings();
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');

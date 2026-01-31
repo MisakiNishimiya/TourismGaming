@@ -451,6 +451,104 @@
             font-size: 0.95em;
         }
 
+        .bookings-section {
+            max-width: 1400px;
+            margin: 80px auto;
+            padding: 0 40px;
+        }
+
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .booking-card {
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .booking-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .booking-title {
+            font-size: 1.25em;
+            color: #2c3e50;
+            letter-spacing: 1px;
+        }
+
+        .booking-status {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 6px 12px;
+            background: #f8f9fa;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .detail-item span {
+            display: block;
+            color: #95a5a6;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .booking-footer {
+            margin-top: auto;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-price {
+            font-size: 1.4em;
+            color: #c9a961;
+            font-weight: 300;
+        }
+
         .gallery {
             background: #f8f9fa;
             padding: 0px 40px;
@@ -743,6 +841,7 @@
             </div>
             <ul id="navMenu">
                 <li><a href="#packages">Experiences & Destinations</a></li>
+                <li><a href="#my-bookings" id="navBookings" style="display: none;">My Bookings</a></li>
                 <li><a href="map.html">Explore Map</a></li>
                 <li><a href="#gallery">Gallery</a></li>
                 <li><a href="#contact">Inquire</a></li>
@@ -872,6 +971,25 @@
         </div>
     </div>
 
+    <!-- Dynamic section for all live packages -->
+    <div class="container" id="all-packages-section" style="margin-top: 50px;">
+        <h2 class="section-title">Latest Experiences</h2>
+        <p class="section-subtitle">Freshly added journeys from our hosts</p>
+        <div class="packages-grid" id="dynamic-packages-grid">
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #7f8c8d;">
+                <p>Connecting to NaviBay cloud...</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="bookings-section" id="my-bookings" style="display: none;">
+        <h2 class="section-title">My Bookings</h2>
+        <p class="section-subtitle">Your upcoming and past experiences with NaviBay</p>
+        <div class="bookings-grid" id="bookingsGrid">
+            <!-- Bookings will be loaded here -->
+        </div>
+    </section>
+
     <section class="gallery" id="gallery">
         <h2 class="section-title">Discover Pantukan</h2>
         <p class="section-subtitle">A visual journey through our pristine landscapes</p>
@@ -931,7 +1049,7 @@
         }
 
         function renderPackages() {
-            const container = document.querySelector('.packages-grid');
+            const container = document.getElementById('dynamic-packages-grid');
             if (!container) return;
 
             if (allPackages.length === 0) {
@@ -958,7 +1076,7 @@
                         </ul>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
                             <span style="font-size: 1.2em; color: #c9a961; font-weight: bold;">₱${(pkg.price || 0).toLocaleString()}</span>
-                            <a href="package/booking-transaction.html?id=${pkg.id}" class="btn" style="padding: 10px 20px; font-size: 0.8em;">Book Now</a>
+                            <a href="package/booking-transaction.html?package=${pkg.id}" class="btn" style="padding: 10px 20px; font-size: 0.8em;">Book Now</a>
                         </div>
                     </div>
                 </div>
@@ -1017,7 +1135,7 @@
         });
 
 
-        cards.forEach(card => observer.observe(card));
+        // cards.forEach(card => observer.observe(card)); // Removed broken reference causing script to crash
 
         document.querySelectorAll('.btn').forEach(btn => {
             btn.addEventListener('click', function (e) {
@@ -1028,8 +1146,73 @@
             });
         });
 
+        // BOOKINGS SYNC
+        function initRealTimeBookings() {
+            const q = query(collection(db, "bookings"), where("customerEmail", "==", currentUser.email));
+
+            onSnapshot(q, (querySnapshot) => {
+                const bookings = [];
+                querySnapshot.forEach((doc) => {
+                    bookings.push({ id: doc.id, ...doc.data() });
+                });
+                renderBookings(bookings);
+            }, (error) => {
+                console.error("Bookings sync error:", error);
+            });
+        }
+
+        function renderBookings(bookings) {
+            const container = document.getElementById('bookingsGrid');
+            const section = document.getElementById('my-bookings');
+            const navLink = document.getElementById('navBookings');
+
+            if (bookings.length === 0) {
+                section.style.display = 'none';
+                if (navLink) navLink.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            if (navLink) navLink.style.display = 'block';
+
+            // Sort by createdAt desc
+            bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            container.innerHTML = bookings.map(bk => `
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <div class="booking-title">${bk.packageName}</div>
+                        <div class="booking-status status-${bk.status || 'pending'}">${bk.status || 'pending'}</div>
+                    </div>
+                    <div class="booking-details">
+                        <div class="detail-item">
+                            <span>Check-in</span>
+                            ${bk.checkIn}
+                        </div>
+                        <div class="detail-item">
+                            <span>Check-out</span>
+                            ${bk.checkOut}
+                        </div>
+                        <div class="detail-item">
+                            <span>Guests</span>
+                            ${bk.adults} Adults${bk.children > 0 ? `, ${bk.children} Children` : ''}
+                        </div>
+                        <div class="detail-item">
+                            <span>Booking ID</span>
+                            ${bk.id.substring(0, 8)}...
+                        </div>
+                    </div>
+                    <div class="booking-footer">
+                        <div class="booking-price">${bk.totalPrice}</div>
+                        <div style="font-size: 0.8em; color: #95a5a6;">Booked on ${new Date(bk.createdAt).toLocaleDateString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // Initialize Cloud Connection
         initRealTimeCloud();
+        initRealTimeBookings();
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {

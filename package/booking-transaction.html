@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
@@ -90,7 +91,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
 
@@ -370,6 +371,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header-actions">
         <button class="btn-back" onclick="history.back()">◀ Back</button>
@@ -392,7 +394,8 @@
         <div class="booking-layout">
             <div class="booking-form-section">
                 <div class="info-box">
-                    <p><strong>Important:</strong> All bookings are subject to availability. Our team will contact you within 24 hours to confirm your reservation and discuss payment options.</p>
+                    <p><strong>Important:</strong> All bookings are subject to availability. Our team will contact you
+                        within 24 hours to confirm your reservation and discuss payment options.</p>
                 </div>
 
                 <div class="form-group">
@@ -435,7 +438,8 @@
 
                 <div class="form-group">
                     <label>Special Requests or Notes</label>
-                    <textarea id="specialRequests" placeholder="Any dietary restrictions, accessibility needs, or special occasions?"></textarea>
+                    <textarea id="specialRequests"
+                        placeholder="Any dietary restrictions, accessibility needs, or special occasions?"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -456,7 +460,7 @@
 
             <div class="booking-summary">
                 <h2 class="summary-title">Booking Summary</h2>
-                
+
                 <div class="package-preview" id="packagePreview">
                     <!-- Package details will be loaded here -->
                 </div>
@@ -506,7 +510,9 @@
         <p>© 2026 Pantukan Luxury Travel. All rights reserved.</p>
     </footer>
 
-    <script>
+    <script type="module">
+        import { db, doc, getDoc, collection, addDoc } from '../js/firebase-config.js';
+
         // Authentication check
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!currentUser.email || currentUser.role !== 'customer') {
@@ -518,18 +524,18 @@
         const dropdownMenu = document.getElementById('dropdownMenu');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        profileIcon.addEventListener('click', function(e) {
+        profileIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdownMenu.classList.toggle('active');
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
 
-        logoutBtn.addEventListener('click', function(e) {
+        logoutBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
@@ -542,12 +548,26 @@
         const packageId = urlParams.get('package');
         let selectedPackage = null;
 
-        // Load package details
-        function loadPackageDetails() {
-            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
-            selectedPackage = packages.find(p => p.id === packageId);
+        // Load package details from Cloud Firestore
+        async function loadPackageDetails() {
+            if (!packageId) {
+                document.getElementById('errorMessage').textContent = 'Package ID missing. Please select a package from the listings.';
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('submitBooking').disabled = true;
+                return;
+            }
 
-            if (!selectedPackage) {
+            try {
+                const docRef = doc(db, "packages", packageId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    selectedPackage = { id: docSnap.id, ...docSnap.data() };
+                } else {
+                    throw new Error("Package not found in database.");
+                }
+            } catch (error) {
+                console.error("Error loading package:", error);
                 document.getElementById('errorMessage').textContent = 'Package not found. Please select a package from the listings.';
                 document.getElementById('errorMessage').style.display = 'block';
                 document.getElementById('submitBooking').disabled = true;
@@ -555,18 +575,19 @@
             }
 
             // Display package preview
-            const pkgImages = selectedPackage.images && selectedPackage.images.length > 0 
-                ? selectedPackage.images 
-                : (selectedPackage.image ? [selectedPackage.image] : []);
+            const pkgImages = selectedPackage.images && selectedPackage.images.length > 0
+                ? selectedPackage.images
+                : (selectedPackage.image ? [selectedPackage.image] : ['https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800']);
 
             document.getElementById('packagePreview').innerHTML = `
-                ${pkgImages.length > 0 ? `<img src="${pkgImages[0]}" alt="${selectedPackage.name}">` : ''}
+                <img src="${pkgImages[0]}" alt="${selectedPackage.name}">
                 <div class="package-name">${selectedPackage.name}</div>
                 <div class="package-type">${selectedPackage.type || 'Experience'}</div>
             `;
 
             // Prefill user email
             document.getElementById('email').value = currentUser.email;
+            document.getElementById('fullName').value = currentUser.name || '';
 
             // Set minimum date to today
             const today = new Date().toISOString().split('T')[0];
@@ -606,7 +627,7 @@
             document.getElementById('summaryGuests').textContent = guestsText;
 
             // Calculate pricing
-            const basePrice = selectedPackage.price;
+            const basePrice = selectedPackage.price || 0;
             const subtotal = basePrice * Math.max(1, nights);
             const serviceFee = subtotal * 0.05;
             const total = subtotal + serviceFee;
@@ -618,7 +639,7 @@
         }
 
         // Form event listeners
-        document.getElementById('checkInDate').addEventListener('change', function() {
+        document.getElementById('checkInDate').addEventListener('change', function () {
             const checkInDate = this.value;
             document.getElementById('checkOutDate').min = checkInDate;
             updateSummary();
@@ -628,8 +649,8 @@
         document.getElementById('adults').addEventListener('input', updateSummary);
         document.getElementById('children').addEventListener('input', updateSummary);
 
-        // Submit booking
-        document.getElementById('submitBooking').addEventListener('click', function() {
+        // Submit booking to Cloud Firestore
+        document.getElementById('submitBooking').addEventListener('click', async function () {
             const errorMsg = document.getElementById('errorMessage');
             errorMsg.style.display = 'none';
 
@@ -657,40 +678,51 @@
                 return;
             }
 
-            // Create booking object
-            const booking = {
-                id: 'BK' + Date.now(),
-                packageId: selectedPackage.id,
-                packageName: selectedPackage.name,
-                customerEmail: currentUser.email,
-                fullName: fullName,
-                email: email,
-                phone: phone,
-                checkIn: checkIn,
-                checkOut: checkOut,
-                adults: parseInt(document.getElementById('adults').value),
-                children: parseInt(document.getElementById('children').value),
-                specialRequests: document.getElementById('specialRequests').value,
-                referralSource: document.getElementById('referralSource').value,
-                status: 'pending',
-                createdAt: new Date().toISOString(),
-                totalPrice: document.getElementById('totalPrice').textContent
-            };
+            this.disabled = true;
+            this.textContent = 'Processing...';
 
-            // Save booking
-            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-            bookings.push(booking);
-            localStorage.setItem('bookings', JSON.stringify(bookings));
+            try {
+                // Create booking object
+                const booking = {
+                    packageId: selectedPackage.id,
+                    packageName: selectedPackage.name,
+                    customerEmail: currentUser.email,
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    checkIn: checkIn,
+                    checkOut: checkOut,
+                    adults: parseInt(document.getElementById('adults').value),
+                    children: parseInt(document.getElementById('children').value),
+                    specialRequests: document.getElementById('specialRequests').value,
+                    referralSource: document.getElementById('referralSource').value,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    totalPrice: document.getElementById('totalPrice').textContent,
+                    hostEmail: selectedPackage.hostEmail || '' // Store who the package belongs to
+                };
 
-            // Show success message
-            alert(`Booking Confirmed!\n\nBooking ID: ${booking.id}\n\nThank you for booking "${selectedPackage.name}"!\n\nOur team will contact you at ${email} or ${phone} within 24 hours to confirm your reservation.\n\nYou can view your booking details in your dashboard.`);
+                // Save booking to Cloud Firestore
+                const docRef = await addDoc(collection(db, "bookings"), booking);
 
-            // Redirect to dashboard
-            window.location.href = '../customer-dashboard.html';
+                // Show success message
+                alert(`Booking Confirmed!\n\nBooking Reference: ${docRef.id}\n\nThank you for booking "${selectedPackage.name}"!\n\nOur team will contact you at ${email} or ${phone} within 24 hours to confirm your reservation.`);
+
+                // Redirect to dashboard
+                window.location.href = '../customer-dashboard.html';
+            } catch (error) {
+                console.error("Error saving booking:", error);
+                errorMsg.textContent = 'Database Error: ' + error.message;
+                errorMsg.style.display = 'block';
+                this.disabled = false;
+                this.textContent = 'Confirm Booking';
+            }
         });
 
         // Initialize
         loadPackageDetails();
     </script>
+    </script>
 </body>
+
 </html>

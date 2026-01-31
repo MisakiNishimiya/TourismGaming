@@ -494,10 +494,7 @@
     </div>
 
     <script type="module">
-        import {
-            db, auth, doc, setDoc, getDoc,
-            createUserWithEmailAndPassword, signInWithEmailAndPassword
-        } from './js/firebase-config.js';
+        import { db, doc, setDoc, getDoc } from './js/firebase-config.js';
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
@@ -561,7 +558,7 @@
             document.getElementById('loginContainer').style.display = 'block';
         });
 
-        // Registration (Auth + Firestore Profile)
+        // Registration (Direct Firestore)
         document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
@@ -579,16 +576,20 @@
             }
 
             try {
-                // 1. Create official account
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                // Check if user exists
+                const userRef = doc(db, "users", email);
+                const userSnap = await getDoc(userRef);
 
-                // 2. Save profile details
-                await setDoc(doc(db, "users", user.uid), {
-                    name: name,
-                    role: userType,
-                    email: email,
-                    createdAt: new Date().toISOString()
+                if (userSnap.exists()) {
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    messageDiv.textContent = 'Email already registered.';
+                    return;
+                }
+
+                // Save to Cloud Database
+                await setDoc(userRef, {
+                    name, role: userType, password, email, createdAt: new Date().toISOString()
                 });
 
                 messageDiv.className = 'message success';
@@ -600,16 +601,14 @@
                     document.getElementById('loginContainer').style.display = 'block';
                     document.getElementById('registerForm').reset();
                 }, 1500);
-
             } catch (error) {
-                console.error("Registration Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = error.message.replace('Firebase:', '').trim();
+                messageDiv.textContent = 'Database Error: ' + error.message;
             }
         });
 
-        // Login (Auth Service)
+        // Login (Direct Firestore)
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const email = document.getElementById('email').value.trim().toLowerCase();
@@ -617,47 +616,43 @@
             const messageDiv = document.getElementById('message');
 
             try {
-                // 1. Sign In
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                const userRef = doc(db, "users", email);
+                const userSnap = await getDoc(userRef);
 
-                // 2. Fetch Profile from Firestore
-                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userSnap.exists()) {
+                    const snapData = userSnap.data();
+                    if (snapData.password === password) {
+                        const userData = { email, name: snapData.name, role: snapData.role };
+                        messageDiv.className = 'message success';
+                        messageDiv.style.display = 'block';
+                        messageDiv.textContent = `Welcome, ${userData.name}!`;
 
-                if (userDoc.exists()) {
-                    const snapData = userDoc.data();
-                    const userData = {
-                        email: email,
-                        name: snapData.name,
-                        role: snapData.role,
-                        uid: user.uid
-                    };
-
-                    messageDiv.className = 'message success';
-                    messageDiv.style.display = 'block';
-                    messageDiv.textContent = `Welcome back, ${userData.name}!`;
-
-                    localStorage.setItem('currentUser', JSON.stringify(userData));
-                    setTimeout(() => {
-                        window.location.href = userData.role === 'host' ? 'host-dashboard.html' : 'customer-dashboard.html';
-                    }, 1200);
+                        localStorage.setItem('currentUser', JSON.stringify(userData));
+                        setTimeout(() => {
+                            window.location.href = userData.role === 'host' ? 'host-dashboard.html' : 'customer-dashboard.html';
+                        }, 1200);
+                    } else {
+                        throw new Error('Incorrect password.');
+                    }
+                } else {
+                    throw new Error('Account not found.');
                 }
             } catch (error) {
-                console.error("Login Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = "Login Failed: " + error.message.replace('Firebase:', '').trim();
+                messageDiv.textContent = error.message;
             }
         });
 
-        // Message Clear Logic (Global within Module)
+        // Message Clear Logic
         window.clearMessage = () => document.getElementById('message').style.display = 'none';
         window.clearRegisterMessage = () => document.getElementById('registerMessage').style.display = 'none';
 
         document.getElementById('email').addEventListener('input', clearMessage);
         document.getElementById('password').addEventListener('input', clearMessage);
         ['regName', 'regEmail', 'regPassword', 'regConfirmPassword'].forEach(id => {
-            document.getElementById(id).addEventListener('input', clearRegisterMessage);
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', clearRegisterMessage);
         });
         document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
     </script>

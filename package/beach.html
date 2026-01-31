@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
@@ -70,7 +71,7 @@
 
         .profile-icon {
             border-radius: 20px;
-            background:  #ecf0f1;
+            background: #ecf0f1;
             padding: 10px 10px;
             font-size: 1.2em;
             cursor: pointer;
@@ -97,7 +98,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
 
@@ -128,7 +129,7 @@
 
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
-                        url('https://beachresortfinder.com/resorts/magnaga-waters-beach-resort/cover.jpg') center/cover;
+                url('https://beachresortfinder.com/resorts/magnaga-waters-beach-resort/cover.jpg') center/cover;
             color: #ecf0f1;
             padding: 120px 20px 80px;
             text-align: center;
@@ -199,7 +200,7 @@
 
         .package-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
         .package-image {
@@ -218,7 +219,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
             opacity: 0;
             transition: opacity 0.4s;
         }
@@ -395,22 +396,27 @@
                 font-size: 2.5em;
                 letter-spacing: 4px;
             }
+
             .packages-grid {
                 grid-template-columns: 1fr;
             }
+
             .container {
                 padding: 60px 20px;
             }
+
             .header-actions {
                 flex-direction: row;
                 width: 100%;
             }
+
             .right-section {
                 gap: 10px;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="header-actions">
         <a href="../customer-dashboard.html" class="btn-back">◀ Back to Dashboard</a>
@@ -442,28 +448,30 @@
         <p>© 2026 Pantukan Luxury Travel. All rights reserved.</p>
     </footer>
 
-    <script>
+    <script type="module">
+        import { db, collection, query, where, onSnapshot } from '../js/firebase-config.js';
+
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!currentUser.email || currentUser.role !== 'customer') {
-            window.location.href = 'login.html';
+            window.location.href = '../login.html';
         }
 
         const profileIcon = document.getElementById('profileIcon');
         const dropdownMenu = document.getElementById('dropdownMenu');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        profileIcon.addEventListener('click', function(e) {
+        profileIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdownMenu.classList.toggle('active');
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
 
-        logoutBtn.addEventListener('click', function(e) {
+        logoutBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
@@ -471,95 +479,107 @@
             }
         });
 
-        function changeImage(event, packageId, direction) {
+        // Global gallery functions exposed to window for onclick handlers
+        window.changeImage = function (event, packageId, direction) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
             const imageDiv = card.querySelector('.package-image');
             const imagesData = imageDiv.getAttribute('data-images');
             const images = JSON.parse(imagesData);
-            
+
             let currentIndex = parseInt(imageDiv.getAttribute('data-current-index'));
             currentIndex = (currentIndex + direction + images.length) % images.length;
-            
+
             imageDiv.style.backgroundImage = `url('${images[currentIndex]}')`;
             imageDiv.setAttribute('data-current-index', currentIndex);
-            
+
             const dots = card.querySelectorAll('.gallery-dot');
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentIndex);
             });
-        }
+        };
 
-        function setImage(event, packageId, index) {
+        window.setImage = function (event, packageId, index) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
             const imageDiv = card.querySelector('.package-image');
             const imagesData = imageDiv.getAttribute('data-images');
             const images = JSON.parse(imagesData);
-            
+
             imageDiv.style.backgroundImage = `url('${images[index]}')`;
             imageDiv.setAttribute('data-current-index', index);
-            
+
             const dots = card.querySelectorAll('.gallery-dot');
             dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
-        }
+        };
 
-        function loadPackages() {
-            const packages = JSON.parse(localStorage.getItem('tourPackages') || '[]');
-            const beachPackages = packages.filter(pkg => pkg.type === 'beach');
+        window.bookPackage = function (packageId) {
+            window.location.href = `booking-transaction.html?package=${packageId}`;
+        };
+
+        // Real-time Cloud Loading
+        function initCategoryCloud() {
+            const q = query(collection(db, "packages"), where("type", "==", "beach"));
             const container = document.getElementById('packagesContainer');
-            
-            if (beachPackages.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <p>No beach packages available at the moment.</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">Check back soon for exciting new experiences!</p>
-                    </div>
-                `;
-                return;
-            }
 
-            container.innerHTML = beachPackages.map(pkg => {
-                const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
-                const imageCount = pkgImages.length;
-                
-                return `
-                <div class="package-card" data-package-id="${pkg.id}">
-                    <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0" data-images='${JSON.stringify(pkgImages)}'>
-                        ${imageCount > 1 ? `
-                            <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
-                            <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
-                            <div class="image-gallery-dots">
-                                ${pkgImages.map((_, index) => `
-                                    <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
-                                `).join('')}
-                            </div>
-                        ` : ''}
+            onSnapshot(q, (querySnapshot) => {
+                const packages = [];
+                querySnapshot.forEach((doc) => {
+                    packages.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (packages.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <p>No beach packages available at the moment.</p>
+                            <p style="font-size: 0.9em; margin-top: 10px;">Check back soon for exciting new experiences!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = packages.map(pkg => {
+                    const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : ['https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800']);
+                    const imageCount = pkgImages.length;
+
+                    return `
+                    <div class="package-card" data-package-id="${pkg.id}">
+                        <div class="package-image" style="background-image: url('${pkgImages[0]}')" data-current-index="0" data-images='${JSON.stringify(pkgImages)}'>
+                            ${imageCount > 1 ? `
+                                <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
+                                <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
+                                <div class="image-gallery-dots">
+                                    ${pkgImages.map((_, index) => `
+                                        <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="package-content">
+                            <h3>${pkg.name}</h3>
+                            <p>${pkg.description}</p>
+                            ${pkg.features && pkg.features.length > 0 ? `
+                                <ul class="package-features">
+                                    ${pkg.features.map(feature => `<li>${feature}</li>`).join('')}
+                                </ul>
+                            ` : ''}
+                            <div class="price">₱${(pkg.price || 0).toLocaleString()}</div>
+                            <div class="host-info">Hosted by ${pkg.hostName || 'Local Expert'}</div>
+                            <button class="btn" onclick="bookPackage('${pkg.id}')">Book Now</button>
+                        </div>
                     </div>
-                    <div class="package-content">
-                        <h3>${pkg.name}</h3>
-                        <p>${pkg.description}</p>
-                        ${pkg.features && pkg.features.length > 0 ? `
-                            <ul class="package-features">
-                                ${pkg.features.map(feature => `<li>${feature}</li>`).join('')}
-                            </ul>
-                        ` : ''}
-                        <div class="price">₱${pkg.price.toLocaleString()}</div>
-                        <div class="host-info">Hosted by ${pkg.hostName || 'Local Expert'}</div>
-                        <button class="btn" onclick="bookPackage('${pkg.id}')">Book Now</button>
-                    </div>
-                </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }, (error) => {
+                console.error("Cloud Error:", error);
+                container.innerHTML = `<p style="text-align: center; color: #e74c3c;">Error loading packages from cloud.</p>`;
+            });
         }
 
-        function bookPackage(packageId) {
-    window.location.href = `booking-transaction.html?package=${packageId}`;
-}
-
-        loadPackages();
+        initCategoryCloud();
     </script>
 </body>
+
 </html>
