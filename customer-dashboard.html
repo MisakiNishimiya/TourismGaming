@@ -899,7 +899,9 @@
         </p>
     </footer>
 
-    <script>
+    <script type="module">
+        import { db, doc, getDoc, collection, query, onSnapshot } from './js/firebase-config.js';
+
         // Load user info
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (currentUser.name) {
@@ -911,6 +913,59 @@
             window.location.href = 'login.html';
         }
 
+        // Dashboard Data Handling
+        let allPackages = [];
+
+        function initRealTimeCloud() {
+            const q = query(collection(db, "packages"));
+
+            onSnapshot(q, (querySnapshot) => {
+                allPackages = [];
+                querySnapshot.forEach((doc) => {
+                    allPackages.push({ id: doc.id, ...doc.data() });
+                });
+                renderPackages();
+            }, (error) => {
+                console.error("Cloud Error:", error);
+            });
+        }
+
+        function renderPackages() {
+            const container = document.querySelector('.packages-grid');
+            if (!container) return;
+
+            if (allPackages.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #7f8c8d;">
+                        <p>No tourism packages found in the cloud yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = allPackages.map(pkg => {
+                const img = (pkg.images && pkg.images.length > 0) ? pkg.images[0] : (pkg.image || 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800');
+
+                return `
+                <div class="package-card" id="${pkg.id}">
+                    <div class="package-image" style="background-image: url('${img}')"></div>
+                    <div class="package-content">
+                        <span style="font-size: 0.7em; text-transform: uppercase; color: #c9a961; letter-spacing: 2px;">${pkg.type}</span>
+                        <h3>${pkg.name}</h3>
+                        <p>${pkg.description}</p>
+                        <ul class="package-features">
+                            ${(pkg.features || []).slice(0, 3).map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                            <span style="font-size: 1.2em; color: #c9a961; font-weight: bold;">₱${(pkg.price || 0).toLocaleString()}</span>
+                            <a href="package/booking-transaction.html?id=${pkg.id}" class="btn" style="padding: 10px 20px; font-size: 0.8em;">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
         // Profile dropdown toggle
         const profileIcon = document.getElementById('profileIcon');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -920,7 +975,6 @@
             dropdownMenu.classList.toggle('active');
         });
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function (e) {
             if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
@@ -928,12 +982,12 @@
         });
 
         // Logout function
-        function logout() {
+        window.logout = function () {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
-        }
+        };
 
         // Burger menu toggle
         const burgerMenu = document.getElementById('burgerMenu');
@@ -944,9 +998,8 @@
             navMenu.classList.toggle('active');
         });
 
-        // Close menu when clicking a link
         document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function () {
+            link.addEventListener('click', () => {
                 burgerMenu.classList.remove('active');
                 navMenu.classList.remove('active');
             });
@@ -963,14 +1016,6 @@
             });
         });
 
-        const cards = document.querySelectorAll('.package-card');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animation = 'fadeIn 0.8s ease-out';
-                }
-            });
-        }, { threshold: 0.1 });
 
         cards.forEach(card => observer.observe(card));
 
@@ -982,6 +1027,9 @@
                 }
             });
         });
+
+        // Initialize Cloud Connection
+        initRealTimeCloud();
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {

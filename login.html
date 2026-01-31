@@ -493,7 +493,9 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { db, auth, doc, setDoc, getDoc } from './js/firebase-config.js';
+
         // Register Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
@@ -561,28 +563,11 @@
             offlineIndicator.classList.add('show');
         }
 
-        // User Database
-        const users = {
-            'customer@pantukan.com': {
-                password: 'customer123',
-                role: 'customer',
-                name: 'Maria Santos'
-            },
-            'host@pantukan.com': {
-                password: 'host123',
-                role: 'host',
-                name: 'Juan Dela Cruz'
-            }
+        // Demo users (for offline or initial cloud testing)
+        const demoUsers = {
+            'customer@pantukan.com': { role: 'customer', name: 'Maria Santos', password: 'customer123' },
+            'host@pantukan.com': { role: 'host', name: 'Juan Dela Cruz', password: 'host123' }
         };
-
-        const storedUsers = localStorage.getItem('registeredUsers');
-        if (storedUsers) {
-            Object.assign(users, JSON.parse(storedUsers));
-        }
-
-        function saveUsers() {
-            localStorage.setItem('registeredUsers', JSON.stringify(users));
-        }
 
         // Toggle Forms
         document.getElementById('showRegister').addEventListener('click', function (e) {
@@ -597,8 +582,8 @@
             document.getElementById('loginContainer').style.display = 'block';
         });
 
-        // Registration
-        document.getElementById('registerForm').addEventListener('submit', function (e) {
+        // Registration (Cloud Firestore)
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const name = document.getElementById('regName').value.trim();
@@ -611,107 +596,129 @@
             if (password.length < 6) {
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Password must be at least 6 characters long.';
+                messageDiv.textContent = 'Password must be at least 6 characters.';
                 return;
             }
 
             if (password !== confirmPassword) {
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Passwords do not match. Please try again.';
+                messageDiv.textContent = 'Passwords do not match.';
                 return;
             }
 
-            if (users[email]) {
+            try {
+                // Check if user exists in cloud
+                const userRef = doc(db, "users", email);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                    messageDiv.textContent = 'Account already exists in the cloud.';
+                    return;
+                }
+
+                // Save to Cloud Firestore
+                await setDoc(userRef, {
+                    name: name,
+                    role: userType,
+                    password: password, // Note: In production use Auth for security
+                    createdAt: new Date().toISOString()
+                });
+
+                messageDiv.className = 'message success';
+                messageDiv.style.display = 'block';
+                messageDiv.textContent = 'Successfully saved to Cloud! Redirecting...';
+
+                setTimeout(() => {
+                    document.getElementById('registerContainer').style.display = 'none';
+                    document.getElementById('loginContainer').style.display = 'block';
+                    document.getElementById('registerForm').reset();
+                }, 2000);
+
+            } catch (error) {
+                console.error("Firebase Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'An account with this email already exists.';
-                return;
+                messageDiv.textContent = 'Cloud Error: ' + error.message;
             }
-
-            users[email] = {
-                password: password,
-                role: userType,
-                name: name
-            };
-
-            saveUsers();
-
-            messageDiv.className = 'message success';
-            messageDiv.style.display = 'block';
-            messageDiv.textContent = 'Account created successfully! Redirecting to login...';
-
-            setTimeout(() => {
-                document.getElementById('registerContainer').style.display = 'none';
-                document.getElementById('loginContainer').style.display = 'block';
-                document.getElementById('registerForm').reset();
-                document.getElementById('registerMessage').style.display = 'none';
-            }, 2000);
         });
 
-        // Fill Login
-        function fillLogin(email, password) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = password;
-        }
-
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        // Login (Cloud Firestore)
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
-            if (users[email]) {
-                if (users[email].password === password) {
+            try {
+                let userData = null;
+
+                // 1. Check Cloud
+                const userRef = doc(db, "users", email);
+                const userSnap = await getDoc(userRef);
+
+                if (userSnap.exists()) {
+                    const snapData = userSnap.data();
+                    if (snapData.password === password) {
+                        userData = {
+                            email: email,
+                            name: snapData.name,
+                            role: snapData.role
+                        };
+                    }
+                }
+                // 2. Check Demo Users Fallback
+                else if (demoUsers[email] && demoUsers[email].password === password) {
+                    userData = {
+                        email: email,
+                        name: demoUsers[email].name,
+                        role: demoUsers[email].role
+                    };
+                }
+
+                if (userData) {
                     messageDiv.className = 'message success';
                     messageDiv.style.display = 'block';
-                    messageDiv.textContent = `Welcome back, ${users[email].name}!`;
+                    messageDiv.textContent = `Welcome back, ${userData.name}!`;
 
-                    const userData = {
-                        email: email,
-                        name: users[email].name,
-                        role: users[email].role,
-                        loginTime: new Date().toISOString()
-                    };
+                    userData.loginTime = new Date().toISOString();
                     localStorage.setItem('currentUser', JSON.stringify(userData));
 
                     setTimeout(() => {
-                        if (users[email].role === 'host') {
-                            window.location.href = 'host-dashboard.html';
-                        } else {
-                            window.location.href = 'customer-dashboard.html';
-                        }
+                        window.location.href = userData.role === 'host' ? 'host-dashboard.html' : 'customer-dashboard.html';
                     }, 1500);
                 } else {
                     messageDiv.className = 'message error';
                     messageDiv.style.display = 'block';
-                    messageDiv.textContent = 'Invalid password. Please try again.';
+                    messageDiv.textContent = 'Invalid credentials or user not found.';
                 }
-            } else {
+
+            } catch (error) {
+                console.error("Login Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Account not found. Please check your email address.';
+                messageDiv.textContent = 'Database Error: ' + error.message;
             }
         });
+    </script> // Clear Messages
+    function clearMessage() {
+    document.getElementById('message').style.display = 'none';
+    }
 
-        // Clear Messages
-        function clearMessage() {
-            document.getElementById('message').style.display = 'none';
-        }
+    function clearRegisterMessage() {
+    document.getElementById('registerMessage').style.display = 'none';
+    }
 
-        function clearRegisterMessage() {
-            document.getElementById('registerMessage').style.display = 'none';
-        }
-
-        document.getElementById('email').addEventListener('input', clearMessage);
-        document.getElementById('password').addEventListener('input', clearMessage);
-        document.getElementById('regName').addEventListener('input', clearRegisterMessage);
-        document.getElementById('regEmail').addEventListener('input', clearRegisterMessage);
-        document.getElementById('regPassword').addEventListener('input', clearRegisterMessage);
-        document.getElementById('regConfirmPassword').addEventListener('input', clearRegisterMessage);
-        document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
+    document.getElementById('email').addEventListener('input', clearMessage);
+    document.getElementById('password').addEventListener('input', clearMessage);
+    document.getElementById('regName').addEventListener('input', clearRegisterMessage);
+    document.getElementById('regEmail').addEventListener('input', clearRegisterMessage);
+    document.getElementById('regPassword').addEventListener('input', clearRegisterMessage);
+    document.getElementById('regConfirmPassword').addEventListener('input', clearRegisterMessage);
+    document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
     </script>
 </body>
 

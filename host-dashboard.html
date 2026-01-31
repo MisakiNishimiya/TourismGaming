@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,8 @@
     <title>Pantukan - Host Dashboard</title>
 
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
     <style>
         * {
             margin: 0;
@@ -28,7 +30,7 @@
 
         .header {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
-                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
+                url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #2c3e50;
             padding: 40px 40px;
@@ -37,7 +39,7 @@
             align-items: center;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
         }
 
         .logo h1 {
@@ -97,7 +99,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
 
@@ -166,6 +168,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -185,13 +188,13 @@
             cursor: pointer;
             transition: all 0.3s;
             margin-top: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .btn-add-package:hover {
             background: #c9a961;
             transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
 
         .experience-section {
@@ -236,7 +239,7 @@
         }
 
         .package-card:hover {
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             transform: translateY(-8px);
         }
 
@@ -256,7 +259,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 100%);
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
             opacity: 0;
             transition: opacity 0.4s;
         }
@@ -353,7 +356,8 @@
             margin-top: 20px;
         }
 
-        .btn-edit, .btn-delete {
+        .btn-edit,
+        .btn-delete {
             flex: 1;
             padding: 14px;
             border: none;
@@ -394,7 +398,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(8px);
             z-index: 1000;
             overflow-y: auto;
@@ -406,6 +410,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -424,7 +429,7 @@
             padding: 50px;
             margin: auto;
             animation: modalSlideUp 0.4s ease-out;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes modalSlideUp {
@@ -432,6 +437,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -557,7 +563,8 @@
             margin-top: 40px;
         }
 
-        .btn-submit, .btn-cancel {
+        .btn-submit,
+        .btn-cancel {
             flex: 1;
             padding: 18px;
             border: none;
@@ -577,7 +584,7 @@
         .btn-submit:hover {
             background: #c9a961;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn-cancel {
@@ -620,7 +627,7 @@
         nav {
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -766,11 +773,25 @@
                 transform: translateY(0);
             }
 
-            nav ul.active li:nth-child(1) { transition-delay: 0.1s; }
-            nav ul.active li:nth-child(2) { transition-delay: 0.2s; }
-            nav ul.active li:nth-child(3) { transition-delay: 0.3s; }
-            nav ul.active li:nth-child(4) { transition-delay: 0.4s; }
-            nav ul.active li:nth-child(5) { transition-delay: 0.5s; }
+            nav ul.active li:nth-child(1) {
+                transition-delay: 0.1s;
+            }
+
+            nav ul.active li:nth-child(2) {
+                transition-delay: 0.2s;
+            }
+
+            nav ul.active li:nth-child(3) {
+                transition-delay: 0.3s;
+            }
+
+            nav ul.active li:nth-child(4) {
+                transition-delay: 0.4s;
+            }
+
+            nav ul.active li:nth-child(5) {
+                transition-delay: 0.5s;
+            }
 
             .modal-content {
                 padding: 30px 25px;
@@ -784,6 +805,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="top-header">
         <div class="user-info">
@@ -962,7 +984,9 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { db, auth, doc, setDoc, getDoc, collection, addDoc, getDocs, query, where, deleteDoc, onSnapshot } from './js/firebase-config.js';
+
         let packages = [];
         let editingPackageId = null;
         let features = [];
@@ -978,21 +1002,18 @@
         const dropdownMenu = document.getElementById('dropdownMenu');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        // Toggle dropdown on profile icon click
-        profileIcon.addEventListener('click', function(e) {
+        profileIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdownMenu.classList.toggle('active');
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
 
-        // Logout functionality
-        logoutBtn.addEventListener('click', function(e) {
+        logoutBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
@@ -1000,33 +1021,41 @@
             }
         });
 
-        function loadPackages() {
-            const stored = localStorage.getItem('tourPackages');
-            if (stored) {
-                packages = JSON.parse(stored);
-                renderAllPackages();
-            }
-        }
+        // LIVE CLOUD LISTENER (Real-time sync)
+        function initRealTimePackages() {
+            const q = query(collection(db, "packages"));
 
-        function savePackages() {
-            localStorage.setItem('tourPackages', JSON.stringify(packages));
+            onSnapshot(q, (querySnapshot) => {
+                packages = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    packages.push({ id: doc.id, ...data });
+                });
+                console.log("Cloud Packages Updated:", packages.length);
+                renderAllPackages();
+            }, (error) => {
+                console.error("Snapshot error:", error);
+            });
         }
 
         function renderAllPackages() {
             const types = ['beach', 'adventure', 'nature', 'cultural', 'culinary', 'family'];
             types.forEach(type => {
                 const grid = document.getElementById(`${type}-grid`);
+                if (!grid) return;
+
                 const typePackages = packages.filter(p => p.type === type);
-                
-                document.getElementById(`count-${type}`).textContent = typePackages.length;
-                
+
+                const countEl = document.getElementById(`count-${type}`);
+                if (countEl) countEl.textContent = typePackages.length;
+
                 if (typePackages.length === 0) {
                     grid.innerHTML = '<div class="empty-state"><p>No packages yet. Click "Add New Package" to create one.</p></div>';
                 } else {
                     grid.innerHTML = typePackages.map(pkg => {
-                        const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
+                        const pkgImages = pkg.images || [];
                         const imageCount = pkgImages.length;
-                        
+
                         return `
                         <div class="package-card" data-package-id="${pkg.id}">
                             <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
@@ -1043,7 +1072,6 @@
                             <div class="package-content">
                                 <h4>${pkg.name}</h4>
                                 <p style="color: #7f8c8d; font-size: 0.95em; margin: 10px 0;">${pkg.description}</p>
-                                ${imageCount > 1 ? `<p style="color: #c9a961; font-size: 0.85em; margin: 5px 0;">📷 ${imageCount} images</p>` : ''}
                                 <div class="package-price">₱${pkg.price.toLocaleString()}</div>
                                 <div class="package-actions">
                                     <button class="btn-edit" onclick="editPackage('${pkg.id}')">Edit</button>
@@ -1057,7 +1085,8 @@
             });
         }
 
-        function openModal() {
+        // Global Window assignments for UI buttons
+        window.openModal = function () {
             document.getElementById('packageModal').classList.add('active');
             document.getElementById('modalTitle').textContent = 'Add Package';
             editingPackageId = null;
@@ -1066,17 +1095,17 @@
             images = [];
             renderFeatures();
             renderImages();
-        }
+        };
 
-        function closeModal() {
+        window.closeModal = function () {
             document.getElementById('packageModal').classList.remove('active');
             document.getElementById('packageForm').reset();
             features = [];
             images = [];
             editingPackageId = null;
-        }
+        };
 
-        function addImage() {
+        window.addImage = function () {
             const input = document.getElementById('imageInput');
             const value = input.value.trim();
             if (value) {
@@ -1084,7 +1113,12 @@
                 input.value = '';
                 renderImages();
             }
-        }
+        };
+
+        window.removeImage = function (index) {
+            images.splice(index, 1);
+            renderImages();
+        };
 
         function renderImages() {
             const list = document.getElementById('imagesList');
@@ -1092,19 +1126,13 @@
                 <div class="feature-item">
                     <div class="image-preview">
                         <div class="image-thumbnail" style="background-image: url('${image}')"></div>
-                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image}</span>
                     </div>
                     <button type="button" class="btn-remove-feature" onclick="removeImage(${index})">×</button>
                 </div>
             `).join('');
         }
 
-        function removeImage(index) {
-            images.splice(index, 1);
-            renderImages();
-        }
-
-        function addFeature() {
+        window.addFeature = function () {
             const input = document.getElementById('featureInput');
             const value = input.value.trim();
             if (value) {
@@ -1112,7 +1140,12 @@
                 input.value = '';
                 renderFeatures();
             }
-        }
+        };
+
+        window.removeFeature = function (index) {
+            features.splice(index, 1);
+            renderFeatures();
+        };
 
         function renderFeatures() {
             const list = document.getElementById('featuresList');
@@ -1124,46 +1157,16 @@
             `).join('');
         }
 
-        function removeFeature(index) {
-            features.splice(index, 1);
-            renderFeatures();
-        }
-
-        const burgerMenu = document.getElementById('burgerMenu');
-        const navMenu = document.getElementById('navMenu');
-
-        burgerMenu.addEventListener('click', function() {
-            this.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function() {
-                burgerMenu.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-
-        document.getElementById('packageForm').addEventListener('submit', function(e) {
+        // FORM SUBMIT (TO CLOUD)
+        document.getElementById('packageForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             if (images.length === 0) {
                 alert('Please add at least one image');
                 return;
             }
-            
+
             const packageData = {
-                id: editingPackageId || Date.now().toString(),
                 type: document.getElementById('experienceType').value,
                 name: document.getElementById('packageName').value,
                 description: document.getElementById('packageDescription').value,
@@ -1171,23 +1174,24 @@
                 images: [...images],
                 features: [...features],
                 hostEmail: currentUser.email,
-                hostName: currentUser.name,
-                createdAt: editingPackageId ? packages.find(p => p.id === editingPackageId).createdAt : new Date().toISOString()
+                hostName: currentUser.name || "Host",
+                updatedAt: new Date().toISOString()
             };
 
-            if (editingPackageId) {
-                const index = packages.findIndex(p => p.id === editingPackageId);
-                packages[index] = packageData;
-            } else {
-                packages.push(packageData);
+            try {
+                if (editingPackageId) {
+                    await setDoc(doc(db, "packages", editingPackageId), packageData, { merge: true });
+                } else {
+                    packageData.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, "packages"), packageData);
+                }
+                closeModal();
+            } catch (error) {
+                alert("Cloud Error: " + error.message);
             }
-
-            savePackages();
-            renderAllPackages();
-            closeModal();
         });
 
-        function editPackage(id) {
+        window.editPackage = function (id) {
             const pkg = packages.find(p => p.id === id);
             if (pkg) {
                 editingPackageId = id;
@@ -1196,80 +1200,75 @@
                 document.getElementById('packageName').value = pkg.name;
                 document.getElementById('packageDescription').value = pkg.description;
                 document.getElementById('packagePrice').value = pkg.price;
-                images = pkg.images ? [...pkg.images] : (pkg.image ? [pkg.image] : []);
-                features = [...pkg.features];
+                images = pkg.images ? [...pkg.images] : [];
+                features = pkg.features ? [...pkg.features] : [];
                 renderImages();
                 renderFeatures();
                 document.getElementById('packageModal').classList.add('active');
             }
-        }
+        };
 
-        function deletePackage(id) {
-            if (confirm('Are you sure you want to delete this package?')) {
-                packages = packages.filter(p => p.id !== id);
-                savePackages();
-                renderAllPackages();
+        window.deletePackage = async function (id) {
+            if (confirm('Are you sure you want to delete this package from the CLOUD?')) {
+                try {
+                    await deleteDoc(doc(db, "packages", id));
+                } catch (error) {
+                    alert("Delete Error: " + error.message);
+                }
             }
-        }
+        };
 
-        function changeImage(event, packageId, direction) {
+        window.changeImage = function (event, packageId, direction) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
             const imageDiv = card.querySelector('.package-image');
             const pkg = packages.find(p => p.id === packageId);
-            const images = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
-            
+            const imgs = pkg.images || [];
+
             let currentIndex = parseInt(imageDiv.getAttribute('data-current-index'));
-            currentIndex = (currentIndex + direction + images.length) % images.length;
-            
-            imageDiv.style.backgroundImage = `url('${images[currentIndex]}')`;
+            currentIndex = (currentIndex + direction + imgs.length) % imgs.length;
+
+            imageDiv.style.backgroundImage = `url('${imgs[currentIndex]}')`;
             imageDiv.setAttribute('data-current-index', currentIndex);
-            
-            // Update dots
+
             const dots = card.querySelectorAll('.gallery-dot');
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentIndex);
             });
-        }
+        };
 
-        function setImage(event, packageId, index) {
+        window.setImage = function (event, packageId, index) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
             const imageDiv = card.querySelector('.package-image');
             const pkg = packages.find(p => p.id === packageId);
-            const images = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : []);
-            
-            imageDiv.style.backgroundImage = `url('${images[index]}')`;
+            const imgs = pkg.images || [];
+
+            imageDiv.style.backgroundImage = `url('${imgs[index]}')`;
             imageDiv.setAttribute('data-current-index', index);
-            
-            // Update dots
+
             const dots = card.querySelectorAll('.gallery-dot');
             dots.forEach((dot, i) => {
                 dot.classList.toggle('active', i === index);
             });
-        }
+        };
 
-        document.getElementById('packageModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+        // Navigation burger menu
+        const burgerMenu = document.getElementById('burgerMenu');
+        const navMenu = document.getElementById('navMenu');
+        burgerMenu.addEventListener('click', () => {
+            burgerMenu.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
 
-        loadPackages();
+        // Start Cloud Sync
+        initRealTimePackages();
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('Service Worker registered'))
-                .catch(err => console.error('SW registration failed', err));
+            navigator.serviceWorker.register('sw.js');
         }
-
-        window.addEventListener('online', () => {
-            console.log('Back online');
-        });
-
-        window.addEventListener('offline', () => {
-            console.log('Connection lost');
-        });
+    </script>
     </script>
 </body>
+
 </html>
