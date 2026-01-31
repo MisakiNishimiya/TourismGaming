@@ -494,7 +494,10 @@
     </div>
 
     <script type="module">
-        import { db, auth, doc, setDoc, getDoc } from './js/firebase-config.js';
+        import {
+            db, auth, doc, setDoc, getDoc,
+            createUserWithEmailAndPassword, signInWithEmailAndPassword
+        } from './js/firebase-config.js';
 
         // Register Service Worker
         if ('serviceWorker' in navigator) {
@@ -509,23 +512,15 @@
         const btnInstall = document.getElementById('btnInstall');
         const btnDismiss = document.getElementById('btnDismiss');
 
-        // Detect if device is iOS
-        const isIos = () => {
-            const userAgent = window.navigator.userAgent.toLowerCase();
-            return /iphone|ipad|ipod/.test(userAgent);
-        };
-
-        // Detect if app is already installed
+        const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
         const isInStandaloneMode = () => ('standalone' in window.navigator) || (window.navigator.standalone);
 
-        // Standard prompt for Android/PC
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             installBanner.classList.add('show');
         });
 
-        // Forced show for iOS users (original look)
         if (isIos() && !isInStandaloneMode()) {
             installBanner.classList.add('show');
         }
@@ -533,72 +528,48 @@
         btnInstall.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
                 deferredPrompt = null;
                 installBanner.classList.remove('show');
             } else if (isIos()) {
-                // Instruction for iPhone users
-                alert("To install NAVIBAY on your iPhone:\n1. Open this link in SAFARI\n2. Tap the Share icon (square with arrow)\n3. Select 'Add to Home Screen'");
+                alert("To install NAVIBAY:\n1. Open in SAFARI\n2. Tap Share Menu\n3. Select 'Add to Home Screen'");
                 installBanner.classList.remove('show');
             }
         });
 
-        btnDismiss.addEventListener('click', () => {
-            installBanner.classList.remove('show');
-        });
+        btnDismiss.addEventListener('click', () => installBanner.classList.remove('show'));
 
         // Online/Offline Detection
         const offlineIndicator = document.getElementById('offlineIndicator');
-
-        window.addEventListener('online', () => {
-            offlineIndicator.classList.remove('show');
-        });
-
-        window.addEventListener('offline', () => {
-            offlineIndicator.classList.add('show');
-        });
-
-        // Check initial state
-        if (!navigator.onLine) {
-            offlineIndicator.classList.add('show');
-        }
-
-        // Demo users (for offline or initial cloud testing)
-        const demoUsers = {
-            'customer@pantukan.com': { role: 'customer', name: 'Maria Santos', password: 'customer123' },
-            'host@pantukan.com': { role: 'host', name: 'Juan Dela Cruz', password: 'host123' }
+        const updateOnlineStatus = () => {
+            if (navigator.onLine) offlineIndicator.classList.remove('show');
+            else offlineIndicator.classList.add('show');
         };
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
 
-        // Toggle Forms
-        document.getElementById('showRegister').addEventListener('click', function (e) {
+        // Toggle Forms Logic
+        document.getElementById('showRegister').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('registerContainer').style.display = 'block';
         });
 
-        document.getElementById('showLogin').addEventListener('click', function (e) {
+        document.getElementById('showLogin').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('registerContainer').style.display = 'none';
             document.getElementById('loginContainer').style.display = 'block';
         });
 
-        // Registration (Cloud Firestore)
+        // Registration (Auth + Firestore Profile)
         document.getElementById('registerForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const name = document.getElementById('regName').value.trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
             const userType = document.getElementById('regUserType').value;
             const messageDiv = document.getElementById('registerMessage');
-
-            if (password.length < 6) {
-                messageDiv.className = 'message error';
-                messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Password must be at least 6 characters.';
-                return;
-            }
 
             if (password !== confirmPassword) {
                 messageDiv.className = 'message error';
@@ -608,117 +579,87 @@
             }
 
             try {
-                // Check if user exists in cloud
-                const userRef = doc(db, "users", email);
-                const userSnap = await getDoc(userRef);
+                // 1. Create official account
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                if (userSnap.exists()) {
-                    messageDiv.className = 'message error';
-                    messageDiv.style.display = 'block';
-                    messageDiv.textContent = 'Account already exists in the cloud.';
-                    return;
-                }
-
-                // Save to Cloud Firestore
-                await setDoc(userRef, {
+                // 2. Save profile details
+                await setDoc(doc(db, "users", user.uid), {
                     name: name,
                     role: userType,
-                    password: password, // Note: In production use Auth for security
+                    email: email,
                     createdAt: new Date().toISOString()
                 });
 
                 messageDiv.className = 'message success';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Successfully saved to Cloud! Redirecting...';
+                messageDiv.textContent = 'Account Created Successfully!';
 
                 setTimeout(() => {
                     document.getElementById('registerContainer').style.display = 'none';
                     document.getElementById('loginContainer').style.display = 'block';
                     document.getElementById('registerForm').reset();
-                }, 2000);
+                }, 1500);
 
             } catch (error) {
-                console.error("Firebase Error:", error);
+                console.error("Registration Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Cloud Error: ' + error.message;
+                messageDiv.textContent = error.message.replace('Firebase:', '').trim();
             }
         });
 
-        // Login (Cloud Firestore)
+        // Login (Auth Service)
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const messageDiv = document.getElementById('message');
 
             try {
-                let userData = null;
+                // 1. Sign In
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-                // 1. Check Cloud
-                const userRef = doc(db, "users", email);
-                const userSnap = await getDoc(userRef);
+                // 2. Fetch Profile from Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
 
-                if (userSnap.exists()) {
-                    const snapData = userSnap.data();
-                    if (snapData.password === password) {
-                        userData = {
-                            email: email,
-                            name: snapData.name,
-                            role: snapData.role
-                        };
-                    }
-                }
-                // 2. Check Demo Users Fallback
-                else if (demoUsers[email] && demoUsers[email].password === password) {
-                    userData = {
+                if (userDoc.exists()) {
+                    const snapData = userDoc.data();
+                    const userData = {
                         email: email,
-                        name: demoUsers[email].name,
-                        role: demoUsers[email].role
+                        name: snapData.name,
+                        role: snapData.role,
+                        uid: user.uid
                     };
-                }
 
-                if (userData) {
                     messageDiv.className = 'message success';
                     messageDiv.style.display = 'block';
                     messageDiv.textContent = `Welcome back, ${userData.name}!`;
 
-                    userData.loginTime = new Date().toISOString();
                     localStorage.setItem('currentUser', JSON.stringify(userData));
-
                     setTimeout(() => {
                         window.location.href = userData.role === 'host' ? 'host-dashboard.html' : 'customer-dashboard.html';
-                    }, 1500);
-                } else {
-                    messageDiv.className = 'message error';
-                    messageDiv.style.display = 'block';
-                    messageDiv.textContent = 'Invalid credentials or user not found.';
+                    }, 1200);
                 }
-
             } catch (error) {
                 console.error("Login Error:", error);
                 messageDiv.className = 'message error';
                 messageDiv.style.display = 'block';
-                messageDiv.textContent = 'Database Error: ' + error.message;
+                messageDiv.textContent = "Login Failed: " + error.message.replace('Firebase:', '').trim();
             }
         });
-    </script> // Clear Messages
-    function clearMessage() {
-    document.getElementById('message').style.display = 'none';
-    }
 
-    function clearRegisterMessage() {
-    document.getElementById('registerMessage').style.display = 'none';
-    }
+        // Message Clear Logic (Global within Module)
+        window.clearMessage = () => document.getElementById('message').style.display = 'none';
+        window.clearRegisterMessage = () => document.getElementById('registerMessage').style.display = 'none';
 
-    document.getElementById('email').addEventListener('input', clearMessage);
-    document.getElementById('password').addEventListener('input', clearMessage);
-    document.getElementById('regName').addEventListener('input', clearRegisterMessage);
-    document.getElementById('regEmail').addEventListener('input', clearRegisterMessage);
-    document.getElementById('regPassword').addEventListener('input', clearRegisterMessage);
-    document.getElementById('regConfirmPassword').addEventListener('input', clearRegisterMessage);
-    document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
+        document.getElementById('email').addEventListener('input', clearMessage);
+        document.getElementById('password').addEventListener('input', clearMessage);
+        ['regName', 'regEmail', 'regPassword', 'regConfirmPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', clearRegisterMessage);
+        });
+        document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
     </script>
 </body>
 
