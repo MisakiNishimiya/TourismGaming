@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2c3e50">
     <title>Explore Pantukan - Interactive Map</title>
-    
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-          crossorigin=""/>
-    
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
     <style>
         * {
             margin: 0;
@@ -93,7 +93,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 1000;
         }
 
@@ -124,7 +124,7 @@
 
         .page-header {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
-                        url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
+                url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop') center/cover;
             color: #ecf0f1;
             padding: 80px 20px 60px;
             text-align: center;
@@ -162,7 +162,7 @@
             padding: 30px;
             margin-bottom: 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -362,8 +362,15 @@
         }
 
         @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
         .location-error {
@@ -380,7 +387,7 @@
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
             border: 1px solid rgba(201, 169, 97, 0.1);
         }
 
@@ -389,7 +396,7 @@
             padding: 35px 40px;
             margin-bottom: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid rgba(201, 169, 97, 0.1);
         }
 
@@ -431,15 +438,32 @@
             height: 32px;
             border-radius: 50%;
             flex-shrink: 0;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
         }
 
-        .icon-beach { background: #3498db; }
-        .icon-adventure { background: #e74c3c; }
-        .icon-nature { background: #27ae60; }
-        .icon-cultural { background: #f39c12; }
-        .icon-culinary { background: #9b59b6; }
-        .icon-family { background: #1abc9c; }
+        .icon-beach {
+            background: #3498db;
+        }
+
+        .icon-adventure {
+            background: #e74c3c;
+        }
+
+        .icon-nature {
+            background: #27ae60;
+        }
+
+        .icon-cultural {
+            background: #f39c12;
+        }
+
+        .icon-culinary {
+            background: #9b59b6;
+        }
+
+        .icon-family {
+            background: #1abc9c;
+        }
 
         /* Custom Leaflet Popup Styling */
         .leaflet-popup-content-wrapper {
@@ -526,7 +550,7 @@
                 background: white;
                 padding: 20px;
                 border-radius: 6px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             }
 
             .controls-content.active {
@@ -588,6 +612,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header-actions">
         <a href="customer-dashboard.html" class="btn-back">◀ Back to Dashboard</a>
@@ -642,7 +667,7 @@
             <button class="burger-menu" id="burgerMenu">
                 ☰ <span>Map Controls</span>
             </button>
-            
+
             <div class="controls-content" id="controlsContent">
                 <div class="control-row">
                     <label>Filter by Experience:</label>
@@ -672,8 +697,10 @@
                 <div class="download-section">
                     <button id="downloadMapBtn">📥 Download Offline Maps</button>
                     <div id="downloadProgress" style="display:none; margin-top: 15px;">
-                        <progress id="progressBar" value="0" max="100" style="width: 100%; height: 8px; border-radius: 4px;"></progress>
-                        <div id="progressText" style="margin-top: 8px; font-size: 0.9em; color: #7f8c8d; text-align: center;">0%</div>
+                        <progress id="progressBar" value="0" max="100"
+                            style="width: 100%; height: 8px; border-radius: 4px;"></progress>
+                        <div id="progressText"
+                            style="margin-top: 8px; font-size: 0.9em; color: #7f8c8d; text-align: center;">0%</div>
                     </div>
                 </div>
             </div>
@@ -684,8 +711,7 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
         // Check authentication
@@ -698,10 +724,10 @@
         const burgerMenu = document.getElementById('burgerMenu');
         const controlsContent = document.getElementById('controlsContent');
 
-        burgerMenu.addEventListener('click', function() {
+        burgerMenu.addEventListener('click', function () {
             controlsContent.classList.toggle('active');
-            this.innerHTML = controlsContent.classList.contains('active') 
-                ? '✕ <span>Close Controls</span>' 
+            this.innerHTML = controlsContent.classList.contains('active')
+                ? '✕ <span>Close Controls</span>'
                 : '☰ <span>Map Controls</span>';
         });
 
@@ -710,18 +736,18 @@
         const dropdownMenu = document.getElementById('dropdownMenu');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        profileIcon.addEventListener('click', function(e) {
+        profileIcon.addEventListener('click', function (e) {
             e.stopPropagation();
             dropdownMenu.classList.toggle('active');
         });
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!profileIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                 dropdownMenu.classList.remove('active');
             }
         });
 
-        logoutBtn.addEventListener('click', function(e) {
+        logoutBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('currentUser');
@@ -732,26 +758,70 @@
         // Pantukan, Davao de Oro coordinates (Municipal Center)
         const pantukan = [7.1333, 125.9000];
 
-        // Initialize map
+        // Create an IndexedDB tile layer class
+        const OfflineTileLayer = L.TileLayer.extend({
+            createTile: function (coords, done) {
+                const tile = document.createElement('img');
+                const url = this.getTileUrl(coords);
+                const key = `${coords.z}_${coords.x}_${coords.y}`;
+
+                L.DomEvent.on(tile, 'load', L.Util.bind(this._tileOnLoad, this, done, tile));
+                L.DomEvent.on(tile, 'error', L.Util.bind(this._tileOnError, this, done, tile));
+
+                // Try to get tile from IndexedDB
+                this._getOfflineTile(key).then(blob => {
+                    if (blob) {
+                        const urlCreator = window.URL || window.webkitURL;
+                        tile.src = urlCreator.createObjectURL(blob);
+                        console.log('Using offline tile:', key);
+                    } else {
+                        // Fallback to online if not in DB
+                        tile.src = url;
+                    }
+                }).catch(() => {
+                    tile.src = url;
+                });
+
+                return tile;
+            },
+
+            _getOfflineTile: async function (key) {
+                const dbName = 'leaflet.offline';
+                const storeName = 'tileStore';
+
+                return new Promise((resolve) => {
+                    const request = indexedDB.open(dbName, 1);
+                    request.onsuccess = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains(storeName)) {
+                            db.close();
+                            resolve(null);
+                            return;
+                        }
+                        const transaction = db.transaction([storeName], 'readonly');
+                        const store = transaction.objectStore(storeName);
+                        const getRequest = store.get(key);
+                        getRequest.onsuccess = () => {
+                            db.close();
+                            resolve(getRequest.result);
+                        };
+                        getRequest.onerror = () => {
+                            db.close();
+                            resolve(null);
+                        };
+                    };
+                    request.onerror = () => resolve(null);
+                });
+            }
+        });
+
+        // Initialize map with offline support
         const map = L.map('map').setView(pantukan, 12);
 
-        // Add OpenStreetMap tile layer
-        const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const tileLayer = new OfflineTileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-            onReady: function() {
-                console.log('Tile layer ready for offline use');
-            }
+            maxZoom: 18
         }).addTo(map);
-
-        // Check if offline tiles are available
-        if (window.indexedDB) {
-            const request = indexedDB.open('leaflet.offline', 1);
-            request.onsuccess = () => {
-                console.log('Offline database ready');
-                request.result.close();
-            };
-        }
 
         // Color mapping for experience types
         const typeColors = {
@@ -830,7 +900,7 @@
 
             packages.forEach(pkg => {
                 const baseLocation = baseLocations.find(loc => loc.type === pkg.type);
-                
+
                 packageLocations.push({
                     name: pkg.name,
                     type: pkg.type,
@@ -876,7 +946,7 @@
                     iconAnchor: [10, 10]
                 });
             }
-            
+
             return L.divIcon({
                 className: 'custom-marker',
                 html: `<div style="
@@ -938,7 +1008,7 @@
 
                     marker.bindPopup(popupContent);
 
-                    marker.on('click', function() {
+                    marker.on('click', function () {
                         selectedLocation = location;
                         document.getElementById('directionsBtn').disabled = !userLocation;
                     });
@@ -950,7 +1020,7 @@
 
         addMarkers();
 
-        document.getElementById('filterType').addEventListener('change', function(e) {
+        document.getElementById('filterType').addEventListener('change', function (e) {
             addMarkers(e.target.value);
         });
 
@@ -960,23 +1030,23 @@
             addMarkers(currentFilter);
         }
 
-        window.addEventListener('storage', function(e) {
+        window.addEventListener('storage', function (e) {
             if (e.key === 'tourPackages') {
                 refreshMapData();
             }
         });
 
-        document.getElementById('showAllBtn').addEventListener('click', function() {
+        document.getElementById('showAllBtn').addEventListener('click', function () {
             document.getElementById('filterType').value = 'all';
             addMarkers('all');
-            
+
             if (markers.length > 0) {
                 const group = L.featureGroup(markers);
                 map.fitBounds(group.getBounds().pad(0.1));
             }
         });
 
-        document.getElementById('myLocationBtn').addEventListener('click', function() {
+        document.getElementById('myLocationBtn').addEventListener('click', function () {
             const statusEl = document.getElementById('locationStatus');
             statusEl.textContent = 'Getting location...';
             statusEl.className = 'location-status';
@@ -988,9 +1058,9 @@
             }
 
             navigator.geolocation.getCurrentPosition(
-                function(position) {
+                function (position) {
                     userLocation = [position.coords.latitude, position.coords.longitude];
-                    
+
                     if (userMarker) {
                         map.removeLayer(userMarker);
                     }
@@ -1014,7 +1084,7 @@
 
                     statusEl.textContent = 'Location found!';
                     statusEl.className = 'location-status';
-                    
+
                     if (selectedLocation) {
                         document.getElementById('directionsBtn').disabled = false;
                     }
@@ -1023,12 +1093,12 @@
                         statusEl.textContent = '';
                     }, 3000);
                 },
-                function(error) {
+                function (error) {
                     let errorMsg = 'Location access denied';
                     if (error.code === 1) errorMsg = 'Location access denied';
                     else if (error.code === 2) errorMsg = 'Location unavailable';
                     else if (error.code === 3) errorMsg = 'Location timeout';
-                    
+
                     statusEl.textContent = errorMsg;
                     statusEl.className = 'location-status location-error';
 
@@ -1044,7 +1114,7 @@
             );
         });
 
-        document.getElementById('directionsBtn').addEventListener('click', function() {
+        document.getElementById('directionsBtn').addEventListener('click', function () {
             if (!userLocation || !selectedLocation) {
                 alert('Please enable location and select a destination first.');
                 return;
@@ -1065,8 +1135,8 @@
             map.fitBounds(routeLine.getBounds().pad(0.2));
 
             const popup = L.popup()
-                .setLatLng([(userLocation[0] + selectedLocation.coords[0]) / 2, 
-                           (userLocation[1] + selectedLocation.coords[1]) / 2])
+                .setLatLng([(userLocation[0] + selectedLocation.coords[0]) / 2,
+                (userLocation[1] + selectedLocation.coords[1]) / 2])
                 .setContent(`
                     <div style="text-align: center;">
                         <div style="font-size: 1.1em; font-weight: 400; margin-bottom: 10px;">
@@ -1095,10 +1165,10 @@
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                     Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             return R * c;
         }
 
@@ -1115,30 +1185,30 @@
             const progressBar = document.getElementById('progressBar');
             const progressText = document.getElementById('progressText');
             const downloadBtn = document.getElementById('downloadMapBtn');
-            
+
             const confirmed = confirm(
                 'Download offline maps for Pantukan area?\n\n' +
                 'This will cache map tiles (zoom 11-15) for offline use.\n' +
                 'Approximately 50-100MB will be stored in your browser.'
             );
-            
+
             if (!confirmed) return;
-            
+
             progressDiv.style.display = 'block';
             downloadBtn.disabled = true;
             downloadBtn.textContent = '⏳ Downloading...';
-            
+
             try {
                 const bounds = L.latLngBounds([7.0, 125.8], [7.3, 126.1]);
-                
+
                 let allTileUrls = [];
                 for (let zoom = 11; zoom <= 14; zoom++) {
                     const tiles = [];
                     const tileBounds = bounds.toBBoxString().split(',').map(Number);
-                    
+
                     const minTile = latLngToTile(tileBounds[1], tileBounds[0], zoom);
                     const maxTile = latLngToTile(tileBounds[3], tileBounds[2], zoom);
-                    
+
                     for (let x = minTile.x; x <= maxTile.x; x++) {
                         for (let y = minTile.y; y <= maxTile.y; y++) {
                             tiles.push({
@@ -1152,19 +1222,19 @@
                     }
                     allTileUrls = allTileUrls.concat(tiles);
                 }
-                
+
                 const totalTiles = allTileUrls.length;
                 let downloadedTiles = 0;
-                
+
                 const dbName = 'leaflet.offline';
                 const storeName = 'tileStore';
-                
+
                 const db = await openDB(dbName, storeName);
-                
+
                 const batchSize = 5;
                 for (let i = 0; i < allTileUrls.length; i += batchSize) {
                     const batch = allTileUrls.slice(i, i + batchSize);
-                    
+
                     await Promise.all(batch.map(async (tile) => {
                         try {
                             const response = await fetch(tile.url);
@@ -1172,7 +1242,7 @@
                                 const blob = await response.blob();
                                 await saveToIndexedDB(db, storeName, tile.key, blob);
                                 downloadedTiles++;
-                                
+
                                 const progress = (downloadedTiles / totalTiles) * 100;
                                 progressBar.value = progress;
                                 progressText.textContent = `${Math.round(progress)}% (${downloadedTiles}/${totalTiles})`;
@@ -1181,20 +1251,20 @@
                             console.warn('Failed to download tile:', tile.url, err);
                         }
                     }));
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 100));
                 }
-                
+
                 progressBar.value = 100;
                 progressText.textContent = '100%';
-                
+
                 setTimeout(() => {
                     alert(`✅ Success! Downloaded ${downloadedTiles} tiles.\n\nYour map will now work offline in the Pantukan area.`);
                     progressDiv.style.display = 'none';
                     downloadBtn.disabled = false;
                     downloadBtn.textContent = '📥 Download Offline Maps';
                 }, 500);
-                
+
             } catch (error) {
                 console.error('Download error:', error);
                 alert('❌ Download failed: ' + error.message + '\n\nPlease check your internet connection and try again.');
@@ -1214,10 +1284,10 @@
         function openDB(dbName, storeName) {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open(dbName, 1);
-                
+
                 request.onerror = () => reject(request.error);
                 request.onsuccess = () => resolve(request.result);
-                
+
                 request.onupgradeneeded = (event) => {
                     const db = event.target.result;
                     if (!db.objectStoreNames.contains(storeName)) {
@@ -1232,11 +1302,12 @@
                 const transaction = db.transaction([storeName], 'readwrite');
                 const store = transaction.objectStore(storeName);
                 const request = store.put(value, key);
-                
+
                 request.onsuccess = () => resolve();
                 request.onerror = () => reject(request.error);
             });
         }
     </script>
 </body>
+
 </html>

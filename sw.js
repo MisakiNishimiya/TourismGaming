@@ -3,10 +3,15 @@ const OFFLINE_URL = 'login.html';
 
 const CACHE_URLS = [
   '/',
+  '/index.html',
   '/login.html',
   '/customer-dashboard.html',
   '/host-dashboard.html',
+  '/map.html',
   '/manifest.json',
+  '/package/beach.html',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
   'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600&h=900&fit=crop',
   'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&h=600&fit=crop',
   'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop'
