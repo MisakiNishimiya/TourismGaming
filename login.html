@@ -13,11 +13,10 @@
     <title>NaviBay - Login</title>
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Fallback Icons -->
-    <link rel="icon" type="image/png" sizes="192x192"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="manifest.json?v=4">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
+    <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
     <link rel="apple-touch-icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
 
@@ -655,6 +654,67 @@
             if (el) el.addEventListener('input', clearRegisterMessage);
         });
         document.getElementById('regUserType').addEventListener('change', clearRegisterMessage);
+
+        // --- SMART INSTALL LOGIC ---
+        (function () {
+            let deferredPrompt;
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+            // Dynamic Button Creation
+            const installBtnHTML = `<button id="installBtn" style="display: none; position: fixed; bottom: 30px; right: 30px; z-index: 1000; background: #c9a961; color: white; border: none; padding: 12px 24px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; animation: float 3s ease-in-out infinite;">📲 Install App</button>`;
+            const iosModalHTML = `
+        <div id="iosInstallModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 11000; justify-content: center; align-items: flex-end;">
+            <div style="background: white; width: 100%; max-width: 500px; border-radius: 20px 20px 0 0; padding: 30px; text-align: center; animation: slideUp 0.4s ease-out;">
+                <div style="font-size: 40px; margin-bottom: 15px;">📲</div>
+                <h3 style="margin-bottom: 10px; color: #333;">Install for iPhone</h3>
+                <p style="color: #666; margin-bottom: 25px;">To install on your iPhone, follow these steps:</p>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; display: flex; align-items: center;">
+                    <span style="font-size: 24px; margin-right: 15px;">1️⃣</span>
+                    <div>Tap the <strong>Share</strong> button <br><span style="font-size: 0.8em; color: gray;">(Square with arrow at bottom)</span></div>
+                </div>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 12px; margin-bottom: 25px; text-align: left; display: flex; align-items: center;">
+                    <span style="font-size: 24px; margin-right: 15px;">2️⃣</span>
+                    <div>Scroll down & tap <br><strong>"Add to Home Screen"</strong></div>
+                </div>
+                <button onclick="document.getElementById('iosInstallModal').style.display='none'" style="width: 100%; padding: 15px; background: #2c3e50; color: white; border-radius: 12px; font-weight: bold; font-size: 16px; border: none;">Got it</button>
+                <div style="height: 20px;"></div>
+            </div>
+        </div>
+        <style>@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } } @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }</style>`;
+
+            document.body.insertAdjacentHTML('beforeend', installBtnHTML + iosModalHTML);
+
+            const installBtn = document.getElementById('installBtn');
+            const iosModal = document.getElementById('iosInstallModal');
+
+            // 1. Android/PC: Handle Native Install
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'block';
+            });
+
+            installBtn.addEventListener('click', () => {
+                if (isIOS) {
+                    // 2. iOS: Show Instructions
+                    iosModal.style.display = 'flex';
+                } else if (deferredPrompt) {
+                    // 3. Android: Trigger Native Prompt
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            installBtn.style.display = 'none';
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            });
+
+            // Force button show on iOS
+            if (isIOS) {
+                installBtn.style.display = 'block';
+            }
+        })();
     </script>
 </body>
 

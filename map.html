@@ -614,6 +614,10 @@
 </head>
 
 <body>
+    <div id="offlineBanner"
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; background: #c0392b; color: white; text-align: center; padding: 12px; z-index: 10000; font-weight: 500; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        ⚠️ You are Offline. Features are limited.
+    </div>
     <div class="header-actions">
         <a href="customer-dashboard.html" class="btn-back">◀ Back to Dashboard</a>
         <div class="right-section">
@@ -661,6 +665,10 @@
             </div>
         </div>
     </div>
+
+    <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
+    <link rel="manifest" href="manifest.json?v=4">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
 
     <div class="map-container">
         <div class="map-controls">
@@ -740,6 +748,24 @@
                 window.location.href = 'login.html';
             }
         });
+
+        // Window Error Handling for Offline
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            const btn = document.getElementById('directionsBtn');
+
+            if (navigator.onLine) {
+                banner.style.display = 'none';
+                if (btn) btn.innerHTML = '🧭 Get Directions (Road)';
+            } else {
+                banner.style.display = 'block';
+                if (btn) btn.innerHTML = '❌ Directions Unavailable';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        document.addEventListener('DOMContentLoaded', updateOnlineStatus);
     </script>
 
     <script type="module">
@@ -750,6 +776,7 @@
         let selectedLocation = null;
         let markers = [];
         let userMarker = null;
+        let routeLayer = null;
 
         const OfflineTileLayer = L.TileLayer.extend({
             createTile: function (coords, done) {
@@ -778,38 +805,84 @@
             }
         });
 
-        const map = L.map('map').setView(pantukan, 12);
+        // Initialize Map with Strict Zoom Limits for Offline Use (Levels 11-15)
+        const map = L.map('map', {
+            minZoom: 11,
+            maxZoom: 15
+        }).setView(pantukan, 12);
+
         new OfflineTileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap',
-            maxZoom: 18
+            maxZoom: 15
         }).addTo(map);
 
         const typeColors = { beach: '#3498db', adventure: '#e74c3c', nature: '#27ae60', cultural: '#f39c12', culinary: '#9b59b6', family: '#1abc9c' };
         const markerGroup = L.layerGroup().addTo(map);
+        let allPackages = [];
 
         // Load Cloud Markers
         onSnapshot(query(collection(db, "packages")), (snapshot) => {
-            markerGroup.clearLayers();
-            markers = [];
+            allPackages = []; // clear current
 
-            // Base Markers
-            const bases = [
-                { name: 'Magnaga Waters', coords: [7.0850, 125.9500], type: 'beach' },
-                { name: 'Pantukan Town Center', coords: [7.1333, 125.9000], type: 'cultural' }
-            ];
+            // Add Base Markers
+            allPackages.push({ name: 'Magnaga Waters', lat: 7.0850, lng: 125.9500, type: 'beach', id: 'base1', description: 'Famous beach resort' });
+            allPackages.push({ name: 'Pantukan Town Center', lat: 7.1333, lng: 125.9000, type: 'cultural', id: 'base2', description: 'Center of town' });
 
-            bases.forEach(b => createMarker(b, false));
-            snapshot.forEach(doc => createMarker({ id: doc.id, ...doc.data() }, true));
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                allPackages.push({ id: doc.id, ...data });
+            });
+
+            renderMarkers();
         });
 
-        function createMarker(pkg, isCloud) {
-            const lat = pkg.lat || (7.1333 + (Math.random() - 0.5) * 0.05);
-            const lng = pkg.lng || (125.9000 + (Math.random() - 0.5) * 0.05);
+        function renderMarkers() {
+            markerGroup.clearLayers();
+            const filter = document.getElementById('filterType').value;
+
+            const visiblePackages = filter === 'all'
+                ? allPackages
+                : allPackages.filter(p => p.type === filter);
+
+            console.log(`[MAP] Rendering ${visiblePackages.length} markers (Filter: ${filter})`);
+            visiblePackages.forEach(pkg => createMarker(pkg));
+        }
+
+        // Filter Logic
+        document.getElementById('filterType').addEventListener('change', renderMarkers);
+        document.getElementById('showAllBtn').addEventListener('click', () => {
+            document.getElementById('filterType').value = 'all';
+            renderMarkers();
+        });
+
+        function createMarker(pkg) {
+            // Priority: Real saved coords > Hash fallback
+            const getConsistentOffset = (str, index) => {
+                if (!str) return 0;
+                let hash = 0;
+                for (let i = 0; i < str.length; i++) {
+                    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                    hash = hash & hash;
+                }
+                return ((hash + index) % 100) / 1000 - 0.05;
+            };
+
+            // Ensure we use the SAVED lat/lng from Host Dashboard if available
+            // Note: Host Dashboard saves as 'lat' and 'lng' locally, but let's handle if it was saved differently
+            let lat = pkg.lat;
+            let lng = pkg.lng;
+
+            if (!lat || !lng) {
+                lat = 7.1333 + getConsistentOffset(pkg.id || pkg.name, 1);
+                lng = 125.9000 + getConsistentOffset(pkg.id || pkg.name, 2);
+            }
+
+            console.log(`[MAP] Marker: ${pkg.name} [${lat}, ${lng}]`);
 
             const marker = L.circleMarker([lat, lng], {
                 radius: 10,
                 fillColor: typeColors[pkg.type] || '#c9a961',
-                color: '#fff',
+                color: '#white',
                 weight: 2,
                 opacity: 1,
                 fillOpacity: 0.8
@@ -844,13 +917,46 @@
             }, () => { status.textContent = '❌ Denied'; });
         });
 
-        // Directions
+        // Directions Logic (Upgraded)
         document.getElementById('directionsBtn').addEventListener('click', () => {
             if (!userLocation || !selectedLocation) return;
-            const line = L.polyline([userLocation, selectedLocation.coords], { color: '#c9a961', dashArray: '10, 10' }).addTo(map);
-            const dist = calculateDistance(userLocation[0], userLocation[1], selectedLocation.coords[0], selectedLocation.coords[1]);
-            L.popup().setLatLng(selectedLocation.coords).setContent(`Distance: ${dist.toFixed(2)} km`).openOn(map);
-            map.fitBounds(line.getBounds().pad(0.2));
+
+            if (!navigator.onLine) {
+                alert("🚫 Road directions require an internet connection.\n\nPlease connect to WiFi or Data to calculate the route.");
+                return;
+            }
+
+            const btn = document.getElementById('directionsBtn');
+            btn.textContent = "Calculating...";
+            btn.disabled = true;
+
+            // Use OSRM for Road Directions
+            const start = `${userLocation[1]},${userLocation[0]}`; // lng,lat
+            const end = `${selectedLocation.coords[1]},${selectedLocation.coords[0]}`; // lng,lat
+
+            fetch(`https://router.project-osrm.org/route/v1/driving/${start};${end}?overview=full&geometries=geojson`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.code !== 'Ok') throw new Error('Route not found');
+
+                    if (routeLayer) map.removeLayer(routeLayer);
+
+                    routeLayer = L.geoJSON(data.routes[0].geometry, {
+                        style: { color: '#e74c3c', weight: 5, opacity: 0.8 }
+                    }).addTo(map);
+
+                    map.fitBounds(routeLayer.getBounds(), { padding: [50, 50] });
+                    btn.textContent = "🧭 Get Directions (Road)";
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Could not find a road route to this location. It might be off-road.");
+
+                    // Fallback to straight line if road fails? No, user requested disabling.
+                    btn.textContent = "🧭 Get Directions (Road)";
+                    btn.disabled = false;
+                });
         });
 
         function calculateDistance(lat1, lon1, lat2, lon2) {

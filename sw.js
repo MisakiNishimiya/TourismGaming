@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pantukan-v2'; // Updated version to force refresh
+const CACHE_NAME = 'pantukan-v3'; // Bump version to force update
 const OFFLINE_URL = '/login.html';
 
 const CACHE_URLS = [
@@ -17,12 +17,15 @@ const CACHE_URLS = [
   '/package/family.html',
   '/js/firebase-config.js',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  '/assets/app-icon.png'
 ];
+
+// ... (Install and Activate events remain the same) ...
 
 // Install Event
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing...');
+  console.log('[SW] Installing v3...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -38,7 +41,7 @@ self.addEventListener('install', (event) => {
 
 // Activate Event
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating...');
+  console.log('[SW] Activating v3...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -56,24 +59,27 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event - Cache First for navigations, then network
+// Fetch Event - Network First, Fallback to Cache
 self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match(event.request)
-        .then((cachedResponse) => {
-          if (cachedResponse) {
-            console.log('[SW] Serving from cache:', event.request.url);
-            return cachedResponse;
-          }
-          return fetch(event.request).catch(() => {
-            console.log('[SW] Network failed, serving offline page');
-            return caches.match(OFFLINE_URL);
-          });
+      fetch(event.request)
+        .catch(() => {
+          console.log('[SW] Network failed, checking cache for:', event.request.url);
+          return caches.match(event.request)
+            .then((cachedResponse) => {
+              if (cachedResponse) {
+                return cachedResponse;
+              }
+              return caches.match(OFFLINE_URL);
+            });
         })
     );
     return;
   }
+
+  // For non-navigation requests (images, scripts), use Cache First
+
 
   event.respondWith(
     caches.match(event.request)

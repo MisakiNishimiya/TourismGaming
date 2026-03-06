@@ -11,9 +11,13 @@
 
     <title>Pantukan - Host Dashboard</title>
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <link rel="manifest" href="manifest.json?v=4">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
+    <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
+
+    <!-- Leaflet for Map Picker -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
@@ -1076,7 +1080,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Image URLs</label>
+                    <label>Location (Drag pin to set exact location)</label>
+                    <div id="pickerMap"
+                        style="height: 300px; width: 100%; border-radius: 8px; margin-bottom: 20px; z-index: 1;"></div>
+                    <input type="hidden" id="packageLat" required>
+                    <input type="hidden" id="packageLng" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Package Images</label>
                     <div class="features-input">
                         <input type="text" id="imageInput" placeholder="https://images.unsplash.com/...">
                         <button type="button" class="btn-add-feature" onclick="addImage()">Add</button>
@@ -1215,7 +1227,11 @@
             features = [];
             images = [];
             renderFeatures();
+            renderFeatures();
             renderImages();
+
+            // Init Map with default coords
+            setTimeout(() => initPickerMap(), 100);
         };
 
         window.closeModal = function () {
@@ -1296,7 +1312,9 @@
                 features: [...features],
                 hostEmail: currentUser.email,
                 hostName: currentUser.name || "Host",
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
+                lat: parseFloat(document.getElementById('packageLat').value) || 7.1333,
+                lng: parseFloat(document.getElementById('packageLng').value) || 125.9000
             };
 
             try {
@@ -1312,6 +1330,55 @@
             }
         });
 
+        // Map Picker Logic
+        let pickerMap = null;
+        let pickerMarker = null;
+
+        function initPickerMap(lat = 7.1333, lng = 125.9000) {
+            if (!pickerMap) {
+                pickerMap = L.map('pickerMap').setView([lat, lng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(pickerMap);
+
+                // Pantukan Bounds
+                const southWest = L.latLng(7.05, 125.80);
+                const northEast = L.latLng(7.20, 126.00);
+                const bounds = L.latLngBounds(southWest, northEast);
+                pickerMap.setMaxBounds(bounds);
+                pickerMap.on('drag', function () {
+                    pickerMap.panInsideBounds(bounds, { animate: false });
+                });
+            } else {
+                pickerMap.setView([lat, lng], 13);
+                // Fix map rendering in modal
+                setTimeout(() => pickerMap.invalidateSize(), 100);
+            }
+
+            if (pickerMarker) pickerMap.removeLayer(pickerMarker);
+
+            pickerMarker = L.marker([lat, lng], { draggable: true }).addTo(pickerMap);
+
+            // Update inputs on drag
+            pickerMarker.on('dragend', function (e) {
+                const pos = e.target.getLatLng();
+                const bounds = L.latLngBounds(L.latLng(7.05, 125.80), L.latLng(7.20, 126.00));
+
+                if (!bounds.contains(pos)) {
+                    alert("Location must be within Pantukan!");
+                    pickerMarker.setLatLng([7.1333, 125.9000]);
+                    pickerMap.panTo([7.1333, 125.9000]);
+                    document.getElementById('packageLat').value = 7.1333;
+                    document.getElementById('packageLng').value = 125.9000;
+                } else {
+                    document.getElementById('packageLat').value = pos.lat;
+                    document.getElementById('packageLng').value = pos.lng;
+                }
+            });
+
+            // Set initial values
+            document.getElementById('packageLat').value = lat;
+            document.getElementById('packageLng').value = lng;
+        }
+
         window.editPackage = function (id) {
             const pkg = packages.find(p => p.id === id);
             if (pkg) {
@@ -1325,7 +1392,11 @@
                 features = pkg.features ? [...pkg.features] : [];
                 renderImages();
                 renderFeatures();
+
                 document.getElementById('packageModal').classList.add('active');
+
+                // Init Map with saved coords or default
+                initPickerMap(pkg.lat || 7.1333, pkg.lng || 125.9000);
             }
         };
 
