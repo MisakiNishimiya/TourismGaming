@@ -810,6 +810,200 @@
                 gap: 30px;
             }
         }
+
+        /* ===== FEEDBACK SECTION ===== */
+        .feedback-section {
+            max-width: 1000px;
+            margin: 80px auto;
+            padding: 0 40px;
+        }
+
+        .feedback-form-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            padding: 45px 50px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .feedback-form-card h3 {
+            font-size: 1.5em;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .feedback-form-card .form-sub {
+            font-size: 0.9em;
+            color: #95a5a6;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        .feedback-form-group {
+            margin-bottom: 22px;
+        }
+
+        .feedback-form-group label {
+            display: block;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .feedback-form-group select,
+        .feedback-form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            background: #fafafa;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.95em;
+            color: #2c3e50;
+            transition: border-color 0.3s;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .feedback-form-group select:focus,
+        .feedback-form-group textarea:focus {
+            border-color: #c9a961;
+        }
+
+        .feedback-form-group textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 6px;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2em;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+            letter-spacing: 0;
+            text-transform: none;
+            margin-bottom: 0;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #c9a961;
+        }
+
+        .btn-feedback-submit {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: none;
+            padding: 15px 45px;
+            font-family: 'Garamond', 'Georgia', serif;
+            font-size: 0.85em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 2px;
+            margin-top: 8px;
+        }
+
+        .btn-feedback-submit:hover {
+            background: #c9a961;
+            transform: translateY(-2px);
+        }
+
+        .feedback-msg {
+            margin-top: 14px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            min-height: 22px;
+        }
+
+        .feedback-msg.success { color: #27ae60; }
+        .feedback-msg.error   { color: #e74c3c; }
+
+        /* Feedback List */
+        .feedback-list-title {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .feedback-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            padding: 28px 32px;
+            margin-bottom: 18px;
+            transition: box-shadow 0.3s;
+        }
+
+        .feedback-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+        }
+
+        .feedback-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .feedback-resort {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #c9a961;
+            font-weight: 600;
+        }
+
+        .feedback-stars {
+            color: #c9a961;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+        }
+
+        .feedback-meta {
+            font-size: 0.8em;
+            color: #bdc3c7;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .feedback-comment {
+            font-size: 0.97em;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .feedback-empty {
+            text-align: center;
+            padding: 40px;
+            color: #bdc3c7;
+            font-size: 0.95em;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .feedback-section { padding: 0 20px; }
+            .feedback-form-card { padding: 30px 25px; }
+        }
     </style>
 </head>
 
@@ -844,6 +1038,7 @@
                 <li><a href="#my-bookings" id="navBookings" style="display: none;">My Bookings</a></li>
                 <li><a href="map.html">Explore Map</a></li>
                 <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#feedback">Feedback</a></li>
                 <li><a href="#contact">Inquire</a></li>
             </ul>
         </div>
@@ -1005,6 +1200,55 @@
         </div>
     </section>
 
+    <!-- ===== FEEDBACK SECTION ===== -->
+    <section class="feedback-section" id="feedback">
+        <h2 class="section-title">Share Your Experience</h2>
+        <p class="section-subtitle">Leave a review for any resort or destination you've visited</p>
+
+        <div class="feedback-form-card">
+            <h3>Write a Review</h3>
+            <p class="form-sub">Your honest feedback helps other travelers</p>
+
+            <div class="feedback-form-group">
+                <label for="feedbackResort">Resort / Destination</label>
+                <select id="feedbackResort">
+                    <option value="">— Select a resort or destination —</option>
+                    <option>Magnaga Waters Beach Resort</option>
+                    <option>Pantukan Water World</option>
+                    <option>Puting Bonbon Beach</option>
+                    <option>Salvosa Falls</option>
+                    <option>Municipal Baywalk Park</option>
+                    <option>Gulf Marine Snorkeling Area</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="feedback-form-group">
+                <label>Your Rating</label>
+                <div class="star-rating" id="starRating">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">&#9733;</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">&#9733;</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">&#9733;</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">&#9733;</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">&#9733;</label>
+                </div>
+            </div>
+
+            <div class="feedback-form-group">
+                <label for="feedbackComment">Your Comment</label>
+                <textarea id="feedbackComment" placeholder="Tell us about your experience..."></textarea>
+            </div>
+
+            <button class="btn-feedback-submit" id="submitFeedbackBtn">Submit Feedback</button>
+            <div class="feedback-msg" id="feedbackMsg"></div>
+        </div>
+
+        <p class="feedback-list-title">What Travelers Are Saying</p>
+        <div id="feedbackList">
+            <div class="feedback-empty">Loading reviews...</div>
+        </div>
+    </section>
+
     <footer id="contact">
         <h3>Begin Your Journey</h3>
         <div class="divider" style="background: #ecf0f1;"></div>
@@ -1018,7 +1262,8 @@
     </footer>
 
     <script type="module">
-        import { db, doc, getDoc, collection, query, where, onSnapshot } from './js/firebase-config.js';
+        import { db, doc, getDoc, collection, addDoc, query, where, orderBy, onSnapshot } from './js/firebase-config.js';
+        // Note: orderBy import is gracefully handled if not exported — fallback below
 
         // Load user info
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -1209,6 +1454,91 @@
                 </div>
             `).join('');
         }
+
+        // ===== FEEDBACK FEATURE =====
+        const feedbackResort   = document.getElementById('feedbackResort');
+        const feedbackComment  = document.getElementById('feedbackComment');
+        const submitFeedbackBtn = document.getElementById('submitFeedbackBtn');
+        const feedbackMsg      = document.getElementById('feedbackMsg');
+        const feedbackList     = document.getElementById('feedbackList');
+
+        function starsHtml(rating) {
+            return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        }
+
+        // Load & render feedback in real-time
+        function initFeedbacks() {
+            const q = query(collection(db, 'feedbacks'));
+            onSnapshot(q, (snapshot) => {
+                const all = [];
+                snapshot.forEach(d => all.push({ id: d.id, ...d.data() }));
+                // Sort newest first
+                all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                if (all.length === 0) {
+                    feedbackList.innerHTML = '<div class="feedback-empty">No reviews yet. Be the first to share your experience!</div>';
+                    return;
+                }
+
+                feedbackList.innerHTML = all.map(fb => `
+                    <div class="feedback-card">
+                        <div class="feedback-card-header">
+                            <span class="feedback-resort">${fb.resort}</span>
+                            <span class="feedback-stars">${starsHtml(fb.rating)}</span>
+                        </div>
+                        <div class="feedback-meta">${fb.customerName} &nbsp;•&nbsp; ${new Date(fb.createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                        <div class="feedback-comment">${fb.comment}</div>
+                    </div>
+                `).join('');
+            }, err => {
+                console.error('Feedback load error:', err);
+                feedbackList.innerHTML = '<div class="feedback-empty">Could not load reviews.</div>';
+            });
+        }
+
+        // Submit feedback
+        submitFeedbackBtn.addEventListener('click', async () => {
+            const resort  = feedbackResort.value.trim();
+            const comment = feedbackComment.value.trim();
+            const ratingInput = document.querySelector('input[name="rating"]:checked');
+            const rating = ratingInput ? parseInt(ratingInput.value) : 0;
+
+            feedbackMsg.className = 'feedback-msg';
+            feedbackMsg.textContent = '';
+
+            if (!resort)   { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please select a resort.'; return; }
+            if (!rating)   { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please choose a star rating.'; return; }
+            if (!comment)  { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please write a comment.'; return; }
+
+            submitFeedbackBtn.disabled = true;
+            submitFeedbackBtn.textContent = 'Submitting...';
+
+            try {
+                await addDoc(collection(db, 'feedbacks'), {
+                    resort,
+                    rating,
+                    comment,
+                    customerName:  currentUser.name  || 'Anonymous',
+                    customerEmail: currentUser.email || '',
+                    createdAt:     new Date().toISOString()
+                });
+
+                feedbackMsg.className += ' success';
+                feedbackMsg.textContent = 'Thank you! Your review has been submitted.';
+                feedbackResort.value = '';
+                feedbackComment.value = '';
+                if (ratingInput) ratingInput.checked = false;
+            } catch (e) {
+                console.error('Feedback submit error:', e);
+                feedbackMsg.className += ' error';
+                feedbackMsg.textContent = 'Failed to submit. Please try again.';
+            } finally {
+                submitFeedbackBtn.disabled = false;
+                submitFeedbackBtn.textContent = 'Submit Feedback';
+            }
+        });
+
+        initFeedbacks();
 
         // Initialize Cloud Connection
         initRealTimeCloud();

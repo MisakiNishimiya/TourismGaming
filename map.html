@@ -391,79 +391,7 @@
             border: 1px solid rgba(201, 169, 97, 0.1);
         }
 
-        .legend {
-            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-            padding: 35px 40px;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(201, 169, 97, 0.1);
-        }
 
-        .legend h3 {
-            font-size: 0.75em;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            color: #7f8c8d;
-            font-weight: 600;
-        }
-
-        .legend-grid {
-            display: flex;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 18px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 0.9em;
-            padding: 12px 16px;
-            border-radius: 8px;
-            transition: all 0.3s;
-            background: white;
-            border: 1px solid transparent;
-        }
-
-        .legend-item:hover {
-            background: #f8f9fa;
-            border-color: rgba(201, 169, 97, 0.2);
-            transform: translateX(4px);
-        }
-
-        .legend-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-        }
-
-        .icon-beach {
-            background: #3498db;
-        }
-
-        .icon-adventure {
-            background: #e74c3c;
-        }
-
-        .icon-nature {
-            background: #27ae60;
-        }
-
-        .icon-cultural {
-            background: #f39c12;
-        }
-
-        .icon-culinary {
-            background: #9b59b6;
-        }
-
-        .icon-family {
-            background: #1abc9c;
-        }
 
         /* Custom Leaflet Popup Styling */
         .leaflet-popup-content-wrapper {
@@ -528,10 +456,7 @@
                 height: 400px;
             }
 
-            .legend-grid {
-                grid-template-columns: 1fr;
-                flex-direction: column;
-            }
+
 
             .map-controls {
                 padding: 0;
@@ -636,35 +561,7 @@
         <p>Discover destinations and experiences on the map</p>
     </div>
 
-    <div class="legend">
-        <h3>Map Legend</h3>
-        <div class="legend-grid">
-            <div class="legend-item">
-                <div class="legend-icon icon-beach"></div>
-                <span>Beach Bliss & Coastal Escape</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-icon icon-adventure"></div>
-                <span>Adventure Explorer</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-icon icon-nature"></div>
-                <span>Nature Sanctuary</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-icon icon-cultural"></div>
-                <span>Cultural Heritage</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-icon icon-culinary"></div>
-                <span>Culinary Journey</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-icon icon-family"></div>
-                <span>Family Collection</span>
-            </div>
-        </div>
-    </div>
+
 
     <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
     <link rel="manifest" href="manifest.json?v=4">
