@@ -575,28 +575,11 @@
 
             <div class="controls-content" id="controlsContent">
                 <div class="control-row">
-                    <label>Filter by Experience:</label>
-                    <div class="filter-row">
-                        <select id="filterType">
-                            <option value="all">All Experiences</option>
-                            <option value="beach">Beach Bliss</option>
-                            <option value="adventure">Adventure Explorer</option>
-                            <option value="nature">Nature Sanctuary</option>
-                            <option value="cultural">Cultural Heritage</option>
-                            <option value="culinary">Culinary Journey</option>
-                            <option value="family">Family Collection</option>
-                        </select>
-                        <button id="showAllBtn">Show All</button>
-                    </div>
-                </div>
-
-                <div class="control-row">
-                    <label>Location & Navigation:</label>
+                    <label>Discovery & Navigation:</label>
                     <div class="control-buttons">
                         <button id="myLocationBtn">📍 My Location</button>
                         <button id="directionsBtn" disabled>🧭 Get Directions</button>
                     </div>
-                    <span id="locationStatus"></span>
                 </div>
 
                 <div class="download-section">
@@ -713,7 +696,7 @@
             maxZoom: 15
         }).addTo(map);
 
-        const typeColors = { beach: '#3498db', adventure: '#e74c3c', nature: '#27ae60', cultural: '#f39c12', culinary: '#9b59b6', family: '#1abc9c' };
+
         const markerGroup = L.layerGroup().addTo(map);
         let allPackages = [];
 
@@ -734,22 +717,9 @@
 
         function renderMarkers() {
             markerGroup.clearLayers();
-            const filter = document.getElementById('filterType').value;
-
-            const visiblePackages = filter === 'all'
-                ? allPackages
-                : allPackages.filter(p => p.type === filter);
-
-            console.log(`[MAP] Rendering ${visiblePackages.length} markers (Filter: ${filter})`);
-            visiblePackages.forEach(pkg => createMarker(pkg));
+            console.log(`[MAP] Rendering ${allPackages.length} markers`);
+            allPackages.forEach(pkg => createMarker(pkg));
         }
-
-        // Filter Logic
-        document.getElementById('filterType').addEventListener('change', renderMarkers);
-        document.getElementById('showAllBtn').addEventListener('click', () => {
-            document.getElementById('filterType').value = 'all';
-            renderMarkers();
-        });
 
         function createMarker(pkg) {
             const lat = pkg.lat;
@@ -759,7 +729,7 @@
 
             const marker = L.circleMarker([lat, lng], {
                 radius: 10,
-                fillColor: typeColors[pkg.type] || '#c9a961',
+                fillColor: '#c9a961',
                 color: '#white',
                 weight: 2,
                 opacity: 1,

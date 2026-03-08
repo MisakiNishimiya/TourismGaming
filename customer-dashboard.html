@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>Pantukan - Luxury Tourism Experience</title>
+    <title>Pantukan - Luxury Destinations & Resorts</title>
     <link rel="manifest" href="manifest.json?v=4">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
     <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
@@ -265,10 +265,10 @@
 
         .packages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, 320px);
+            gap: 30px;
             margin-bottom: 80px;
-            align-items: stretch;
+            justify-content: center;
         }
 
         .package-card {
@@ -279,7 +279,8 @@
             border: 1px solid #e8e8e8;
             display: flex;
             flex-direction: column;
-            height: 100%;
+            width: 320px;
+            height: 320px;
         }
 
         .package-card:hover {
@@ -289,7 +290,7 @@
 
         .package-image {
             width: 100%;
-            height: 320px;
+            height: 180px;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -337,25 +338,30 @@
         }
 
         .package-content {
-            padding: 40px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             flex: 1;
+            justify-content: space-between;
         }
 
         .package-content h3 {
             color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-size: 1.4em;
             font-weight: 300;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
         }
 
         .package-content p {
             color: #7f8c8d;
-            margin-bottom: 30px;
-            font-size: 1em;
-            line-height: 1.8;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .package-features {
@@ -378,10 +384,10 @@
         }
 
         .price {
-            font-size: 2.2em;
+            font-size: 1.8em;
             color: #c9a961;
             font-weight: 300;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
         }
 
@@ -1034,7 +1040,7 @@
                 <span></span>
             </div>
             <ul id="navMenu">
-                <li><a href="#packages">Experiences & Destinations</a></li>
+                <li><a href="#all-packages-section">Destinations & Resorts</a></li>
                 <li><a href="#my-bookings" id="navBookings" style="display: none;">My Bookings</a></li>
                 <li><a href="map.html">Explore Map</a></li>
                 <li><a href="#gallery">Gallery</a></li>
@@ -1048,7 +1054,7 @@
         <div class="featured-grid">
             <div class="feature-item">
                 <div class="feature-icon">✦</div>
-                <h3>Curated Experiences</h3>
+                <h3>Curated Destinations</h3>
                 <p>Every journey is thoughtfully designed to showcase the finest of Pantukan's natural beauty and
                     cultural heritage</p>
             </div>
@@ -1065,111 +1071,12 @@
         </div>
     </div>
 
-    <div class="container" id="packages">
-        <h2 class="section-title">Our Experiences</h2>
-        <p class="section-subtitle">Carefully crafted journeys for the discerning traveler</p>
-        <div class="packages-grid">
-            <div class="package-card" id="beach">
-                <div class="package-image img-adventure"></div>
-                <div class="package-content">
-                    <h3>Beach Bliss & Coastal Escape</h3>
-                    <p>Unwind on pristine shores with golden sands, calm gulf waters, and sunset views—Pantukan's
-                        signature relaxation spots.</p>
-                    <ul class="package-features">
-                        <li>Private beachfront lounging at local premium resorts</li>
-                        <li>Panoramic sunset deck views</li>
-                        <li>Serene swimming & sunbathing at secluded coastal spots</li>
-                        <li>Exclusive resort beach access and amenities</li>
-                    </ul>
-                    <a href="package/beach.html" class="btn">See packages</a>
-                </div>
-            </div>
 
-            <div class="package-card" id="food">
-                <div class="package-image img-culinary"></div>
-                <div class="package-content">
-                    <h3>Adventure Explorer</h3>
-                    <p>Get your adrenaline going with water-based thrills and light coastal exploration along Pantukan's
-                        shores.</p>
-                    <ul class="package-features">
-                        <li>Premium water sports: kayaking, kiteboarding, banana boat rides</li>
-                        <li>Guided snorkeling in vibrant marine areas</li>
-                        <li>Coastal paddle adventures along the gulf</li>
-                        <li>Expert-led active beach exploration</li>
-                    </ul>
-                    <a href="package/adventure.html" class="btn">See packages</a>
-                </div>
-            </div>
-
-            <div class="package-card" id="places">
-                <div class="package-image img-cultural"></div>
-                <div class="package-content">
-                    <h3>Nature Sanctuary</h3>
-                    <p>Immerse in Pantukan's coastal ecosystems, from mangroves to beachside greenery, for peaceful
-                        eco-connection.</p>
-                    <ul class="package-features">
-                        <li>Guided mangrove walks & birdwatching</li>
-                        <li>Eco-exploration of gulf marine life</li>
-                        <li>Tranquil beachside immersion in tropical groves</li>
-                        <li>Sustainable activities with expert local guidance</li>
-                    </ul>
-                    <a href="package/nature.html" class="btn">See packages</a>
-                </div>
-            </div>
-
-            <div class="package-card">
-                <div class="package-image img-nature"></div>
-                <div class="package-content">
-                    <h3>Cultural Heritage</h3>
-                    <p>Discover Pantukan's roots in gold mining, fishing communities, and everyday local life.</p>
-                    <ul class="package-features">
-                        <li>Respectful insights into local mining heritage</li>
-                        <li>Relaxed strolls at established community parks</li>
-                        <li>Encounters with traditional fishing practices</li>
-                        <li>Host-curated cultural interactions</li>
-                    </ul>
-                    <a href="package/cultural.html" class="btn">See packages</a>
-                </div>
-            </div>
-
-            <div class="package-card">
-                <div class="package-image img-complete"></div>
-                <div class="package-content">
-                    <h3>Culinary Journey</h3>
-                    <p>Savor fresh gulf seafood, unique local treats, and beachside dining that highlight Pantukan's
-                        coastal bounty.</p>
-                    <ul class="package-features">
-                        <li>Daily gulf catches and traditional preparations</li>
-                        <li>Signature "Dinner by the Beach" experiences</li>
-                        <li>Tastings of regional specialties and snacks</li>
-                        <li>Resort dining with fresh tropical accents</li>
-                    </ul>
-                    <a href="package/culinary.html" class="btn">See packages</a>
-                </div>
-            </div>
-
-            <div class="package-card">
-                <div class="package-image img-family"></div>
-                <div class="package-content">
-                    <h3>Family Collection / Grand Experience</h3>
-                    <p>Create memorable group moments with easy, all-ages-friendly beaches, pools, and activities
-                        perfect for families or reunions.</p>
-                    <ul class="package-features">
-                        <li>Family water fun & pool activities</li>
-                        <li>Spacious beach picnics at premier locations</li>
-                        <li>Relaxed baywalk strolls & golden hour watching</li>
-                        <li>Group stays with games and casual activities</li>
-                    </ul>
-                    <a href="package/family.html" class="btn">See packages</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Dynamic section for all live packages -->
     <div class="container" id="all-packages-section" style="margin-top: 50px;">
-        <h2 class="section-title">Latest Experiences</h2>
-        <p class="section-subtitle">Freshly added journeys from our hosts</p>
+        <h2 class="section-title">Our Destinations & Resorts</h2>
+        <p class="section-subtitle">Real-time curated journeys from our host community</p>
         <div class="packages-grid" id="dynamic-packages-grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #7f8c8d;">
                 <p>Connecting to NaviBay cloud...</p>
@@ -1179,7 +1086,7 @@
 
     <section class="bookings-section" id="my-bookings" style="display: none;">
         <h2 class="section-title">My Bookings</h2>
-        <p class="section-subtitle">Your upcoming and past experiences with NaviBay</p>
+        <p class="section-subtitle">Your upcoming and past bookings with NaviBay</p>
         <div class="bookings-grid" id="bookingsGrid">
             <!-- Bookings will be loaded here -->
         </div>
@@ -1202,7 +1109,7 @@
 
     <!-- ===== FEEDBACK SECTION ===== -->
     <section class="feedback-section" id="feedback">
-        <h2 class="section-title">Share Your Experience</h2>
+        <h2 class="section-title">Share Your Feedback</h2>
         <p class="section-subtitle">Leave a review for any resort or destination you've visited</p>
 
         <div class="feedback-form-card">
@@ -1213,12 +1120,6 @@
                 <label for="feedbackResort">Resort / Destination</label>
                 <select id="feedbackResort">
                     <option value="">— Select a resort or destination —</option>
-                    <option>Magnaga Waters Beach Resort</option>
-                    <option>Pantukan Water World</option>
-                    <option>Puting Bonbon Beach</option>
-                    <option>Salvosa Falls</option>
-                    <option>Municipal Baywalk Park</option>
-                    <option>Gulf Marine Snorkeling Area</option>
                     <option>Other</option>
                 </select>
             </div>
@@ -1236,7 +1137,7 @@
 
             <div class="feedback-form-group">
                 <label for="feedbackComment">Your Comment</label>
-                <textarea id="feedbackComment" placeholder="Tell us about your experience..."></textarea>
+                <textarea id="feedbackComment" placeholder="Tell us about your stay..."></textarea>
             </div>
 
             <button class="btn-feedback-submit" id="submitFeedbackBtn">Submit Feedback</button>
@@ -1252,7 +1153,7 @@
     <footer id="contact">
         <h3>Begin Your Journey</h3>
         <div class="divider" style="background: #ecf0f1;"></div>
-        <p>Experience the refined beauty of Pantukan</p>
+        <p>Discover the refined beauty of Pantukan</p>
         <div class="contact-info">
             <a href="tel:+639123456789">+63 912 345 6789</a>
             <a href="mailto:concierge@pantukan.travel">concierge@pantukan.travel</a>
@@ -1262,8 +1163,8 @@
     </footer>
 
     <script type="module">
-        import { db, doc, getDoc, collection, addDoc, query, where, orderBy, onSnapshot } from './js/firebase-config.js';
-        // Note: orderBy import is gracefully handled if not exported — fallback below
+        import { db, doc, getDoc, collection, addDoc, query, where, onSnapshot } from './js/firebase-config.js';
+
 
         // Load user info
         const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
@@ -1288,6 +1189,7 @@
                     allPackages.push({ id: doc.id, ...doc.data() });
                 });
                 renderPackages();
+                updateFeedbackDropdown();
             }, (error) => {
                 console.error("Cloud Error:", error);
             });
@@ -1313,7 +1215,6 @@
                 <div class="package-card" id="${pkg.id}">
                     <div class="package-image" style="background-image: url('${img}')"></div>
                     <div class="package-content">
-                        <span style="font-size: 0.7em; text-transform: uppercase; color: #c9a961; letter-spacing: 2px;">${pkg.type}</span>
                         <h3>${pkg.name}</h3>
                         <p>${pkg.description}</p>
                         <ul class="package-features">
@@ -1327,6 +1228,25 @@
                 </div>
                 `;
             }).join('');
+        }
+
+        function updateFeedbackDropdown() {
+            const select = document.getElementById('feedbackResort');
+            if (!select) return;
+
+            const currentVal = select.value;
+            let html = '<option value="">— Select a resort or destination —</option>';
+            
+            // Add package names
+            allPackages.forEach(pkg => {
+                if (pkg.name) {
+                    html += `<option value="${pkg.name}">${pkg.name}</option>`;
+                }
+            });
+
+            html += '<option value="Other">Other</option>';
+            select.innerHTML = html;
+            select.value = currentVal;
         }
 
         // Profile dropdown toggle
@@ -1386,7 +1306,7 @@
             btn.addEventListener('click', function (e) {
                 if (this.textContent === 'Reserve') {
                     e.preventDefault();
-                    alert('Thank you for your interest in our luxury experiences. Our concierge team will contact you shortly at +63 912 345 6789.');
+                    alert('Thank you for your interest in our luxury destinations. Our concierge team will contact you shortly at +63 912 345 6789.');
                 }
             });
         });
@@ -1476,7 +1396,7 @@
                 all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
                 if (all.length === 0) {
-                    feedbackList.innerHTML = '<div class="feedback-empty">No reviews yet. Be the first to share your experience!</div>';
+                    feedbackList.innerHTML = '<div class="feedback-empty">No reviews yet. Be the first to share your feedback!</div>';
                     return;
                 }
 

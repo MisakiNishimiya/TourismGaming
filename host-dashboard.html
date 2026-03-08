@@ -319,8 +319,8 @@
 
         .packages-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, 300px);
+            gap: 25px;
         }
 
         .package-card {
@@ -329,6 +329,10 @@
             overflow: hidden;
             transition: all 0.4s ease;
             cursor: pointer;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
         }
 
         .package-card:hover {
@@ -338,7 +342,7 @@
 
         .package-image {
             width: 100%;
-            height: 280px;
+            height: 160px;
             background-size: cover;
             background-position: center;
             position: relative;
@@ -424,22 +428,25 @@
         }
 
         .package-content {
-            padding: 35px;
+            padding: 20px;
         }
 
         .package-content h4 {
-            font-size: 1.6em;
+            font-size: 1.2em;
             color: #2c3e50;
             font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .package-price {
-            font-size: 2em;
+            font-size: 1.6em;
             color: #c9a961;
             font-weight: 300;
-            margin: 20px 0;
+            margin: 15px 0;
             letter-spacing: 1px;
         }
 
@@ -925,12 +932,7 @@
                 <span></span>
             </div>
             <ul id="navMenu">
-                <li><a href="#count-beach">Beach Bliss </a></li>
-                <li><a href="#count-adventure">Adventure Explorer</a></li>
-                <li><a href="#count-nature">Nature Sanctuary</a></li>
-                <li><a href="#count-cultural">Cultural Heritage</a></li>
-                <li><a href="#count-culinary">Culinary Journey</a></li>
-                <li><a href="#count-family">Family Collection </a></li>
+                <li><a href="#all-packages">My Packages</a></li>
             </ul>
         </div>
     </nav>
@@ -939,7 +941,7 @@
         <div class="dashboard-header">
             <h2>Host Dashboard</h2>
             <div class="divider"></div>
-            <p>Manage your tour packages and experiences</p>
+            <p>Manage your destinations and resorts</p>
             <button class="btn-add-package" onclick="openModal()">Add New Package</button>
         </div>
 
@@ -971,72 +973,12 @@
             </div>
         </div>
 
-        <div class="experience-section">
+        <div class="experience-section" id="all-packages">
             <div class="experience-header">
-                <h3>Beach Bliss & Coastal Escape</h3>
-                <span class="experience-count"><span id="count-beach">0</span> packages</span>
+                <h3>My Packages</h3>
+                <span class="experience-count"><span id="all-packages-count">0</span> total</span>
             </div>
-            <div class="packages-grid" id="beach-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Adventure Explorer</h3>
-                <span class="experience-count"><span id="count-adventure">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="adventure-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Nature Sanctuary</h3>
-                <span class="experience-count"><span id="count-nature">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="nature-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Cultural Heritage</h3>
-                <span class="experience-count"><span id="count-cultural">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="cultural-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Culinary Journey</h3>
-                <span class="experience-count"><span id="count-culinary">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="culinary-grid">
-                <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="experience-section">
-            <div class="experience-header">
-                <h3>Family Collection / Grand Experience</h3>
-                <span class="experience-count"><span id="count-family">0</span> packages</span>
-            </div>
-            <div class="packages-grid" id="family-grid">
+            <div class="packages-grid" id="all-packages-grid">
                 <div class="empty-state">
                     <p>No packages yet. Click "Add New Package" to create one.</p>
                 </div>
@@ -1051,18 +993,7 @@
                 <div class="divider"></div>
             </div>
             <form id="packageForm">
-                <div class="form-group">
-                    <label for="experienceType">Experience Type</label>
-                    <select id="experienceType" required>
-                        <option value="">Select Experience Type</option>
-                        <option value="beach">Beach Bliss & Coastal Escape</option>
-                        <option value="adventure">Adventure Explorer</option>
-                        <option value="nature">Nature Sanctuary</option>
-                        <option value="cultural">Cultural Heritage</option>
-                        <option value="culinary">Culinary Journey</option>
-                        <option value="family">Family Collection / Grand Experience</option>
-                    </select>
-                </div>
+
 
                 <div class="form-group">
                     <label for="packageName">Package Name</label>
@@ -1172,50 +1103,45 @@
         }
 
         function renderAllPackages() {
-            const types = ['beach', 'adventure', 'nature', 'cultural', 'culinary', 'family'];
-            types.forEach(type => {
-                const grid = document.getElementById(`${type}-grid`);
-                if (!grid) return;
+            const grid = document.getElementById('all-packages-grid');
+            if (!grid) return;
 
-                const typePackages = packages.filter(p => p.type === type);
+            const countEl = document.getElementById('all-packages-count');
+            if (countEl) countEl.textContent = packages.length;
 
-                const countEl = document.getElementById(`count-${type}`);
-                if (countEl) countEl.textContent = typePackages.length;
+            if (packages.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><p>No packages yet. Click "Add New Package" to create one.</p></div>';
+            } else {
+                grid.innerHTML = packages.map(pkg => {
+                    const pkgImages = pkg.images || [];
+                    const imageCount = pkgImages.length;
 
-                if (typePackages.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><p>No packages yet. Click "Add New Package" to create one.</p></div>';
-                } else {
-                    grid.innerHTML = typePackages.map(pkg => {
-                        const pkgImages = pkg.images || [];
-                        const imageCount = pkgImages.length;
-
-                        return `
-                        <div class="package-card" data-package-id="${pkg.id}">
-                            <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
-                                ${imageCount > 1 ? `
-                                    <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
-                                    <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
-                                    <div class="image-gallery-dots">
-                                        ${pkgImages.map((_, index) => `
-                                            <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
-                                        `).join('')}
-                                    </div>
-                                ` : ''}
-                            </div>
-                            <div class="package-content">
-                                <h4>${pkg.name}</h4>
-                                <p style="color: #7f8c8d; font-size: 0.95em; margin: 10px 0;">${pkg.description}</p>
-                                <div class="package-price">₱${pkg.price.toLocaleString()}</div>
-                                <div class="package-actions">
-                                    <button class="btn-edit" onclick="editPackage('${pkg.id}')">Edit</button>
-                                    <button class="btn-delete" onclick="deletePackage('${pkg.id}')">Delete</button>
+                    return `
+                    <div class="package-card" data-package-id="${pkg.id}">
+                        <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
+                            ${imageCount > 1 ? `
+                                <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
+                                <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
+                                <div class="image-gallery-dots">
+                                    ${pkgImages.map((_, index) => `
+                                        <button class="gallery-dot ${index === 0 ? 'active' : ''}" onclick="setImage(event, '${pkg.id}', ${index})"></button>
+                                    `).join('')}
                                 </div>
+                            ` : ''}
+                        </div>
+                        <div class="package-content">
+                            <h4>${pkg.name}</h4>
+                            <p style="color: #7f8c8d; font-size: 0.85em; margin: 5px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${pkg.description}</p>
+                            <div class="package-price" style="font-size: 1.4em; margin: 10px 0;">₱${pkg.price.toLocaleString()}</div>
+                            <div class="package-actions">
+                                <button class="btn-edit" onclick="editPackage('${pkg.id}')">Edit</button>
+                                <button class="btn-delete" onclick="deletePackage('${pkg.id}')">Delete</button>
                             </div>
                         </div>
-                        `;
-                    }).join('');
-                }
-            });
+                    </div>
+                    `;
+                }).join('');
+            }
         }
 
         // Global Window assignments for UI buttons
@@ -1303,7 +1229,6 @@
             }
 
             const packageData = {
-                type: document.getElementById('experienceType').value,
                 name: document.getElementById('packageName').value,
                 description: document.getElementById('packageDescription').value,
                 price: parseFloat(document.getElementById('packagePrice').value),
@@ -1383,7 +1308,6 @@
             if (pkg) {
                 editingPackageId = id;
                 document.getElementById('modalTitle').textContent = 'Edit Package';
-                document.getElementById('experienceType').value = pkg.type;
                 document.getElementById('packageName').value = pkg.name;
                 document.getElementById('packageDescription').value = pkg.description;
                 document.getElementById('packagePrice').value = pkg.price;
