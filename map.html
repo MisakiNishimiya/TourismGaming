@@ -824,13 +824,12 @@
         onSnapshot(query(collection(db, "packages")), (snapshot) => {
             allPackages = []; // clear current
 
-            // Add Base Markers
-            allPackages.push({ name: 'Magnaga Waters', lat: 7.0850, lng: 125.9500, type: 'beach', id: 'base1', description: 'Famous beach resort' });
-            allPackages.push({ name: 'Pantukan Town Center', lat: 7.1333, lng: 125.9000, type: 'cultural', id: 'base2', description: 'Center of town' });
-
             snapshot.forEach(doc => {
                 const data = doc.data();
-                allPackages.push({ id: doc.id, ...data });
+                // Only add if it has coordinates
+                if (data.lat && data.lng) {
+                    allPackages.push({ id: doc.id, ...data });
+                }
             });
 
             renderMarkers();
@@ -856,26 +855,8 @@
         });
 
         function createMarker(pkg) {
-            // Priority: Real saved coords > Hash fallback
-            const getConsistentOffset = (str, index) => {
-                if (!str) return 0;
-                let hash = 0;
-                for (let i = 0; i < str.length; i++) {
-                    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-                    hash = hash & hash;
-                }
-                return ((hash + index) % 100) / 1000 - 0.05;
-            };
-
-            // Ensure we use the SAVED lat/lng from Host Dashboard if available
-            // Note: Host Dashboard saves as 'lat' and 'lng' locally, but let's handle if it was saved differently
-            let lat = pkg.lat;
-            let lng = pkg.lng;
-
-            if (!lat || !lng) {
-                lat = 7.1333 + getConsistentOffset(pkg.id || pkg.name, 1);
-                lng = 125.9000 + getConsistentOffset(pkg.id || pkg.name, 2);
-            }
+            const lat = pkg.lat;
+            const lng = pkg.lng;
 
             console.log(`[MAP] Marker: ${pkg.name} [${lat}, ${lng}]`);
 

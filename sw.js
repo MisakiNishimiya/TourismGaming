@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pantukan-v3'; // Bump version to force update
+const CACHE_NAME = 'pantukan-v4'; // Bump version to force update
 const OFFLINE_URL = '/login.html';
 
 const CACHE_URLS = [
@@ -25,7 +25,7 @@ const CACHE_URLS = [
 
 // Install Event
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing v3...');
+  console.log('[SW] Installing v4...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -41,7 +41,7 @@ self.addEventListener('install', (event) => {
 
 // Activate Event
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating v3...');
+  console.log('[SW] Activating v4...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
