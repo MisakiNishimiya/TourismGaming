@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Packages: allow anyone to read, any authenticated host to write (custom auth uses 'if true' for now)
+    match /packages/{packageId} {
+      allow read, write: if true;
+    }
+    
+    // Users: needed for custom login/register
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Bookings: needed for customer booking and host management
+    match /bookings/{bookingId} {
+      allow read, write: if true;
+    }
+
+    // Feedbacks: the new collection requested
+    match /feedbacks/{feedbackId} {
+      allow read, write: if true;
+    }
+  }
+}
