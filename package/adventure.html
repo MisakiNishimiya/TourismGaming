@@ -177,14 +177,14 @@
             letter-spacing: 1px;
         }
 
-        .packages-grid {
+        .resorts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
             align-items: stretch;
         }
 
-        .package-card {
+        .resort-card {
             background: #ecf0f1;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -194,12 +194,12 @@
             height: 100%;
         }
 
-        .package-card:hover {
+        .resort-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        .package-image {
+        .resort-image {
             width: 100%;
             height: 320px;
             background-size: cover;
@@ -208,7 +208,7 @@
             overflow: hidden;
         }
 
-        .package-image::after {
+        .resort-image::after {
             content: '';
             position: absolute;
             top: 0;
@@ -220,7 +220,7 @@
             transition: opacity 0.4s;
         }
 
-        .package-card:hover .package-image::after {
+        .resort-card:hover .resort-image::after {
             opacity: 1;
         }
 
@@ -243,7 +243,7 @@
             opacity: 0;
         }
 
-        .package-card:hover .image-gallery-nav {
+        .resort-card:hover .image-gallery-nav {
             opacity: 1;
         }
 
@@ -287,14 +287,14 @@
             border-radius: 4px;
         }
 
-        .package-content {
+        .resort-content {
             padding: 40px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
-        .package-content h3 {
+        .resort-content h3 {
             color: #2c3e50;
             margin-bottom: 20px;
             font-size: 1.8em;
@@ -302,25 +302,25 @@
             letter-spacing: 2px;
         }
 
-        .package-content p {
+        .resort-content p {
             color: #7f8c8d;
             margin-bottom: 30px;
             font-size: 1em;
             line-height: 1.8;
         }
 
-        .package-features {
+        .resort-features {
             list-style: none;
             margin-bottom: 30px;
         }
 
-        .package-features li {
+        .resort-features li {
             padding: 12px 0;
             color: #555;
             font-size: 0.95em;
         }
 
-        .package-features li::before {
+        .resort-features li::before {
             content: '—';
             color: #c9a961;
             font-weight: bold;
@@ -481,7 +481,7 @@
         window.changeImage = function (event, packageId, direction) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
-            const imageDiv = card.querySelector('.package-image');
+            const imageDiv = card.querySelector('.resort-image');
             const imagesData = imageDiv.getAttribute('data-images');
             const images = JSON.parse(imagesData);
 
@@ -513,7 +513,7 @@
             });
         };
 
-        window.bookPackage = function (packageId) {
+        window.bookResort = function (packageId) {
             window.location.href = `booking-transaction.html?package=${packageId}`;
         };
 

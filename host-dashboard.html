@@ -179,7 +179,7 @@
             }
         }
 
-        .btn-add-package {
+        .btn-add-resort {
             display: inline-block;
             background: #2c3e50;
             color: #ecf0f1;
@@ -195,7 +195,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-add-package:hover {
+        .btn-add-resort:hover {
             background: #c9a961;
             transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
@@ -317,13 +317,13 @@
             letter-spacing: 1px;
         }
 
-        .packages-grid {
+        .resorts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, 300px);
             gap: 25px;
         }
 
-        .package-card {
+        .resort-card {
             background: #ecf0f1;
             border: 1px solid #e8e8e8;
             overflow: hidden;
@@ -335,12 +335,12 @@
             flex-direction: column;
         }
 
-        .package-card:hover {
+        .resort-card:hover {
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             transform: translateY(-8px);
         }
 
-        .package-image {
+        .resort-image {
             width: 100%;
             height: 160px;
             background-size: cover;
@@ -349,7 +349,7 @@
             overflow: hidden;
         }
 
-        .package-image::after {
+        .resort-image::after {
             content: '';
             position: absolute;
             top: 0;
@@ -361,7 +361,7 @@
             transition: opacity 0.4s;
         }
 
-        .package-card:hover .package-image::after {
+        .resort-card:hover .resort-image::after {
             opacity: 1;
         }
 
@@ -384,7 +384,7 @@
             opacity: 0;
         }
 
-        .package-card:hover .image-gallery-nav {
+        .resort-card:hover .image-gallery-nav {
             opacity: 1;
         }
 
@@ -427,11 +427,11 @@
             border-radius: 4px;
         }
 
-        .package-content {
+        .resort-content {
             padding: 20px;
         }
 
-        .package-content h4 {
+        .resort-content h4 {
             font-size: 1.2em;
             color: #2c3e50;
             font-weight: 300;
@@ -811,19 +811,58 @@
             color: #c9a961;
         }
 
-        .image-preview {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
 
-        .image-thumbnail {
-            width: 60px;
-            height: 60px;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid #e0e0e0;
-            flex-shrink: 0;
+        .image-preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .image-preview-item:hover {
+            transform: translateY(-3px);
+            border-color: #c9a961;
+            box-shadow: 0 4px 12px rgba(201, 169, 97, 0.2);
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .btn-remove-image:hover {
+            background: #ef4444;
+            color: white;
+            transform: scale(1.1);
         }
 
         @media (max-width: 768px) {
@@ -836,7 +875,7 @@
                 font-size: 2em;
             }
 
-            .packages-grid {
+            .resorts-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -932,7 +971,7 @@
                 <span></span>
             </div>
             <ul id="navMenu">
-                <li><a href="#all-packages">My Packages</a></li>
+                <li><a href="#all-resorts">My Resorts</a></li>
             </ul>
         </div>
     </nav>
@@ -942,7 +981,7 @@
             <h2>Host Dashboard</h2>
             <div class="divider"></div>
             <p>Manage your destinations and resorts</p>
-            <button class="btn-add-package" onclick="openModal()">Add New Package</button>
+            <button class="btn-add-resort" onclick="openModal()">Add New Resort</button>
         </div>
 
         <div class="experience-section bookings">
@@ -955,7 +994,7 @@
                     <thead>
                         <tr>
                             <th>Customer</th>
-                            <th>Package</th>
+                            <th>Resort</th>
                             <th>Dates</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -973,58 +1012,58 @@
             </div>
         </div>
 
-        <div class="experience-section" id="all-packages">
+        <div class="experience-section" id="all-resorts">
             <div class="experience-header">
-                <h3>My Packages</h3>
-                <span class="experience-count"><span id="all-packages-count">0</span> total</span>
+                <h3>My Resorts</h3>
+                <span class="experience-count"><span id="all-resorts-count">0</span> total</span>
             </div>
-            <div class="packages-grid" id="all-packages-grid">
+            <div class="resorts-grid" id="all-resorts-grid">
                 <div class="empty-state">
-                    <p>No packages yet. Click "Add New Package" to create one.</p>
+                    <p>No resorts yet. Click "Add New Resort" to create one.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="packageModal">
+    <div class="modal" id="resortModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Add Package</h3>
+                <h3 id="modalTitle">Add Resort</h3>
                 <div class="divider"></div>
             </div>
-            <form id="packageForm">
+            <form id="resortForm">
 
 
                 <div class="form-group">
-                    <label for="packageName">Package Name</label>
-                    <input type="text" id="packageName" required placeholder="Package Name">
+                    <label for="resortName">Resort Name</label>
+                    <input type="text" id="resortName" required placeholder="Resort Name">
                 </div>
 
                 <div class="form-group">
-                    <label for="packageDescription">Description</label>
-                    <textarea id="packageDescription" required placeholder="Describe your package..."></textarea>
+                    <label for="resortDescription">Description</label>
+                    <textarea id="resortDescription" required placeholder="Describe your resort..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="packagePrice">Price (₱)</label>
-                    <input type="number" id="packagePrice" required placeholder="3500" min="0">
+                    <label for="resortPrice">Price (₱)</label>
+                    <input type="number" id="resortPrice" required placeholder="3500" min="0">
                 </div>
 
                 <div class="form-group">
                     <label>Location (Drag pin to set exact location)</label>
                     <div id="pickerMap"
                         style="height: 300px; width: 100%; border-radius: 8px; margin-bottom: 20px; z-index: 1;"></div>
-                    <input type="hidden" id="packageLat" required>
-                    <input type="hidden" id="packageLng" required>
+                    <input type="hidden" id="resortLat" required>
+                    <input type="hidden" id="resortLng" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Package Images</label>
+                    <label>Resort Gallery (Select one or more photos)</label>
                     <div class="features-input">
-                        <input type="text" id="imageInput" placeholder="https://images.unsplash.com/...">
-                        <button type="button" class="btn-add-feature" onclick="addImage()">Add</button>
+                        <input type="file" id="imageInput" accept="image/*" multiple>
+                        <button type="button" class="btn-add-feature" onclick="addImage()">Upload</button>
                     </div>
-                    <div id="imagesList"></div>
+                    <div id="imagesList" class="image-preview-grid"></div>
                 </div>
 
                 <div class="form-group">
@@ -1037,7 +1076,7 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button type="submit" class="btn-submit">Save Package</button>
+                    <button type="submit" class="btn-submit">Save Resort</button>
                     <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
                 </div>
             </form>
@@ -1047,8 +1086,8 @@
     <script type="module">
         import { db, auth, doc, setDoc, getDoc, collection, addDoc, getDocs, query, where, deleteDoc, onSnapshot } from './js/firebase-config.js';
 
-        let packages = [];
-        let editingPackageId = null;
+        let resorts = [];
+        let editingResortId = null;
         let features = [];
         let images = [];
 
@@ -1086,39 +1125,39 @@
         });
 
         // LIVE CLOUD LISTENER (Real-time sync)
-        function initRealTimePackages() {
+        function initRealTimeResorts() {
             const q = query(collection(db, "packages"), where("hostEmail", "==", currentUser.email));
 
             onSnapshot(q, (querySnapshot) => {
-                packages = [];
+                resorts = [];
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    packages.push({ id: doc.id, ...data });
+                    resorts.push({ id: doc.id, ...data });
                 });
-                console.log("Cloud Packages Updated:", packages.length);
-                renderAllPackages();
+                console.log("Cloud Resorts Updated:", resorts.length);
+                renderAllResorts();
             }, (error) => {
                 console.error("Snapshot error:", error);
             });
         }
 
-        function renderAllPackages() {
-            const grid = document.getElementById('all-packages-grid');
+        function renderAllResorts() {
+            const grid = document.getElementById('all-resorts-grid');
             if (!grid) return;
 
-            const countEl = document.getElementById('all-packages-count');
-            if (countEl) countEl.textContent = packages.length;
+            const countEl = document.getElementById('all-resorts-count');
+            if (countEl) countEl.textContent = resorts.length;
 
-            if (packages.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><p>No packages yet. Click "Add New Package" to create one.</p></div>';
+            if (resorts.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><p>No resorts yet. Click "Add New Resort" to create one.</p></div>';
             } else {
-                grid.innerHTML = packages.map(pkg => {
+                grid.innerHTML = resorts.map(pkg => {
                     const pkgImages = pkg.images || [];
                     const imageCount = pkgImages.length;
 
                     return `
-                    <div class="package-card" data-package-id="${pkg.id}">
-                        <div class="package-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
+                    <div class="resort-card" data-resort-id="${pkg.id}">
+                        <div class="resort-image" style="background-image: url('${pkgImages[0] || ''}')" data-current-index="0">
                             ${imageCount > 1 ? `
                                 <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
                                 <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
@@ -1129,13 +1168,13 @@
                                 </div>
                             ` : ''}
                         </div>
-                        <div class="package-content">
+                        <div class="resort-content">
                             <h4>${pkg.name}</h4>
                             <p style="color: #7f8c8d; font-size: 0.85em; margin: 5px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${pkg.description}</p>
                             <div class="package-price" style="font-size: 1.4em; margin: 10px 0;">₱${pkg.price.toLocaleString()}</div>
                             <div class="package-actions">
-                                <button class="btn-edit" onclick="editPackage('${pkg.id}')">Edit</button>
-                                <button class="btn-delete" onclick="deletePackage('${pkg.id}')">Delete</button>
+                                <button class="btn-edit" onclick="editResort('${pkg.id}')">Edit</button>
+                                <button class="btn-delete" onclick="deleteResort('${pkg.id}')">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -1146,10 +1185,10 @@
 
         // Global Window assignments for UI buttons
         window.openModal = function () {
-            document.getElementById('packageModal').classList.add('active');
-            document.getElementById('modalTitle').textContent = 'Add Package';
-            editingPackageId = null;
-            document.getElementById('packageForm').reset();
+            document.getElementById('resortModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = 'Add Resort';
+            editingResortId = null;
+            document.getElementById('resortForm').reset();
             features = [];
             images = [];
             renderFeatures();
@@ -1160,20 +1199,35 @@
         };
 
         window.closeModal = function () {
-            document.getElementById('packageModal').classList.remove('active');
-            document.getElementById('packageForm').reset();
+            document.getElementById('resortModal').classList.remove('active');
+            document.getElementById('resortForm').reset();
             features = [];
             images = [];
-            editingPackageId = null;
+            editingResortId = null;
         };
 
         window.addImage = function () {
             const input = document.getElementById('imageInput');
-            const value = input.value.trim();
-            if (value) {
-                images.push(value);
-                input.value = '';
-                renderImages();
+            const files = Array.from(input.files);
+            
+            if (files.length > 0) {
+                let processedCount = 0;
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const base64Image = e.target.result;
+                        images.push(base64Image);
+                        processedCount++;
+                        
+                        if (processedCount === files.length) {
+                            input.value = ''; // Clear file input
+                            renderImages();
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                alert("Please select one or more image files first.");
             }
         };
 
@@ -1185,11 +1239,9 @@
         function renderImages() {
             const list = document.getElementById('imagesList');
             list.innerHTML = images.map((image, index) => `
-                <div class="feature-item">
-                    <div class="image-preview">
-                        <div class="image-thumbnail" style="background-image: url('${image}')"></div>
-                    </div>
-                    <button type="button" class="btn-remove-feature" onclick="removeImage(${index})">×</button>
+                <div class="image-preview-item">
+                    <img src="${image}" alt="Resort photo">
+                    <button type="button" class="btn-remove-image" onclick="removeImage(${index})">×</button>
                 </div>
             `).join('');
         }
@@ -1220,7 +1272,7 @@
         }
 
         // FORM SUBMIT (TO CLOUD)
-        document.getElementById('packageForm').addEventListener('submit', async function (e) {
+        document.getElementById('resortForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             if (images.length === 0) {
@@ -1228,25 +1280,25 @@
                 return;
             }
 
-            const packageData = {
-                name: document.getElementById('packageName').value,
-                description: document.getElementById('packageDescription').value,
-                price: parseFloat(document.getElementById('packagePrice').value),
+            const resortData = {
+                name: document.getElementById('resortName').value,
+                description: document.getElementById('resortDescription').value,
+                price: parseFloat(document.getElementById('resortPrice').value),
                 images: [...images],
                 features: [...features],
                 hostEmail: currentUser.email,
                 hostName: currentUser.name || "Host",
                 updatedAt: new Date().toISOString(),
-                lat: parseFloat(document.getElementById('packageLat').value) || 7.1333,
-                lng: parseFloat(document.getElementById('packageLng').value) || 125.9000
+                lat: parseFloat(document.getElementById('resortLat').value) || 7.1333,
+                lng: parseFloat(document.getElementById('resortLng').value) || 125.9000
             };
 
             try {
-                if (editingPackageId) {
-                    await setDoc(doc(db, "packages", editingPackageId), packageData, { merge: true });
+                if (editingResortId) {
+                    await setDoc(doc(db, "packages", editingResortId), resortData, { merge: true });
                 } else {
-                    packageData.createdAt = new Date().toISOString();
-                    await addDoc(collection(db, "packages"), packageData);
+                    resortData.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, "packages"), resortData);
                 }
                 closeModal();
             } catch (error) {
@@ -1290,41 +1342,41 @@
                     alert("Location must be within Pantukan!");
                     pickerMarker.setLatLng([7.1333, 125.9000]);
                     pickerMap.panTo([7.1333, 125.9000]);
-                    document.getElementById('packageLat').value = 7.1333;
-                    document.getElementById('packageLng').value = 125.9000;
+                    document.getElementById('resortLat').value = 7.1333;
+                    document.getElementById('resortLng').value = 125.9000;
                 } else {
-                    document.getElementById('packageLat').value = pos.lat;
-                    document.getElementById('packageLng').value = pos.lng;
+                    document.getElementById('resortLat').value = pos.lat;
+                    document.getElementById('resortLng').value = pos.lng;
                 }
             });
 
             // Set initial values
-            document.getElementById('packageLat').value = lat;
-            document.getElementById('packageLng').value = lng;
+            document.getElementById('resortLat').value = lat;
+            document.getElementById('resortLng').value = lng;
         }
 
-        window.editPackage = function (id) {
-            const pkg = packages.find(p => p.id === id);
+        window.editResort = function (id) {
+            const pkg = resorts.find(p => p.id === id);
             if (pkg) {
-                editingPackageId = id;
-                document.getElementById('modalTitle').textContent = 'Edit Package';
-                document.getElementById('packageName').value = pkg.name;
-                document.getElementById('packageDescription').value = pkg.description;
-                document.getElementById('packagePrice').value = pkg.price;
+                editingResortId = id;
+                document.getElementById('modalTitle').textContent = 'Edit Resort';
+                document.getElementById('resortName').value = pkg.name;
+                document.getElementById('resortDescription').value = pkg.description;
+                document.getElementById('resortPrice').value = pkg.price;
                 images = pkg.images ? [...pkg.images] : [];
                 features = pkg.features ? [...pkg.features] : [];
                 renderImages();
                 renderFeatures();
 
-                document.getElementById('packageModal').classList.add('active');
+                document.getElementById('resortModal').classList.add('active');
 
                 // Init Map with saved coords or default
                 initPickerMap(pkg.lat || 7.1333, pkg.lng || 125.9000);
             }
         };
 
-        window.deletePackage = async function (id) {
-            if (confirm('Are you sure you want to delete this package from the CLOUD?')) {
+        window.deleteResort = async function (id) {
+            if (confirm('Are you sure you want to delete this resort from the CLOUD?')) {
                 try {
                     await deleteDoc(doc(db, "packages", id));
                 } catch (error) {
@@ -1333,11 +1385,11 @@
             }
         };
 
-        window.changeImage = function (event, packageId, direction) {
+        window.changeImage = function (event, resortId, direction) {
             event.stopPropagation();
-            const card = document.querySelector(`[data-package-id="${packageId}"]`);
-            const imageDiv = card.querySelector('.package-image');
-            const pkg = packages.find(p => p.id === packageId);
+            const card = document.querySelector(`[data-resort-id="${resortId}"]`);
+            const imageDiv = card.querySelector('.resort-image');
+            const pkg = resorts.find(p => p.id === resortId);
             const imgs = pkg.images || [];
 
             let currentIndex = parseInt(imageDiv.getAttribute('data-current-index'));
@@ -1352,11 +1404,11 @@
             });
         };
 
-        window.setImage = function (event, packageId, index) {
+        window.setImage = function (event, resortId, index) {
             event.stopPropagation();
-            const card = document.querySelector(`[data-package-id="${packageId}"]`);
-            const imageDiv = card.querySelector('.package-image');
-            const pkg = packages.find(p => p.id === packageId);
+            const card = document.querySelector(`[data-resort-id="${resortId}"]`);
+            const imageDiv = card.querySelector('.resort-image');
+            const pkg = resorts.find(p => p.id === resortId);
             const imgs = pkg.images || [];
 
             imageDiv.style.backgroundImage = `url('${imgs[index]}')`;
@@ -1441,7 +1493,7 @@
         });
 
         // Start Cloud Sync
-        initRealTimePackages();
+        initRealTimeResorts();
         initRealTimeBookings();
 
         if ('serviceWorker' in navigator) {

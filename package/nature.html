@@ -177,14 +177,14 @@
             letter-spacing: 1px;
         }
 
-        .packages-grid {
+        .resorts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 40px;
             align-items: stretch;
         }
 
-        .package-card {
+        .resort-card {
             background: #ecf0f1;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -194,12 +194,12 @@
             height: 100%;
         }
 
-        .package-card:hover {
+        .resort-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        .package-image {
+        .resort-image {
             width: 100%;
             height: 320px;
             background-size: cover;
@@ -208,7 +208,7 @@
             overflow: hidden;
         }
 
-        .package-image::after {
+        .resort-image::after {
             content: '';
             position: absolute;
             top: 0;
@@ -220,7 +220,7 @@
             transition: opacity 0.4s;
         }
 
-        .package-card:hover .package-image::after {
+        .resort-card:hover .resort-image::after {
             opacity: 1;
         }
 
@@ -243,7 +243,7 @@
             opacity: 0;
         }
 
-        .package-card:hover .image-gallery-nav {
+        .resort-card:hover .image-gallery-nav {
             opacity: 1;
         }
 
@@ -287,14 +287,14 @@
             border-radius: 4px;
         }
 
-        .package-content {
+        .resort-content {
             padding: 40px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
-        .package-content h3 {
+        .resort-content h3 {
             color: #2c3e50;
             margin-bottom: 20px;
             font-size: 1.8em;
@@ -302,25 +302,25 @@
             letter-spacing: 2px;
         }
 
-        .package-content p {
+        .resort-content p {
             color: #7f8c8d;
             margin-bottom: 30px;
             font-size: 1em;
             line-height: 1.8;
         }
 
-        .package-features {
+        .resort-features {
             list-style: none;
             margin-bottom: 30px;
         }
 
-        .package-features li {
+        .resort-features li {
             padding: 12px 0;
             color: #555;
             font-size: 0.95em;
         }
 
-        .package-features li::before {
+        .resort-features li::before {
             content: '—';
             color: #c9a961;
             font-weight: bold;
@@ -393,7 +393,7 @@
                 letter-spacing: 4px;
             }
 
-            .packages-grid {
+            .resorts-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -433,10 +433,10 @@
     </div>
 
     <div class="container">
-        <h2 class="section-title">Available Packages</h2>
+        <h2 class="section-title">Available Resorts</h2>
         <p class="section-subtitle">Peaceful eco-connection experiences</p>
-        <div class="packages-grid" id="packagesContainer">
-            <!-- Packages will be loaded here -->
+        <div class="resorts-grid" id="resortsContainer">
+            <!-- Resorts will be loaded here -->
         </div>
     </div>
 
@@ -479,7 +479,7 @@
         window.changeImage = function (event, packageId, direction) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
-            const imageDiv = card.querySelector('.package-image');
+            const imageDiv = card.querySelector('.resort-image');
             const imagesData = imageDiv.getAttribute('data-images');
             const images = JSON.parse(imagesData);
 
@@ -498,7 +498,7 @@
         window.setImage = function (event, packageId, index) {
             event.stopPropagation();
             const card = document.querySelector(`[data-package-id="${packageId}"]`);
-            const imageDiv = card.querySelector('.package-image');
+            const imageDiv = card.querySelector('.resort-image');
             const imagesData = imageDiv.getAttribute('data-images');
             const images = JSON.parse(imagesData);
 
@@ -511,38 +511,38 @@
             });
         };
 
-        window.bookPackage = function (packageId) {
+        window.bookResort = function (packageId) {
             window.location.href = `booking-transaction.html?package=${packageId}`;
         };
 
         // Real-time Cloud Loading
         function initCategoryCloud() {
             const q = query(collection(db, "packages"), where("type", "==", "nature"));
-            const container = document.getElementById('packagesContainer');
+            const container = document.getElementById('resortsContainer');
 
             onSnapshot(q, (querySnapshot) => {
-                const packages = [];
+                const resorts = [];
                 querySnapshot.forEach((doc) => {
-                    packages.push({ id: doc.id, ...doc.data() });
+                    resorts.push({ id: doc.id, ...doc.data() });
                 });
 
-                if (packages.length === 0) {
+                if (resorts.length === 0) {
                     container.innerHTML = `
                         <div class="empty-state">
-                            <p>No nature packages available at the moment.</p>
+                            <p>No nature resorts available at the moment.</p>
                             <p style="font-size: 0.9em; margin-top: 10px;">Check back soon for exciting new experiences!</p>
                         </div>
                     `;
                     return;
                 }
 
-                container.innerHTML = packages.map(pkg => {
+                container.innerHTML = resorts.map(pkg => {
                     const pkgImages = pkg.images && pkg.images.length > 0 ? pkg.images : (pkg.image ? [pkg.image] : ['https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800']);
                     const imageCount = pkgImages.length;
 
                     return `
-                    <div class="package-card" data-package-id="${pkg.id}">
-                        <div class="package-image" style="background-image: url('${pkgImages[0]}')" data-current-index="0" data-images='${JSON.stringify(pkgImages)}'>
+                    <div class="resort-card" data-package-id="${pkg.id}">
+                        <div class="resort-image" style="background-image: url('${pkgImages[0]}')" data-current-index="0" data-images='${JSON.stringify(pkgImages)}'>
                             ${imageCount > 1 ? `
                                 <button class="image-gallery-nav prev" onclick="changeImage(event, '${pkg.id}', -1)">‹</button>
                                 <button class="image-gallery-nav next" onclick="changeImage(event, '${pkg.id}', 1)">›</button>
@@ -553,24 +553,24 @@
                                 </div>
                             ` : ''}
                         </div>
-                        <div class="package-content">
+                        <div class="resort-content">
                             <h3>${pkg.name}</h3>
                             <p>${pkg.description}</p>
                             ${pkg.features && pkg.features.length > 0 ? `
-                                <ul class="package-features">
+                                <ul class="resort-features">
                                     ${pkg.features.map(feature => `<li>${feature}</li>`).join('')}
                                 </ul>
                             ` : ''}
                             <div class="price">₱${(pkg.price || 0).toLocaleString()}</div>
                             <div class="host-info">Hosted by ${pkg.hostName || 'Local Expert'}</div>
-                            <button class="btn" onclick="bookPackage('${pkg.id}')">Book Now</button>
+                            <button class="btn" onclick="bookResort('${pkg.id}')">Book Now</button>
                         </div>
                     </div>
                     `;
                 }).join('');
             }, (error) => {
                 console.error("Cloud Error:", error);
-                container.innerHTML = `<p style="text-align: center; color: #e74c3c;">Error loading packages from cloud.</p>`;
+                container.innerHTML = `<p style="text-align: center; color: #e74c3c;">Error loading resorts from cloud.</p>`;
             });
         }
 

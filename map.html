@@ -558,7 +558,7 @@
     <div class="page-header">
         <h1>Explore Pantukan</h1>
         <div class="divider"></div>
-        <p>Discover destinations and experiences on the map</p>
+        <p>Discover resorts and experiences on the map</p>
     </div>
 
 
@@ -698,17 +698,17 @@
 
 
         const markerGroup = L.layerGroup().addTo(map);
-        let allPackages = [];
+        let allResorts = [];
 
         // Load Cloud Markers
         onSnapshot(query(collection(db, "packages")), (snapshot) => {
-            allPackages = []; // clear current
+            allResorts = []; // clear current
 
             snapshot.forEach(doc => {
                 const data = doc.data();
                 // Only add if it has coordinates
                 if (data.lat && data.lng) {
-                    allPackages.push({ id: doc.id, ...data });
+                    allResorts.push({ id: doc.id, ...data });
                 }
             });
 
@@ -717,8 +717,8 @@
 
         function renderMarkers() {
             markerGroup.clearLayers();
-            console.log(`[MAP] Rendering ${allPackages.length} markers`);
-            allPackages.forEach(pkg => createMarker(pkg));
+            console.log(`[MAP] Rendering ${allResorts.length} markers`);
+            allResorts.forEach(pkg => createMarker(pkg));
         }
 
         function createMarker(pkg) {

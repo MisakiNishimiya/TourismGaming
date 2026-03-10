@@ -13,6 +13,7 @@
     <link rel="manifest" href="manifest.json?v=4">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
     <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -263,7 +264,7 @@
             letter-spacing: 1px;
         }
 
-        .packages-grid {
+        .resorts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, 320px);
             gap: 30px;
@@ -271,7 +272,7 @@
             justify-content: center;
         }
 
-        .package-card {
+        .resort-card {
             background: #ecf0f1;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -283,12 +284,12 @@
             height: 320px;
         }
 
-        .package-card:hover {
+        .resort-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
 
-        .package-image {
+        .resort-image {
             width: 100%;
             height: 180px;
             background-size: cover;
@@ -297,7 +298,7 @@
             overflow: hidden;
         }
 
-        .package-image::after {
+        .resort-image::after {
             content: '';
             position: absolute;
             top: 0;
@@ -309,7 +310,7 @@
             transition: opacity 0.4s;
         }
 
-        .package-card:hover .package-image::after {
+        .resort-card:hover .resort-image::after {
             opacity: 1;
         }
 
@@ -337,7 +338,7 @@
             background-image: url('https://a0.muscache.com/im/pictures/a9bf5b5c-efe0-47a4-88ae-79ee3a74c15e.jpg');
         }
 
-        .package-content {
+        .resort-content {
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -345,7 +346,7 @@
             justify-content: space-between;
         }
 
-        .package-content h3 {
+        .resort-content h3 {
             color: #2c3e50;
             margin-bottom: 15px;
             font-size: 1.4em;
@@ -353,30 +354,31 @@
             letter-spacing: 1.5px;
         }
 
-        .package-content p {
+        .resort-content p {
             color: #7f8c8d;
             margin-bottom: 10px;
             font-size: 0.85em;
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        .package-features {
+        .resort-features {
             list-style: none;
             margin-bottom: 30px;
         }
 
-        .package-features li {
+        .resort-features li {
             padding: 12px 0;
             color: #555;
             font-size: 0.95em;
             letter-spacing: 0.5px;
         }
 
-        .package-features li::before {
+        .resort-features li::before {
             content: '—';
             color: #c9a961;
             font-weight: bold;
@@ -780,7 +782,7 @@
                 border-bottom: none;
             }
 
-            .packages-grid {
+            .resorts-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -807,11 +809,11 @@
                 letter-spacing: 2px;
             }
 
-            .package-content {
+            .resort-content {
                 padding: 30px;
             }
 
-            .packages-grid {
+            .resorts-grid {
                 grid-template-columns: 1fr;
                 gap: 30px;
             }
@@ -1010,7 +1012,364 @@
             .feedback-section { padding: 0 20px; }
             .feedback-form-card { padding: 30px 25px; }
         }
+
+        /* ===== RESORT DETAIL MODAL ===== */
+        .resort-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 40px 20px;
+            animation: modalFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .resort-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .resort-modal-content {
+            background: #ffffff;
+            max-width: 900px;
+            width: 100%;
+            margin: auto;
+            position: relative;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
+            animation: modalSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(60px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            font-size: 28px;
+            color: #1e293b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: all 0.4s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .modal-close-btn:hover {
+            background: #c9a961;
+            color: white;
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .modal-photo-grid {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr;
+            grid-template-rows: repeat(2, 220px);
+            gap: 12px;
+            padding: 24px;
+            background: #ffffff;
+        }
+
+        /* Dynamic Grid Adjustments */
+        .modal-photo-grid.grid-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 450px; }
+        .modal-photo-grid.grid-3 { grid-template-columns: 2fr 1fr; grid-template-rows: 220px 218px; }
+        .modal-photo-grid.grid-3 .grid-item.featured { grid-row: 1/3; }
+        .modal-photo-grid.grid-4 { grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 220px 218px; }
+        .modal-photo-grid.grid-4 .grid-item.featured { grid-row: 1/3; }
+
+        .modal-photo-grid.single-photo {
+            grid-template-columns: 1fr;
+            grid-template-rows: 450px;
+        }
+
+        .modal-photo-grid.single-photo .grid-item:not(.featured) {
+            display: none;
+        }
+
+        .grid-item {
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .grid-item:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 10;
+        }
+
+        .grid-item.featured {
+            grid-row: 1 / 3;
+            grid-column: 1 / 2;
+        }
+
+        .see-all-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e293b;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            z-index: 20;
+        }
+
+        .see-all-badge:hover {
+            background: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 85%;
+            position: relative;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-prev { left: -100px; }
+        .lightbox-next { right: -100px; }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9em;
+        }
+
+        .see-all-badge i {
+            font-size: 1.2em;
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 1.2em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .heart-icon:hover {
+            color: #e11d48;
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            padding: 50px 60px;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        .modal-body h2 {
+            font-size: 4em;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .modal-resort-desc {
+            font-size: 1.25em;
+            color: #64748b;
+            line-height: 2;
+            margin-bottom: 45px;
+            font-weight: 300;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .modal-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+            text-align: left;
+        }
+
+        .modal-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #475569;
+            font-size: 1.1em;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .modal-feature-item::before {
+            content: '✦';
+            color: #c9a961;
+            font-weight: bold;
+        }
+
+        .modal-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px;
+            text-align: center;
+            background: #ffffff;
+        }
+
+        .modal-price-tag {
+            margin-bottom: 15px;
+        }
+
+        .modal-price-label {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .modal-book-btn {
+            background: #2c3e50;
+            color: #ffffff;
+            padding: 20px 80px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1em;
+            text-decoration: none;
+            transition: all 0.4s;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 500;
+            min-width: 300px;
+        }
+
+        .modal-book-btn:hover {
+            background: #c9a961;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(201, 169, 97, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .modal-body { padding: 30px; }
+            .modal-footer-sticky { padding: 30px; flex-direction: column; gap: 30px; text-align: center; }
+            .modal-body h2 { font-size: 2.5em; }
+            .modal-hero-image { height: 300px; }
+            .modal-book-btn { width: 100%; }
+        }
     </style>
+
 </head>
 
 <body>
@@ -1040,7 +1399,7 @@
                 <span></span>
             </div>
             <ul id="navMenu">
-                <li><a href="#all-packages-section">Destinations & Resorts</a></li>
+                <li><a href="#all-resorts-section">Destinations & Resorts</a></li>
                 <li><a href="#my-bookings" id="navBookings" style="display: none;">My Bookings</a></li>
                 <li><a href="map.html">Explore Map</a></li>
                 <li><a href="#gallery">Gallery</a></li>
@@ -1073,11 +1432,11 @@
 
 
 
-    <!-- Dynamic section for all live packages -->
-    <div class="container" id="all-packages-section" style="margin-top: 50px;">
+    <!-- Dynamic section for all live resorts -->
+    <div class="container" id="all-resorts-section" style="margin-top: 50px;">
         <h2 class="section-title">Our Destinations & Resorts</h2>
         <p class="section-subtitle">Real-time curated journeys from our host community</p>
-        <div class="packages-grid" id="dynamic-packages-grid">
+        <div class="resorts-grid" id="dynamic-resorts-grid">
             <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #7f8c8d;">
                 <p>Connecting to NaviBay cloud...</p>
             </div>
@@ -1158,9 +1517,46 @@
             <a href="tel:+639123456789">+63 912 345 6789</a>
             <a href="mailto:concierge@pantukan.travel">concierge@pantukan.travel</a>
         </div>
-        <p style="margin-top: 50px; opacity: 0.6; font-size: 0.9em;">© 2026 Pantukan Luxury Travel. All rights reserved.
-        </p>
+        <p style="margin-top: 50px; opacity: 0.6; font-size: 0.9em;">© 2026 Pantukan Luxury Travel. All rights reserved.</p>
     </footer>
+
+    <!-- Resort Detail Modal -->
+    <div id="resortDetailModal" class="resort-modal" onclick="if(event.target === this) { closeResortModal(); closeLightbox(); }">
+        <div class="resort-modal-content" style="max-width: 1200px;">
+            <button class="modal-close-btn" onclick="closeResortModal()">&times;</button>
+            <div class="modal-photo-grid" id="modalPhotoGrid">
+                <!-- Bento grid images will be injected here -->
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle">Resort Name</h2>
+                <p class="modal-resort-desc" id="modalDescription">Detailed description goes here...</p>
+                
+                <h4 style="margin-top: 40px; margin-bottom: 20px; color: #1e293b; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
+                   ✨ Featured Amenities
+                </h4>
+                <div class="modal-features-grid" id="modalFeatures">
+                    <!-- Features will be injected here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="modal-price-tag">
+                    <span class="modal-price-label">Starting from <span id="modalPrice">₱0</span></span>
+                </div>
+                <a href="javascript:void(0)" class="modal-book-btn" id="modalBookBtn">Book Now</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Gallery Viewer -->
+    <div id="lightbox" class="lightbox" onclick="if(event.target === this) closeLightbox()">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <button class="lightbox-prev lightbox-nav" onclick="changeLightboxImage(-1)">‹</button>
+            <img src="" alt="Resort View" id="lightboxImage" class="lightbox-image">
+            <button class="lightbox-next lightbox-nav" onclick="changeLightboxImage(1)">›</button>
+            <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+        </div>
+    </div>
 
     <script type="module">
         import { db, doc, getDoc, collection, addDoc, query, where, onSnapshot } from './js/firebase-config.js';
@@ -1178,57 +1574,149 @@
         }
 
         // Dashboard Data Handling
-        let allPackages = [];
+        let allResorts = [];
 
         function initRealTimeCloud() {
             const q = query(collection(db, "packages"));
 
             onSnapshot(q, (querySnapshot) => {
-                allPackages = [];
+                allResorts = [];
                 querySnapshot.forEach((doc) => {
-                    allPackages.push({ id: doc.id, ...doc.data() });
+                    allResorts.push({ id: doc.id, ...doc.data() });
                 });
-                renderPackages();
+                renderResorts();
                 updateFeedbackDropdown();
             }, (error) => {
                 console.error("Cloud Error:", error);
             });
         }
 
-        function renderPackages() {
-            const container = document.getElementById('dynamic-packages-grid');
+        function renderResorts() {
+            const container = document.getElementById('dynamic-resorts-grid');
             if (!container) return;
 
-            if (allPackages.length === 0) {
+            if (allResorts.length === 0) {
                 container.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #7f8c8d;">
-                        <p>No tourism packages found in the cloud yet.</p>
+                        <p>No resorts found in the cloud yet.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = allPackages.map(pkg => {
+            container.innerHTML = allResorts.map(pkg => {
                 const img = (pkg.images && pkg.images.length > 0) ? pkg.images[0] : (pkg.image || 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800');
 
                 return `
-                <div class="package-card" id="${pkg.id}">
-                    <div class="package-image" style="background-image: url('${img}')"></div>
-                    <div class="package-content">
+                <div class="resort-card" id="${pkg.id}" onclick="openResortModal('${pkg.id}')">
+                    <div class="resort-image" style="background-image: url('${img}')"></div>
+                    <div class="resort-content">
                         <h3>${pkg.name}</h3>
                         <p>${pkg.description}</p>
-                        <ul class="package-features">
+                        <ul class="resort-features">
                             ${(pkg.features || []).slice(0, 3).map(f => `<li>${f}</li>`).join('')}
                         </ul>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                            <span style="font-size: 1.2em; color: #c9a961; font-weight: bold;">₱${(pkg.price || 0).toLocaleString()}</span>
-                            <a href="package/booking-transaction.html?package=${pkg.id}" class="btn" style="padding: 10px 20px; font-size: 0.8em;">Book Now</a>
-                        </div>
                     </div>
                 </div>
                 `;
             }).join('');
         }
+
+        let currentGalleryImages = [];
+        let currentImageIndex = 0;
+
+        window.openResortModal = function(id) {
+            const pkg = allResorts.find(r => r.id === id);
+            if (!pkg) return;
+
+            const modal = document.getElementById('resortDetailModal');
+            const images = (pkg.images && pkg.images.length > 0) ? pkg.images : [(pkg.image || 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800')];
+            currentGalleryImages = images;
+
+            const grid = document.getElementById('modalPhotoGrid');
+            
+            // Apply dynamic grid classes
+            grid.className = 'modal-photo-grid';
+            if (images.length === 1) grid.classList.add('single-photo');
+            else if (images.length === 2) grid.classList.add('grid-2');
+            else if (images.length === 3) grid.classList.add('grid-3');
+            else if (images.length === 4) grid.classList.add('grid-4');
+
+            // Bento Grid Implementation
+            let gridHtml = `
+                <div class="grid-item featured" style="background-image: url('${images[0]}')" onclick="openLightbox(0)">
+                    <div class="see-all-badge">
+                        <span style="font-size: 1.2em;">📷</span> See all ${images.length} photos
+                    </div>
+                </div>
+            `;
+
+            // Add remaining images (up to 6 more)
+            for(let i = 1; i < Math.min(images.length, 7); i++) {
+                gridHtml += `
+                    <div class="grid-item" style="background-image: url('${images[i]}')" onclick="openLightbox(${i})">
+                        ${i === 3 && images.length > 4 ? '<div class="heart-icon">🤍</div>' : ''}
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = gridHtml;
+
+            document.getElementById('modalTitle').textContent = pkg.name;
+            document.getElementById('modalDescription').textContent = pkg.description;
+            document.getElementById('modalPrice').textContent = `₱${(pkg.price || 0).toLocaleString()}`;
+            document.getElementById('modalBookBtn').href = `package/booking-transaction.html?package=${pkg.id}`;
+
+            const featuresList = document.getElementById('modalFeatures');
+            featuresList.innerHTML = (pkg.features || []).map(f => `<div class="modal-feature-item">${f}</div>`).join('');
+
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.openLightbox = function(index) {
+            currentImageIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const imgEl = document.getElementById('lightboxImage');
+            const counter = document.getElementById('lightboxCounter');
+            
+            imgEl.src = currentGalleryImages[currentImageIndex];
+            counter.textContent = `${currentImageIndex + 1} / ${currentGalleryImages.length}`;
+            
+            lightbox.style.display = 'flex';
+            setTimeout(() => lightbox.classList.add('active'), 10);
+        };
+
+        window.changeLightboxImage = function(direction) {
+            currentImageIndex = (currentImageIndex + direction + currentGalleryImages.length) % currentGalleryImages.length;
+            const imgEl = document.getElementById('lightboxImage');
+            const counter = document.getElementById('lightboxCounter');
+            
+            imgEl.src = currentGalleryImages[currentImageIndex];
+            counter.textContent = `${currentImageIndex + 1} / ${currentGalleryImages.length}`;
+        };
+
+        window.closeLightbox = function() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            setTimeout(() => {
+                if (!lightbox.classList.contains('active')) {
+                    lightbox.style.display = 'none';
+                }
+            }, 300);
+        };
+
+        window.closeResortModal = function() {
+            const modal = document.getElementById('resortDetailModal');
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                if (!document.getElementById('lightbox').classList.contains('active')) {
+                    document.body.style.overflow = 'auto';
+                }
+            }, 400);
+        };
 
         function updateFeedbackDropdown() {
             const select = document.getElementById('feedbackResort');
@@ -1237,8 +1725,8 @@
             const currentVal = select.value;
             let html = '<option value="">— Select a resort or destination —</option>';
             
-            // Add package names
-            allPackages.forEach(pkg => {
+            // Add resort names
+            allResorts.forEach(pkg => {
                 if (pkg.name) {
                     html += `<option value="${pkg.name}">${pkg.name}</option>`;
                 }

@@ -218,27 +218,27 @@
             font-weight: 300;
         }
 
-        .package-preview {
+        .resort-preview {
             margin-bottom: 30px;
             padding-bottom: 30px;
             border-bottom: 1px solid rgba(236, 240, 241, 0.2);
         }
 
-        .package-preview img {
+        .resort-preview img {
             width: 100%;
             height: 200px;
             object-fit: cover;
             margin-bottom: 20px;
         }
 
-        .package-name {
+        .resort-name {
             font-size: 1.3em;
             margin-bottom: 10px;
             color: #c9a961;
             letter-spacing: 1px;
         }
 
-        .package-type {
+        .resort-type {
             font-size: 0.9em;
             color: #95a5a6;
             text-transform: uppercase;
@@ -461,8 +461,8 @@
             <div class="booking-summary">
                 <h2 class="summary-title">Booking Summary</h2>
 
-                <div class="package-preview" id="packagePreview">
-                    <!-- Package details will be loaded here -->
+                <div class="resort-preview" id="resortPreview">
+                    <!-- Resort details will be loaded here -->
                 </div>
 
                 <div class="summary-details" id="bookingDetails">
@@ -486,7 +486,7 @@
 
                 <div class="price-breakdown">
                     <div class="price-row">
-                        <span>Package Price</span>
+                        <span>Resort Price</span>
                         <span id="basePrice">₱0</span>
                     </div>
                     <div class="price-row">
@@ -579,9 +579,9 @@
                 ? selectedPackage.images
                 : (selectedPackage.image ? [selectedPackage.image] : ['https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800']);
 
-            document.getElementById('packagePreview').innerHTML = `
+            document.getElementById('resortPreview').innerHTML = `
                 <img src="${pkgImages[0]}" alt="${selectedPackage.name}">
-                <div class="package-name">${selectedPackage.name}</div>
+                <div class="resort-name">${selectedPackage.name}</div>
             `;
 
             // Prefill user email
