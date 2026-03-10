@@ -1675,6 +1675,9 @@
             document.body.style.overflow = 'hidden';
         };
 
+        let touchStartX = 0;
+        let touchEndX = 0;
+
         window.openLightbox = function(index) {
             currentImageIndex = index;
             const lightbox = document.getElementById('lightbox');
@@ -1686,7 +1689,35 @@
             
             lightbox.style.display = 'flex';
             setTimeout(() => lightbox.classList.add('active'), 10);
+
+            // Add touch listeners for swipe
+            lightbox.addEventListener('touchstart', handleTouchStart, { passive: true });
+            lightbox.addEventListener('touchend', handleTouchEnd, { passive: true });
         };
+
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const deltaX = touchEndX - touchStartX;
+
+            if (Math.abs(deltaX) > swipeThreshold) {
+                if (deltaX > 0) {
+                    // Swiped right -> Previous image
+                    changeLightboxImage(-1);
+                } else {
+                    // Swiped left -> Next image
+                    changeLightboxImage(1);
+                }
+            }
+        }
 
         window.changeLightboxImage = function(direction) {
             currentImageIndex = (currentImageIndex + direction + currentGalleryImages.length) % currentGalleryImages.length;
@@ -1700,6 +1731,11 @@
         window.closeLightbox = function() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
+            
+            // Remove touch listeners cleanup
+            lightbox.removeEventListener('touchstart', handleTouchStart);
+            lightbox.removeEventListener('touchend', handleTouchEnd);
+            
             setTimeout(() => {
                 if (!lightbox.classList.contains('active')) {
                     lightbox.style.display = 'none';
