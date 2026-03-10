@@ -942,6 +942,31 @@
                 gap: 10px;
             }
         }
+
+        .feedback-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feedback-card-host {
+            background: white;
+            padding: 30px;
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .feedback-card-host:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .feedback-stars-host {
+            color: #c9a961;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 
@@ -972,6 +997,7 @@
             </div>
             <ul id="navMenu">
                 <li><a href="#all-resorts">My Resorts</a></li>
+                <li><a href="#recent-feedback">Recent Feedback</a></li>
             </ul>
         </div>
     </nav>
@@ -1009,6 +1035,18 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="experience-section" id="recent-feedback">
+            <div class="experience-header">
+                <h3>Recent Feedback</h3>
+                <span class="experience-count"><span id="feedback-count">0</span> reviews</span>
+            </div>
+            <div id="feedback-container" class="feedback-list">
+                <div style="text-align: center; padding: 40px; color: #7f8c8d;">
+                    No feedback received yet.
+                </div>
             </div>
         </div>
 
@@ -1435,6 +1473,56 @@
             });
         }
 
+        // FEEDBACK SYNC
+        function initRealTimeFeedback() {
+            const q = query(collection(db, "feedbacks"), where("hostEmail", "==", currentUser.email));
+
+            onSnapshot(q, (querySnapshot) => {
+                const feedbacks = [];
+                querySnapshot.forEach((doc) => {
+                    feedbacks.push({ id: doc.id, ...doc.data() });
+                });
+                renderFeedbacks(feedbacks);
+            }, (error) => {
+                console.error("Feedback sync error:", error);
+            });
+        }
+
+        function renderFeedbacks(feedbacks) {
+            const container = document.getElementById('feedback-container');
+            const countEl = document.getElementById('feedback-count');
+            countEl.textContent = feedbacks.length;
+
+            if (feedbacks.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #7f8c8d;">No feedback received yet.</div>';
+                return;
+            }
+
+            // Sort by createdAt desc
+            feedbacks.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            container.innerHTML = feedbacks.map(fb => `
+                <div class="feedback-card-host">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 2px; color: #c9a961; font-weight: 600;">${fb.resort}</div>
+                            <div class="feedback-stars-host" style="margin-top: 5px;">${starsHtml(fb.rating)}</div>
+                        </div>
+                        <div style="font-size: 0.85em; color: #95a5a6;">${new Date(fb.createdAt).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    </div>
+                    <div style="font-style: italic; color: #555; line-height: 2; margin-bottom: 20px; font-size: 1.05em;">"${fb.comment}"</div>
+                    <div style="font-size: 0.9em; display: flex; align-items: center; gap: 12px; border-top: 1px solid #f8f9fa; pt: 15px;">
+                        <span style="color: #2c3e50; font-weight: 500;">By ${fb.customerName}</span>
+                        <span style="color: #95a5a6; font-size: 0.8em; letter-spacing: 0.5px;">&lt;${fb.customerEmail}&gt;</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function starsHtml(rating) {
+            return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+        }
+
         function renderBookings(bookings) {
             const body = document.getElementById('bookings-body');
             const countEl = document.getElementById('booking-count');
@@ -1492,9 +1580,27 @@
             navMenu.classList.toggle('active');
         });
 
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Close mobile menu
+                        burgerMenu.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    }
+                }
+            });
+        });
+
         // Start Cloud Sync
         initRealTimeResorts();
         initRealTimeBookings();
+        initRealTimeFeedback();
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
