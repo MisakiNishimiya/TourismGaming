@@ -579,6 +579,7 @@
                     <div class="control-buttons">
                         <button id="myLocationBtn">📍 My Location</button>
                         <button id="directionsBtn" disabled>🧭 Get Directions</button>
+                        <div id="locationStatus" class="location-status" style="display: none;"></div>
                     </div>
                 </div>
 
@@ -717,6 +718,7 @@
 
         function renderMarkers() {
             markerGroup.clearLayers();
+            markers = []; // Clear the reference array
             console.log(`[MAP] Rendering ${allResorts.length} markers`);
             allResorts.forEach(pkg => createMarker(pkg));
         }
@@ -754,7 +756,10 @@
         // My Location
         document.getElementById('myLocationBtn').addEventListener('click', () => {
             const status = document.getElementById('locationStatus');
+            status.style.display = 'inline-flex';
+            status.classList.remove('location-error');
             status.textContent = 'Locating...';
+
             navigator.geolocation.getCurrentPosition(pos => {
                 userLocation = [pos.coords.latitude, pos.coords.longitude];
                 if (userMarker) map.removeLayer(userMarker);
@@ -762,7 +767,15 @@
                 map.setView(userLocation, 14);
                 status.textContent = '📍 Found!';
                 if (selectedLocation) document.getElementById('directionsBtn').disabled = false;
-            }, () => { status.textContent = '❌ Denied'; });
+                
+                // Hide success message after 3 seconds
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }, () => { 
+                status.textContent = '❌ Denied';
+                status.classList.add('location-error');
+            });
         });
 
         // Directions Logic (Upgraded)
