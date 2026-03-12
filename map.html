@@ -718,6 +718,7 @@
 
         function renderMarkers() {
             markerGroup.clearLayers();
+            markers = []; // Clear the reference array
             console.log(`[MAP] Rendering ${allResorts.length} markers`);
             allResorts.forEach(pkg => createMarker(pkg));
         }
