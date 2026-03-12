@@ -1244,8 +1244,8 @@
             editingResortId = null;
         };
 
-        // Image Compression Utility
-        async function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+        // Image Compression Utility - Optimized for multi-image uploads
+        async function compressImage(file, maxWidth = 1000, maxHeight = 1000, quality = 0.5) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -1255,7 +1255,6 @@
                         let width = img.width;
                         let height = img.height;
 
-                        // Calculate new dimensions maintain aspect ratio
                         if (width > height) {
                             if (width > maxWidth) {
                                 height = Math.round((height * maxWidth) / width);
@@ -1272,8 +1271,6 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-
-                        // Compress to JPEG and get base64
                         const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
                         resolve(compressedBase64);
                     };
@@ -1290,6 +1287,12 @@
             const files = Array.from(input.files);
 
             if (files.length > 0) {
+                // Limit to 6 images total
+                if (images.length + files.length > 6) {
+                    alert("Maximum 6 images allowed per resort to ensure fast loading and save successfully.");
+                    return;
+                }
+
                 const addButton = document.querySelector('button[onclick="addImage()"]');
                 const originalText = addButton.textContent;
                 addButton.disabled = true;
@@ -1377,7 +1380,19 @@
                 lng: parseFloat(document.getElementById('resortLng').value) || 125.9000
             };
 
+            // Estimate document size (Firestore documents have a 1MB limit)
+            const dataString = JSON.stringify(resortData);
+            const sizeInBytes = new Blob([dataString]).size;
+            if (sizeInBytes > 1000 * 1024) { // 1000KB limit for safety
+                alert("Total resort data is too large. Please remove some images or use smaller photos.");
+                return;
+            }
+
             try {
+                const submitBtn = e.target.querySelector('.btn-submit');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Saving...';
+
                 if (editingResortId) {
                     await setDoc(doc(db, "packages", editingResortId), resortData, { merge: true });
                 } else {
