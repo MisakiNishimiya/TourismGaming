@@ -579,7 +579,7 @@
                     <div class="control-buttons">
                         <button id="myLocationBtn">📍 My Location</button>
                         <button id="directionsBtn" disabled>🧭 Get Directions</button>
-                        <div id="locationStatus" class="location-status" style="display: none;"></div>
+                        <span id="locationStatus" style="font-size: 0.8em; color: #7f8c8d; align-self: center;"></span>
                     </div>
                 </div>
 
@@ -756,26 +756,75 @@
         // My Location
         document.getElementById('myLocationBtn').addEventListener('click', () => {
             const status = document.getElementById('locationStatus');
-            status.style.display = 'inline-flex';
-            status.classList.remove('location-error');
-            status.textContent = 'Locating...';
+            status.textContent = '🛰️ Connecting to GPS...';
+            
+            const highAccuracyOptions = {
+                enableHighAccuracy: true,
+                timeout: 30000, // Wait up to 30s for GPS lock
+                maximumAge: 0
+            };
 
-            navigator.geolocation.getCurrentPosition(pos => {
+            const lowAccuracyOptions = {
+                enableHighAccuracy: false,
+                timeout: 10000,
+                maximumAge: 60000
+            };
+
+            function handleSuccess(pos) {
                 userLocation = [pos.coords.latitude, pos.coords.longitude];
+                const accuracy = pos.coords.accuracy;
+
+                console.log(`[MAP] User Location Found: ${userLocation} Accuracy: ${accuracy}m`);
+
                 if (userMarker) map.removeLayer(userMarker);
-                userMarker = L.marker(userLocation).addTo(map).bindPopup('You are here').openPopup();
-                map.setView(userLocation, 14);
+                
+                const userIcon = L.divIcon({
+                    className: 'user-location-marker',
+                    html: '<div style="background-color: #3498db; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.5);"></div>',
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                });
+
+                userMarker = L.layerGroup().addTo(map);
+                L.marker(userLocation, {icon: userIcon}).addTo(userMarker)
+                    .bindPopup(`<b>You are here</b><br>Accuracy: ±${Math.round(accuracy)}m`)
+                    .openPopup();
+                
+                L.circle(userLocation, {
+                    radius: accuracy,
+                    color: '#3498db',
+                    fillColor: '#3498db',
+                    fillOpacity: 0.15,
+                    weight: 1
+                }).addTo(userMarker);
+
+                map.setView(userLocation, 16);
                 status.textContent = '📍 Found!';
                 if (selectedLocation) document.getElementById('directionsBtn').disabled = false;
+            }
+
+            function handleError(err) {
+                console.warn(`[MAP] Geolocation Attempt Failed (${err.code}): ${err.message}`);
                 
-                // Hide success message after 3 seconds
-                setTimeout(() => {
-                    status.style.display = 'none';
-                }, 3000);
-            }, () => { 
-                status.textContent = '❌ Denied';
-                status.classList.add('location-error');
-            });
+                if (err.code === 3 && highAccuracyOptions.enableHighAccuracy) {
+                    status.textContent = '⌛ GPS slow, trying network...';
+                    navigator.geolocation.getCurrentPosition(handleSuccess, (secondErr) => {
+                        status.textContent = '❌ Could not find you';
+                    }, lowAccuracyOptions);
+                } else {
+                    if (err.code === 1) status.textContent = '❌ Location Denied';
+                    else if (err.code === 2) status.textContent = '❌ Signal Lost';
+                    else if (err.code === 3) status.textContent = '❌ Timeout';
+                    else status.textContent = '❌ Error';
+                }
+            }
+
+            if (!navigator.geolocation) {
+                status.textContent = '❌ Not supported';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(handleSuccess, handleError, highAccuracyOptions);
         });
 
         // Directions Logic (Upgraded)

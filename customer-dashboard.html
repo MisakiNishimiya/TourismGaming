@@ -1942,24 +1942,31 @@
 
         // Submit feedback
         submitFeedbackBtn.addEventListener('click', async () => {
-            const resort  = feedbackResort.value.trim();
-            const comment = feedbackComment.value.trim();
+            const resortName = feedbackResort.value.trim();
+            const comment    = feedbackComment.value.trim();
             const ratingInput = document.querySelector('input[name="rating"]:checked');
-            const rating = ratingInput ? parseInt(ratingInput.value) : 0;
+            const rating     = ratingInput ? parseInt(ratingInput.value) : 0;
 
             feedbackMsg.className = 'feedback-msg';
             feedbackMsg.textContent = '';
 
-            if (!resort)   { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please select a resort.'; return; }
-            if (!rating)   { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please choose a star rating.'; return; }
-            if (!comment)  { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please write a comment.'; return; }
+            if (!resortName)   { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please select a resort.'; return; }
+            if (!rating)       { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please choose a star rating.'; return; }
+            if (!comment)      { feedbackMsg.className += ' error'; feedbackMsg.textContent = 'Please write a comment.'; return; }
+
+            // Find hostEmail for the selected resort
+            const resortPkg = allResorts.find(r => r.name === resortName);
+            const hostEmail = resortPkg ? resortPkg.hostEmail : '';
+            const resortId  = resortPkg ? resortPkg.id : '';
 
             submitFeedbackBtn.disabled = true;
             submitFeedbackBtn.textContent = 'Submitting...';
 
             try {
                 await addDoc(collection(db, 'feedbacks'), {
-                    resort,
+                    resort: resortPkg ? resortPkg.name : resortName,
+                    resortId,
+                    hostEmail,
                     rating,
                     comment,
                     customerName:  currentUser.name  || 'Anonymous',
