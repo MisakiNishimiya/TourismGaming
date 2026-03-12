@@ -824,7 +824,7 @@
             border-radius: 8px;
             overflow: hidden;
             border: 2px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             transition: all 0.3s;
         }
 
@@ -855,7 +855,7 @@
             justify-content: center;
             cursor: pointer;
             font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.2s;
         }
 
@@ -1244,26 +1244,72 @@
             editingResortId = null;
         };
 
-        window.addImage = function () {
+        // Image Compression Utility
+        async function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Calculate new dimensions maintain aspect ratio
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Compress to JPEG and get base64
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.addImage = async function () {
             const input = document.getElementById('imageInput');
             const files = Array.from(input.files);
-            
+
             if (files.length > 0) {
-                let processedCount = 0;
-                files.forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const base64Image = e.target.result;
-                        images.push(base64Image);
-                        processedCount++;
-                        
-                        if (processedCount === files.length) {
-                            input.value = ''; // Clear file input
-                            renderImages();
+                const addButton = document.querySelector('button[onclick="addImage()"]');
+                const originalText = addButton.textContent;
+                addButton.disabled = true;
+                addButton.textContent = 'Processing...';
+
+                try {
+                    for (const file of files) {
+                        try {
+                            const compressedImage = await compressImage(file);
+                            images.push(compressedImage);
+                        } catch (err) {
+                            console.error("Compression error:", err);
                         }
-                    };
-                    reader.readAsDataURL(file);
-                });
+                    }
+                    input.value = ''; // Clear file input
+                    renderImages();
+                } finally {
+                    addButton.disabled = false;
+                    addButton.textContent = originalText;
+                }
             } else {
                 alert("Please select one or more image files first.");
             }
