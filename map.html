@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2c3e50">
-    <title>Explore Pantukan - Interactive Map</title>
+    <meta name="theme-color" content="#0077BE">
+    <title>Explore Pantukan - Coastal Map</title>
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -21,12 +21,12 @@
         body {
             font-family: 'Garamond', 'Georgia', serif;
             line-height: 1.8;
-            color: #2c3e50;
-            background: #f8f9fa;
+            color: #013A63;
+            background: #FFFDF5;
         }
 
         .header-actions {
-            background: #2c3e50;
+            background: #0077BE;
             padding: 15px 30px;
             display: flex;
             align-items: center;
@@ -36,7 +36,7 @@
 
         .btn-back {
             background: transparent;
-            color: #ecf0f1;
+            color: #FFFDF5;
             padding: 10px 15px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
@@ -46,7 +46,8 @@
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
-            border: none;
+            border: 1px solid rgba(255, 253, 245, 0.4);
+            border-radius: 5px;
         }
 
         .btn-back:hover {
@@ -66,7 +67,7 @@
 
         .profile-icon {
             border-radius: 20px;
-            background: #ecf0f1;
+            background: #FFFDF5;
             padding: 10px 10px;
             font-size: 1.2em;
             cursor: pointer;
@@ -75,6 +76,7 @@
             align-items: center;
             justify-content: center;
             border: none;
+            color: #0077BE;
         }
 
         .profile-icon:hover {
@@ -87,13 +89,13 @@
             top: 100%;
             right: 0;
             margin-top: 10px;
-            background: #2c3e50;
+            background: #0077BE;
             min-width: 150px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 119, 190, 0.2);
             z-index: 1000;
         }
 
@@ -106,8 +108,8 @@
         .btn-logout {
             width: 100%;
             background: transparent;
-            color: #ecf0f1;
-            border: 1px solid #ecf0f1;
+            color: #FFFDF5;
+            border: 1px solid #FFFDF5;
             padding: 15px 20px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
@@ -123,9 +125,9 @@
         }
 
         .page-header {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+            background: linear-gradient(rgba(0, 119, 190, 0.4), rgba(0, 119, 190, 0.5)),
                 url('assets/hero-bg.png') center/cover;
-            color: #ecf0f1;
+            color: #FFFDF5;
             padding: 80px 20px 60px;
             text-align: center;
         }
@@ -136,19 +138,22 @@
             font-weight: 300;
             letter-spacing: 6px;
             text-transform: uppercase;
+            color: #FFFDF5;
         }
 
         .page-header p {
             font-size: 1.1em;
             font-weight: 300;
             letter-spacing: 2px;
+            color: #FFFDF5;
         }
 
         .divider {
             width: 80px;
-            height: 1px;
-            background: #ecf0f1;
+            height: 3px;
+            background: #90E0EF;
             margin: 20px auto;
+            border-radius: 2px;
         }
 
         .map-container {
@@ -158,11 +163,12 @@
         }
 
         .map-controls {
-            background: white;
+            background: #FFFDF5;
             padding: 30px;
             margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 119, 190, 0.08);
+            border: 1px solid #90E0EF;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -170,26 +176,26 @@
 
         .burger-menu {
             display: none;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #ecf0f1;
+            background: #0077BE;
+            color: #FFFDF5;
             border: none;
             padding: 15px 20px;
             font-size: 1.5em;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 8px;
             align-items: center;
             justify-content: center;
             gap: 10px;
             font-family: 'Garamond', 'Georgia', serif;
             letter-spacing: 2px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 119, 190, 0.15);
         }
 
         .burger-menu:hover {
-            background: linear-gradient(135deg, #c9a961 0%, #d4b574 100%);
+            background: #00a8cc;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(201, 169, 97, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.2);
         }
 
         .burger-menu span {
@@ -213,21 +219,21 @@
             font-size: 0.8em;
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            color: #2c3e50;
+            color: #013A63;
             font-weight: 500;
         }
 
         .control-row select {
             width: 100%;
             padding: 14px 18px;
-            border: 2px solid #e0e0e0;
-            background: white;
+            border: 2px solid #90E0EF;
+            background: #FFFDF5;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.95em;
-            color: #2c3e50;
+            color: #013A63;
             cursor: pointer;
             transition: all 0.3s;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         .filter-row {
@@ -248,8 +254,9 @@
 
         .control-row select:hover,
         .control-row select:focus {
-            border-color: #c9a961;
+            border-color: #0077BE;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 119, 190, 0.1);
         }
 
         .control-buttons {
@@ -262,18 +269,18 @@
         .control-row button {
             padding: 14px 32px;
             border: none;
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: #ecf0f1;
+            background: #0077BE;
+            color: #FFFDF5;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.85em;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 4px;
+            transition: all 0.3s;
+            border-radius: 50px;
             font-weight: 400;
             white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 119, 190, 0.15);
             position: relative;
             overflow: hidden;
         }
@@ -294,9 +301,9 @@
         }
 
         .control-row button:hover {
-            background: linear-gradient(135deg, #c9a961 0%, #d4b574 100%);
+            background: #00a8cc;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(201, 169, 97, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 119, 190, 0.3);
         }
 
         .control-row button:active {
@@ -385,10 +392,10 @@
         #map {
             height: 600px;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            border: 1px solid rgba(201, 169, 97, 0.1);
+            box-shadow: 0 15px 45px rgba(0, 119, 190, 0.15);
+            border: 2px solid #90E0EF;
         }
 
 
@@ -408,19 +415,20 @@
             font-size: 1.2em;
             font-weight: 400;
             letter-spacing: 1px;
-            color: #2c3e50;
+            color: #0077BE;
             margin-bottom: 10px;
         }
 
         .popup-type {
             display: inline-block;
             padding: 4px 12px;
-            background: #c9a961;
-            color: #ecf0f1;
+            background: #90E0EF;
+            color: #013A63;
             font-size: 0.7em;
             letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 10px;
+            border-radius: 4px;
         }
 
         .popup-description {
@@ -433,17 +441,18 @@
         .popup-button {
             display: inline-block;
             padding: 8px 20px;
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: #0077BE;
+            color: #FFFDF5;
             text-decoration: none;
             font-size: 0.8em;
             letter-spacing: 1px;
             text-transform: uppercase;
             transition: all 0.3s;
+            border-radius: 50px;
         }
 
         .popup-button:hover {
-            background: #c9a961;
+            background: #00a8cc;
         }
 
         @media (max-width: 768px) {
@@ -730,19 +739,19 @@
             console.log(`[MAP] Marker: ${pkg.name} [${lat}, ${lng}]`);
 
             const marker = L.circleMarker([lat, lng], {
-                radius: 10,
-                fillColor: '#c9a961',
-                color: '#white',
-                weight: 2,
+                radius: 12,
+                fillColor: '#0077BE',
+                color: '#FFFDF5',
+                weight: 3,
                 opacity: 1,
-                fillOpacity: 0.8
+                fillOpacity: 0.9
             }).addTo(markerGroup);
 
             marker.bindPopup(`
                 <div style="min-width: 180px;">
                     <h4 style="margin:0">${pkg.name}</h4>
                     <p style="font-size:0.8em; color:gray">${pkg.description || ''}</p>
-                    ${pkg.price ? `<b style="color:#c9a961">₱${pkg.price.toLocaleString()}</b>` : ''}
+                    ${pkg.price ? `<b style="color:#0077BE">₱${pkg.price.toLocaleString()}</b>` : ''}
                 </div>
             `);
 

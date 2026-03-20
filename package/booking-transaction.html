@@ -395,7 +395,11 @@
             <div class="booking-form-section">
                 <div class="info-box">
                     <p><strong>Important:</strong> All bookings are subject to availability. Our team will contact you
-                        within 24 hours to confirm your reservation and discuss payment options.</p>
+                        within 24 hours to confirm your reservation.</p>
+                    <p id="gcashPaymentInfo" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,0,0,0.1); display: none;">
+                        <strong>GCash Payment:</strong> Please send your payment to <span id="gcashNumber" style="color: #04AA6D; font-weight: bold;"></span> to secure your booking. 
+                        Once paid, please have your receipt ready for verification.
+                    </p>
                 </div>
 
                 <div class="form-group">
@@ -444,15 +448,23 @@
 
                 <div class="form-group">
                     <label>How did you hear about us?</label>
-                    <select id="referralSource">
-                        <option value="">Select an option</option>
-                        <option value="social-media">Social Media</option>
-                        <option value="search-engine">Search Engine</option>
-                        <option value="friend">Friend or Family</option>
-                        <option value="travel-agent">Travel Agent</option>
-                        <option value="advertisement">Advertisement</option>
-                        <option value="other">Other</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Method *</label>
+                    <select id="paymentMethod" required>
+                        <option value="walk-in">Walk-in (Pay at Resort)</option>
+                        <option value="online">Online Payment (GCash)</option>
+                    </select>
+                </div>
+
+                <div id="proofOfPaymentSection" style="display: none; margin-top: 20px; padding: 25px; border: 2px dashed #0077BE; border-radius: 12px; background: rgba(144, 224, 239, 0.05);">
+                    <label style="color: #013A63; font-weight: 600; margin-bottom: 12px; display: block;">📤 Upload Proof of Payment (Receipt Screenshot) *</label>
+                    <input type="file" id="proofFile" accept="image/*" style="margin-bottom: 20px;">
+                    <div id="proofPreview" style="display: none; margin-top: 15px;">
+                        <img id="previewImg" src="" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
                 </div>
 
                 <button class="btn-submit" id="submitBooking">Confirm Booking</button>
@@ -509,6 +521,47 @@
     <footer>
         <p>© 2026 Pantukan Luxury Travel. All rights reserved.</p>
     </footer>
+
+    <script>
+        // Image Compression Utility
+        async function compressImage(file, maxWidth = 1000, maxHeight = 1000, quality = 0.6) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round((height * maxWidth) / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round((width * maxHeight) / height);
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+
 
     <script type="module">
         import { db, doc, getDoc, collection, addDoc } from '../js/firebase-config.js';
@@ -584,6 +637,11 @@
                 <div class="resort-name">${selectedPackage.name}</div>
             `;
 
+            if (selectedPackage.gcashNumber) {
+                document.getElementById('gcashNumber').textContent = selectedPackage.gcashNumber;
+                document.getElementById('gcashPaymentInfo').style.display = 'block';
+            }
+
             // Prefill user email
             document.getElementById('email').value = currentUser.email;
             document.getElementById('fullName').value = currentUser.name || '';
@@ -648,6 +706,41 @@
         document.getElementById('adults').addEventListener('input', updateSummary);
         document.getElementById('children').addEventListener('input', updateSummary);
 
+        const paymentMethodSelect = document.getElementById('paymentMethod');
+        const proofSection = document.getElementById('proofOfPaymentSection');
+        const gcashInfo = document.getElementById('gcashPaymentInfo');
+
+        paymentMethodSelect.addEventListener('change', function() {
+            if (this.value === 'online') {
+                proofSection.style.display = 'block';
+                if (selectedPackage && selectedPackage.gcashNumber) {
+                    gcashInfo.style.display = 'block';
+                }
+            } else {
+                proofSection.style.display = 'none';
+                gcashInfo.style.display = 'none';
+            }
+        });
+
+        const proofFileInput = document.getElementById('proofFile');
+        const proofPreview = document.getElementById('proofPreview');
+        const previewImg = document.getElementById('previewImg');
+        let proofBase64 = null;
+
+        proofFileInput.addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    proofBase64 = await compressImage(file);
+                    previewImg.src = proofBase64;
+                    proofPreview.style.display = 'block';
+                } catch (err) {
+                    console.error("Image loading error:", err);
+                    alert("Could not load image. Please try another file.");
+                }
+            }
+        });
+
         // Submit booking to Cloud Firestore
         document.getElementById('submitBooking').addEventListener('click', async function () {
             const errorMsg = document.getElementById('errorMessage');
@@ -662,6 +755,14 @@
 
             if (!fullName || !email || !phone || !checkIn || !checkOut) {
                 errorMsg.textContent = 'Please fill in all required fields.';
+                errorMsg.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            if (paymentMethod === 'online' && !proofBase64) {
+                errorMsg.textContent = 'Please upload your Proof of Payment for Online Payment (GCash).';
                 errorMsg.style.display = 'block';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
@@ -698,7 +799,9 @@
                     status: 'pending',
                     createdAt: new Date().toISOString(),
                     totalPrice: document.getElementById('totalPrice').textContent,
-                    hostEmail: selectedPackage.hostEmail || '' // Store who the package belongs to
+                    hostEmail: selectedPackage.hostEmail || '', // Store who the package belongs to
+                    paymentMethod: paymentMethod,
+                    proofOfPayment: proofBase64 || null
                 };
 
                 // Save booking to Cloud Firestore

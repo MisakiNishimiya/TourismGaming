@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2c3e50">
-    <meta name="description" content="NaviBay Pantukan Tourism - A Refined Escape in Davao de Oro">
+    <meta name="theme-color" content="#0077BE">
+    <meta name="description" content="NaviBay Pantukan Tourism - A Coastal Escape in Davao de Oro">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="NaviBay">
     
-    <title>NaviBay Pantukan - Luxury Destinations & Resorts</title>
+    <title>NaviBay Pantukan - Coastal Destinations & Resorts</title>
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     
     <!-- Icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232c3e50' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23c9a961' font-family='serif'>P</text></svg>">
+    <link rel="icon" type="image/png" sizes="192x192" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230077BE' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23F7E7CE' font-family='serif'>P</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230077BE' width='100' height='100'/><text x='50' y='60' text-anchor='middle' font-size='48' fill='%23F7E7CE' font-family='serif'>P</text></svg>">
     
     <style>
         * {
@@ -27,18 +27,23 @@
         
         body {
             font-family: 'Garamond', 'Georgia', serif;
-            background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3)),
+            background: linear-gradient(rgba(0, 119, 190, 0.4), rgba(247, 231, 206, 0.3)),
                         url('assets/hero-bg.png') center/cover fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #ecf0f1;
+            color: #013A63;
         }
 
         .splash-container {
             text-align: center;
             animation: fadeIn 1s ease-out;
+            background: rgba(255, 253, 245, 0.82);
+            padding: 60px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 50px rgba(0, 119, 190, 0.15);
         }
 
         @keyframes fadeIn {
@@ -58,13 +63,15 @@
             letter-spacing: 12px;
             text-transform: uppercase;
             margin-bottom: 30px;
+            color: #0077BE;
         }
 
         .divider {
             width: 80px;
-            height: 1px;
-            background: #ecf0f1;
+            height: 3px;
+            background: #90E0EF;
             margin: 30px auto;
+            border-radius: 2px;
         }
 
         .tagline {
@@ -73,12 +80,14 @@
             text-transform: uppercase;
             opacity: 0.9;
             margin-bottom: 50px;
+            color: #013A63;
         }
 
         .loading {
             font-size: 0.9em;
             letter-spacing: 2px;
             opacity: 0.7;
+            color: #0077BE;
         }
 
         .loading::after {

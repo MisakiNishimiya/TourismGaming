@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
-    <meta name="theme-color" content="#2c3e50">
-    <meta name="description" content="Pantukan Tourism Dashboard">
+    <meta name="theme-color" content="#0077BE">
+    <meta name="description" content="Pantukan Tourism coastal Dashboard">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <title>Pantukan - Luxury Destinations & Resorts</title>
+    <title>Pantukan - Coastal Destinations & Resorts</title>
     <link rel="manifest" href="manifest.json?v=4">
     <link rel="icon" type="image/png" sizes="192x192" href="/assets/app-icon.png?v=4">
     <link rel="apple-touch-icon" href="/assets/app-icon.png?v=4">
@@ -24,13 +24,13 @@
         body {
             font-family: 'Garamond', 'Georgia', serif;
             line-height: 1.8;
-            color: #2c3e50;
+            color: #013A63;
             overflow-x: hidden;
-            background: #f8f9fa;
+            background: #FFFDF5;
         }
 
         .user-info {
-            background: #2c3e50;
+            background: #0077BE;
             padding: 15px 30px;
             display: flex;
             align-items: center;
@@ -40,7 +40,7 @@
 
         .user-name {
             font-size: 0.9em;
-            color: #ecf0f1;
+            color: #FFFDF5;
             letter-spacing: 1px;
             font-weight: 300;
         }
@@ -51,7 +51,7 @@
 
         .profile-icon {
             border-radius: 20px;
-            background: #ecf0f1;
+            background: #FFFDF5;
             padding: 10px 10px;
             font-size: 1.2em;
             cursor: pointer;
@@ -59,6 +59,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #0077BE;
         }
 
         .profile-icon:hover {
@@ -71,13 +72,13 @@
             top: 100%;
             right: 0;
             margin-top: 10px;
-            background: #2c3e50;
+            background: #0077BE;
             min-width: 150px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 119, 190, 0.2);
             z-index: 1000;
         }
 
@@ -90,8 +91,8 @@
         .btn-logout {
             width: 100%;
             background: transparent;
-            color: #ecf0f1;
-            border: 1px solid #ecf0f1;
+            color: #FFFDF5;
+            border: 1px solid #FFFDF5;
             padding: 15px 20px;
             font-family: 'Garamond', 'Georgia', serif;
             font-size: 0.8em;
@@ -107,9 +108,9 @@
         }
 
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)),
+            background: linear-gradient(rgba(0, 119, 190, 0.4), rgba(0, 119, 190, 0.5)),
                 url('assets/hero-bg.png') center/cover;
-            color: #ecf0f1;
+            color: #FFFDF5;
             padding: 180px 20px 120px;
             text-align: center;
             position: relative;
@@ -135,9 +136,10 @@
 
         .divider {
             width: 80px;
-            height: 1px;
-            background: #ecf0f1;
+            height: 3px;
+            background: #90E0EF;
             margin: 30px auto;
+            border-radius: 2px;
         }
 
         @keyframes fadeIn {
@@ -153,13 +155,13 @@
         }
 
         nav {
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 253, 245, 0.98);
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 20px rgba(0, 119, 190, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid #e8e8e8;
+            border-bottom: 1px solid #90E0EF;
         }
 
         .nav-container {
@@ -179,7 +181,7 @@
         .burger-menu span {
             width: 25px;
             height: 2px;
-            background: #2c3e50;
+            background: #0077BE;
             margin: 4px 0;
             transition: 0.3s;
         }
@@ -211,7 +213,7 @@
 
         nav a {
             text-decoration: none;
-            color: #2c3e50;
+            color: #013A63;
             font-weight: 400;
             font-size: 0.95em;
             letter-spacing: 1.5px;
@@ -227,7 +229,7 @@
             left: 0;
             width: 0;
             height: 1px;
-            background: #c9a961;
+            background: #0077BE;
             transition: width 0.3s;
         }
 
@@ -236,7 +238,7 @@
         }
 
         nav a:hover {
-            color: #c9a961;
+            color: #0077BE;
         }
 
         .container {
@@ -249,7 +251,7 @@
             text-align: center;
             font-size: 3em;
             margin-bottom: 20px;
-            color: #2c3e50;
+            color: #0077BE;
             font-weight: 300;
             letter-spacing: 4px;
             text-transform: uppercase;
@@ -273,15 +275,16 @@
         }
 
         .resort-card {
-            background: #ecf0f1;
+            background: #FFFDF5;
             overflow: hidden;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
-            border: 1px solid #e8e8e8;
+            border: 1px solid #90E0EF;
             display: flex;
             flex-direction: column;
             width: 320px;
             height: 320px;
+            border-radius: 15px;
         }
 
         .resort-card:hover {
@@ -305,7 +308,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 119, 190, 0.4) 100%);
             opacity: 0;
             transition: opacity 0.4s;
         }
@@ -347,7 +350,7 @@
         }
 
         .resort-content h3 {
-            color: #2c3e50;
+            color: #0077BE;
             margin-bottom: 15px;
             font-size: 1.4em;
             font-weight: 300;
@@ -379,15 +382,15 @@
         }
 
         .resort-features li::before {
-            content: '—';
-            color: #c9a961;
+            content: '〜';
+            color: #0077BE;
             font-weight: bold;
             margin-right: 12px;
         }
 
         .price {
             font-size: 1.8em;
-            color: #c9a961;
+            color: #0077BE;
             font-weight: 300;
             margin-bottom: 20px;
             letter-spacing: 1px;
@@ -395,12 +398,12 @@
 
         .btn {
             display: inline-block;
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: #0077BE;
+            color: #FFFDF5;
             padding: 15px 45px;
             text-decoration: none;
             font-weight: 400;
-            transition: background 0.3s, transform 0.3s;
+            transition: all 0.3s;
             border: none;
             cursor: pointer;
             letter-spacing: 2px;
@@ -408,17 +411,21 @@
             font-size: 0.85em;
             margin-top: auto;
             align-self: flex-start;
+            border-radius: 50px;
         }
 
         .btn:hover {
-            background: #c9a961;
+            background: #00a8cc;
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 190, 0.2);
         }
 
         .featured-section {
-            background: #ecf0f1;
+            background: #FFFDF5;
             padding: 60px 40px;
             margin: 40px 0;
+            border-top: 1px solid #90E0EF;
+            border-bottom: 1px solid #90E0EF;
         }
 
         .featured-grid {
@@ -432,7 +439,7 @@
         .feature-item {
             text-align: center;
             padding: 40px 20px;
-            border-right: 1px solid #e8e8e8;
+            border-right: 1px solid #90E0EF;
         }
 
         .feature-item:last-child {
@@ -442,7 +449,7 @@
         .feature-icon {
             font-size: 3em;
             margin-bottom: 25px;
-            color: #c9a961;
+            color: #0077BE;
         }
 
         .feature-item h3 {
@@ -450,7 +457,7 @@
             margin-bottom: 15px;
             font-weight: 400;
             letter-spacing: 2px;
-            color: #2c3e50;
+            color: #0077BE;
         }
 
         .feature-item p {
@@ -473,14 +480,15 @@
         }
 
         .booking-card {
-            background: #fff;
+            background: #FFFDF5;
             padding: 30px;
-            border: 1px solid #e8e8e8;
+            border: 1px solid #90E0EF;
             display: flex;
             flex-direction: column;
             gap: 15px;
             position: relative;
             transition: all 0.3s;
+            border-radius: 15px;
         }
 
         .booking-card:hover {
@@ -498,7 +506,7 @@
 
         .booking-title {
             font-size: 1.25em;
-            color: #2c3e50;
+            color: #0077BE;
             letter-spacing: 1px;
         }
 
@@ -553,7 +561,7 @@
 
         .booking-price {
             font-size: 1.4em;
-            color: #c9a961;
+            color: #0077BE;
             font-weight: 300;
         }
 
@@ -659,8 +667,8 @@
         }
 
         footer {
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: #0077BE;
+            color: #FFFDF5;
             text-align: center;
             padding: 80px 40px;
         }
@@ -693,7 +701,7 @@
         }
 
         .contact-info a:hover {
-            color: #c9a961;
+            color: #90E0EF;
         }
 
         @media (max-width: 768px) {
@@ -1529,6 +1537,9 @@
             </div>
             <div class="modal-body">
                 <h2 id="modalTitle">Resort Name</h2>
+                <div id="modalGcash" style="text-align: center; color: #0077BE; font-weight: 500; margin-bottom: 20px; font-size: 1.1em; display: none;">
+                    📱 GCash: <span id="gcashNumber"></span>
+                </div>
                 <p class="modal-resort-desc" id="modalDescription">Detailed description goes here...</p>
                 
                 <h4 style="margin-top: 40px; margin-bottom: 20px; color: #1e293b; font-size: 1.1em; display: flex; align-items: center; gap: 10px;">
@@ -1666,6 +1677,15 @@
             document.getElementById('modalDescription').textContent = pkg.description;
             document.getElementById('modalPrice').textContent = `₱${(pkg.price || 0).toLocaleString()}`;
             document.getElementById('modalBookBtn').href = `package/booking-transaction.html?package=${pkg.id}`;
+
+            const gcashEl = document.getElementById('modalGcash');
+            const gcashVal = document.getElementById('gcashNumber');
+            if (pkg.gcashNumber) {
+                gcashVal.textContent = pkg.gcashNumber;
+                gcashEl.style.display = 'block';
+            } else {
+                gcashEl.style.display = 'none';
+            }
 
             const featuresList = document.getElementById('modalFeatures');
             featuresList.innerHTML = (pkg.features || []).map(f => `<div class="modal-feature-item">${f}</div>`).join('');

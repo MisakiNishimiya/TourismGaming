@@ -1,11 +1,11 @@
 {
-  "name": "Pantukan Luxury Tourism",
-  "short_name": "Pantukan",
-  "description": "Discover refined travel experiences in Davao de Oro",
+  "name": "NaviBay Pantukan Coastal Tourism",
+  "short_name": "NaviBay",
+  "description": "Discover refined coastal travel experiences in Pantukan, Davao de Oro",
   "start_url": "/login.html",
   "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#2c3e50",
+  "background_color": "#FFFDF5",
+  "theme_color": "#0077BE",
   "orientation": "portrait-primary",
   "icons": [
     {
