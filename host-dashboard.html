@@ -1427,6 +1427,23 @@
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Saving...';
 
+                // Check for duplicate name (cross-host)
+                const nameQuery = query(collection(db, "packages"), where("name", "==", resortData.name));
+                const nameSnapshot = await getDocs(nameQuery);
+                let isDuplicate = false;
+                nameSnapshot.forEach((doc) => {
+                    if (doc.id !== editingResortId) {
+                        isDuplicate = true;
+                    }
+                });
+
+                if (isDuplicate) {
+                    alert(`A resort named "${resortData.name}" already exists. Please choose a different name.`);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Save Resort';
+                    return;
+                }
+
                 if (editingResortId) {
                     await setDoc(doc(db, "packages", editingResortId), resortData, { merge: true });
                 } else {
